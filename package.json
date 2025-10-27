@@ -1,0 +1,20 @@
+{
+  "name": "starshield-affiliate-portal",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev:affiliate": "pnpm --filter affiliate dev",
+    "dev:admin": "pnpm --filter admin dev",
+    "dev:api": "pnpm --filter core-api start:dev",
+    "dev:worker": "pnpm --filter worker start:dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "turbo": "^2.0.0"
+  }
+}

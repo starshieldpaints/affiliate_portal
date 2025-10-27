@@ -1,0 +1,28 @@
+# Security & Privacy Checklist
+
+- **Authentication**
+  - Enforce complex passwords and Argon2 hashing.
+  - Short-lived JWT access tokens with rotating refresh tokens.
+  - Optional WebAuthn/TOTP for Admins and high-value affiliates.
+- **Authorization**
+  - Two roles only (`affiliate`, `admin`) enforced via NestJS guards.
+  - API endpoints annotated with explicit permission checks.
+  - Admin critical actions require step-up verification and audit log entries.
+- **Transport & Network**
+  - TLS 1.2+ everywhere (HSTS, TLS termination at ALB).
+  - AWS WAF with bot control shielding redirect endpoints.
+  - Private subnets for data stores; security groups locked to least privilege.
+- **Data Protection**
+  - PII encrypted at rest using PostgreSQL `pgcrypto`.
+  - S3 objects encrypted with KMS CMKs and bucket policies denying public access.
+  - Access logging enabled for S3 and CloudFront.
+- **Monitoring & Response**
+  - OpenTelemetry traces forwarded to Honeycomb/Jaeger.
+  - Pino logs shipped to CloudWatch + security analytics.
+  - IAM access analyzer alerts, GuardDuty findings triaged weekly.
+- **Compliance**
+  - GDPR/CCPA ready: consent banner, data subject access runbook, retention policies.
+  - SOC 2 controls tracked in compliance backlog.
+- **Testing**
+  - Regular SAST/DAST scans, dependency auditing, and infrastructure drift detection.
+  - Quarterly tabletop exercises covering payout fraud and credential compromise scenarios.

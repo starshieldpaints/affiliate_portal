@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-surface text-slate-100 font-sans antialiased;
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(239, 68, 68, 0.2), transparent 45%),
+    radial-gradient(circle at 90% 5%, rgba(239, 68, 68, 0.12), transparent 45%),
+    linear-gradient(175deg, rgba(8, 11, 20, 0.96), rgba(3, 7, 18, 0.96));
+  background-attachment: fixed;
+}
+
+::selection {
+  @apply bg-brand text-brand-foreground;
+}
