@@ -23,7 +23,7 @@ export class CatalogService {
         currency: 'USD',
         description:
           'Flagship impact-resistant helmet engineered for tactical visibility and comfort.',
-        imageUrl: 'https://images.unsplash.com/photo-1612810806695-30ba0b5c7c2e?w=640&q=80'
+        imageUrl: 'https://placehold.co/640x384/png?text=Elite+Helmet'
       },
       {
         id: 'sample-visor',
@@ -31,7 +31,7 @@ export class CatalogService {
         price: 189,
         currency: 'USD',
         description: 'Adaptive visor with anti-glare photon filtering technology.',
-        imageUrl: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=640&q=80'
+        imageUrl: 'https://placehold.co/640x384/png?text=Photon+Visor'
       }
     ];
   }

@@ -1,14 +1,44 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["../../packages/ui/src/*"],
-      "@config/*": ["../../packages/config/src/*"],
-      "@api-client": ["../../packages/api-client/src/index.ts"]
+      "@ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@config/*": [
+        "../../packages/config/src/*"
+      ],
+      "@api-client": [
+        "../../packages/api-client/src/index.ts"
+      ]
     },
-    "types": ["jest", "node"]
+    "types": [
+      "jest",
+      "node"
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

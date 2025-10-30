@@ -7,10 +7,15 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@app/*": ["modules/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

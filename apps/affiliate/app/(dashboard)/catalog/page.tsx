@@ -8,7 +8,7 @@ const products = [
     price: '$249',
     conversion: '4.2%',
     link: 'https://starshield.io/p/elite-helmet',
-    image: 'https://images.unsplash.com/photo-1612810806695-30ba0b5c7c2e?w=640&q=80'
+    image: 'https://placehold.co/640x384/png?text=Elite+Helmet'
   },
   {
     id: '2',
@@ -17,7 +17,7 @@ const products = [
     price: '$189',
     conversion: '5.1%',
     link: 'https://starshield.io/p/photon-visor',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=640&q=80'
+    image: 'https://placehold.co/640x384/png?text=Photon+Visor'
   },
   {
     id: '3',
@@ -26,7 +26,7 @@ const products = [
     price: '$329',
     conversion: '3.7%',
     link: 'https://starshield.io/p/nova-armor',
-    image: 'https://images.unsplash.com/photo-1524678755510-d2e0a1f7adcc?w=640&q=80'
+    image: 'https://placehold.co/640x384/png?text=Nova+Armor'
   }
 ];
 

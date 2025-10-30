@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "noEmit": false
   },
-  "exclude": ["test/**/*.ts", "**/*.spec.ts"]
+  "exclude": ["test/**/*.ts", "**/*.spec.ts", "prisma/**/*.ts"]
 }

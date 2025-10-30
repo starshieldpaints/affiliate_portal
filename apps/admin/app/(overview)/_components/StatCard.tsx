@@ -1,4 +1,4 @@
-'use client';
+// Server component by default; no client-only APIs used
 
 import { ElementType } from 'react';
 import { cn } from '../../../src/utils/cn';

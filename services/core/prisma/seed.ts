@@ -6,10 +6,9 @@ const prisma = new PrismaClient();
 async function main() {
   const adminEmail = 'admin@starshield.io';
   const affiliateEmail = 'affiliate@starshield.io';
-
   const adminPassword = await argon2.hash('StarShield!23');
   const affiliatePassword = await argon2.hash('StarShield!23');
-
+  
   const admin = await prisma.user.upsert({
     where: { email: adminEmail },
     update: {},
@@ -54,7 +53,7 @@ async function main() {
       description: 'Flagship impact-resistant helmet engineered for tactical visibility.',
       price: 249,
       currency: 'USD',
-      imageUrl: 'https://images.unsplash.com/photo-1612810806695-30ba0b5c7c2e?w=640&q=80',
+      imageUrl: 'https://placehold.co/640x384/png?text=Elite+Helmet',
       landingUrl: 'https://starshield.io/p/elite-helmet'
     }
   });

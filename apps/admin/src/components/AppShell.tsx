@@ -1,11 +1,11 @@
 'use client';
-
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 import { navigation } from '../config/navigation';
 import { cn } from '../utils/cn';
 import { ChevronDown, LayoutDashboard, Search, UserCog } from 'lucide-react';
+import React from 'react';
 
 export function AppShell({ children }: PropsWithChildren) {
   const pathname = usePathname();

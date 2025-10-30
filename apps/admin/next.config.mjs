@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    turbo: true
+    // Turbopack config expects an object in Next 14
+    turbo: {},
   },
   output: 'standalone'
 };

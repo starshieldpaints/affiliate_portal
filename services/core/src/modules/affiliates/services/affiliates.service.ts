@@ -22,7 +22,7 @@ export class AffiliatesService {
         },
         take: 50
       })
-      .then((affiliates) => {
+      .then((affiliates: unknown[]) => {
         if (affiliates.length > 0) {
           return affiliates;
         }
@@ -75,7 +75,7 @@ export class AffiliatesService {
           }
         }
       }
-    }).then((affiliate) => {
+    }).then((affiliate: unknown) => {
       if (affiliate) {
         return affiliate;
       }

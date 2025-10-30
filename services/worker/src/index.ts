@@ -5,8 +5,9 @@ import { commissionProcessor } from './jobs/commission-processor';
 import { payoutProcessor } from './jobs/payout-processor';
 
 const connection = {
-  host: process.env.REDIS_HOST ?? 'localhost',
-  port: parseInt(process.env.REDIS_PORT ?? '6379', 10)
+  host: process.env.REDIS_HOST ?? '127.0.0.1',
+  port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
+  family: 4 // force IPv4 to avoid ::1 resolving to an older local Redis
 };
 
 const prisma = new PrismaClient();

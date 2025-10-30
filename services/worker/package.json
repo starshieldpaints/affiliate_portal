@@ -2,7 +2,7 @@
   "name": "worker",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "node dist/index.js",
@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "^5.22.0",
     "bullmq": "^5.7.6",
     "nestjs-pino": "^4.0.0",
     "pino": "^9.1.0",
