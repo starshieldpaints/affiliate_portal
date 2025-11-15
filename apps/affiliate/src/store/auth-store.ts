@@ -1,0 +1,150 @@
+'use client';
+
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { authApi } from '../lib/api-client';
+import type { AuthUser } from '../types/auth';
+
+type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
+
+interface AuthState {
+  user: AuthUser | null;
+  status: AuthStatus;
+  error?: string;
+  initialize: () => Promise<void>;
+  login: (payload: { email: string; password: string }) => Promise<void>;
+  register: (payload: {
+    email: string;
+    password: string;
+    displayName: string;
+    phone: string;
+    country?: string;
+    marketingOptIn?: boolean;
+    termsAccepted: boolean;
+  }) => Promise<void>;
+  logout: () => Promise<void>;
+  updateAffiliateProfile: (updates: Partial<NonNullable<AuthUser['affiliate']>>) => void;
+  markEmailVerified: (verifiedAt: string) => void;
+  markPhoneVerified: (verifiedAt: string) => void;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+  user: null,
+  status: 'idle',
+  async initialize() {
+    if (get().status !== 'idle') {
+      return;
+    }
+    set({ status: 'loading' });
+    try {
+      const user = await authApi.me();
+      if (user) {
+        set({ user, status: 'authenticated', error: undefined });
+      } else {
+        set({ user: null, status: 'unauthenticated', error: undefined });
+      }
+    } catch (error) {
+      set({
+        user: null,
+        status: 'unauthenticated',
+        error: error instanceof Error ? error.message : 'Unable to load session'
+      });
+    }
+  },
+  async login(payload) {
+    set({ status: 'loading', error: undefined });
+    try {
+      const user = await authApi.login(payload);
+      set({ user, status: 'authenticated' });
+    } catch (error) {
+      set({
+        status: 'unauthenticated',
+        error: error instanceof Error ? error.message : 'Login failed'
+      });
+      throw error;
+    }
+  },
+  async register(payload) {
+    set({ status: 'loading', error: undefined });
+    try {
+      const user = await authApi.register(payload);
+      set({ user, status: 'authenticated' });
+    } catch (error) {
+      set({
+        status: 'unauthenticated',
+        error: error instanceof Error ? error.message : 'Registration failed'
+      });
+      throw error;
+    }
+  },
+  async logout() {
+    try {
+      await authApi.logout();
+    } finally {
+      set({ user: null, status: 'unauthenticated' });
+    }
+  },
+  updateAffiliateProfile(updates) {
+    set((state) => {
+      if (!state.user) return state;
+      const fallbackAffiliate = state.user.affiliate ?? {
+        id: 'local-profile',
+        displayName: state.user.email ?? 'Affiliate',
+        defaultReferralCode: state.user.email ?? 'AFFILIATE',
+        kycStatus: 'pending',
+        payoutMethod: null,
+        payoutDetails: null,
+        phone: null,
+        phoneVerifiedAt: null
+      };
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          affiliate: { ...fallbackAffiliate, ...updates }
+        }
+      };
+    });
+  },
+  markEmailVerified(verifiedAt) {
+    set((state) => {
+      if (!state.user) {
+        return state;
+      }
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          emailVerifiedAt: verifiedAt
+        }
+      };
+    });
+  },
+  markPhoneVerified(verifiedAt) {
+    set((state) => {
+      if (!state.user || !state.user.affiliate) {
+        return state;
+      }
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          affiliate: {
+            ...state.user.affiliate,
+            phoneVerifiedAt: verifiedAt
+          }
+        }
+      };
+    });
+  }
+    }),
+    {
+      name: 'auth-store',
+      partialize: (state) => ({
+        user: state.user
+      })
+    }
+  )
+);

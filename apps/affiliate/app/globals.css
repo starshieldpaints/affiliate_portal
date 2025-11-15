@@ -3,7 +3,29 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+  --bg-body: #f8fafc;
+  --bg-gradient:
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.18), transparent 50%),
+    linear-gradient(160deg, #ffffff, #e2e8f0);
+  --panel-bg: rgba(255, 255, 255, 0.92);
+  --panel-border: rgba(15, 23, 42, 0.08);
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+}
+
+.dark {
   color-scheme: dark;
+  --bg-body: #020617;
+  --bg-gradient:
+    radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.12), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.18), transparent 50%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+  --panel-bg: rgba(15, 23, 42, 0.92);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text-primary: #f8fafc;
+  --text-muted: #cbd5f5;
 }
 
 html,
@@ -12,14 +34,63 @@ body {
 }
 
 body {
-  @apply bg-surface text-slate-100 font-sans antialiased;
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.12), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(239, 68, 68, 0.18), transparent 50%),
-    linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+  @apply font-sans antialiased transition-colors duration-300;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  background-image: var(--bg-gradient);
   background-attachment: fixed;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.card-surface {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  backdrop-filter: blur(16px);
 }
 
 ::selection {
   @apply bg-brand text-brand-foreground;
+}
+
+.form-input {
+  @apply w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 transition focus:border-brand focus:outline-none dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-white;
+}
+
+@layer utilities {
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-up {
+    opacity: 0;
+    animation: fade-up 0.7s cubic-bezier(0.2, 0.85, 0.4, 1) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }

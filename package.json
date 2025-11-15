@@ -16,5 +16,14 @@
   "devDependencies": {
     "prettier": "^3.2.5",
     "turbo": "^2.0.0"
+  },
+  "dependencies": {
+    "@jridgewell/sourcemap-codec": "1.4.15",
+    "has-flag": "^4.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "tmp": "0.2.4"
+    }
   }
 }

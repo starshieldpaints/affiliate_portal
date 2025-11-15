@@ -9,6 +9,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AffiliatesModule } from './modules/affiliates/affiliates.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { ShopifyModule } from './modules/shopify/shopify.module';
+import { TrackingModule } from './modules/tracking/tracking.module';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { PayoutsModule } from './modules/payouts/payouts.module';
     AffiliatesModule,
     CatalogModule,
     PayoutsModule,
+    AdminModule,
+    ShopifyModule,
+    TrackingModule,
     HealthModule
   ],
   providers: [

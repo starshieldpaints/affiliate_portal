@@ -19,6 +19,7 @@ export type NavItem = {
 export const navigation: NavItem[] = [
   { label: 'Overview', href: '/overview', icon: Activity },
   { label: 'Affiliates', href: '/affiliates', icon: Users },
+  { label: 'Products', href: '/products', icon: Blocks },
   { label: 'Commission Rules', href: '/commission-rules', icon: ClipboardList },
   { label: 'Orders & Refunds', href: '/orders', icon: Blocks },
   { label: 'Payouts', href: '/payouts', icon: DollarSign, tag: 'Batching' },

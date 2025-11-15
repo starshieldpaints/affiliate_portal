@@ -9,7 +9,8 @@ export const envSchema = z.object({
   JWT_REFRESH_TTL: z.string().default('7d'),
   REDIS_HOST: z.string().default('localhost'),
   REDIS_PORT: z.string().default('6379'),
-  CORS_ORIGIN: z.string().optional()
+  CORS_ORIGIN: z.string().optional(),
+  SHOPIFY_WEBHOOK_SECRET: z.string().optional()
 });
 
 export type Env = z.infer<typeof envSchema>;

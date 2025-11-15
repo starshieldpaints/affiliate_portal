@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+import { Public } from '../../../common/decorators/public.decorator';
 import { CatalogService } from '../services/catalog.service';
+import { GetProductsQueryDto } from '../dto/get-products-query.dto';
 
 @Controller('products')
 export class CatalogController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get()
-  findAll() {
-    return this.catalogService.findAll();
+  @Public()
+  findAll(@Query() query: GetProductsQueryDto) {
+    return this.catalogService.findAll(query);
   }
 }

@@ -16,6 +16,13 @@ const config: Config = {
           dark: '#b91c1c',
           light: '#fee2e2'
         },
+        palette: {
+          black: '#05060a',
+          white: '#f8fafc',
+          blue: '#38bdf8',
+          green: '#10b981',
+          red: '#ef4444'
+        },
         surface: {
           DEFAULT: '#0f172a',
           muted: '#1e293b',

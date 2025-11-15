@@ -1,20 +1,39 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { PrismaModule } from '../prisma/prisma.module';
+import { LoginRateLimiterService } from './services/login-rate-limiter.service';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { ContactVerificationService } from './services/contact-verification.service';
 
 @Module({
   imports: [
+    ConfigModule,
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET ?? 'development-secret',
-      signOptions: { expiresIn: process.env.JWT_ACCESS_TTL ?? '15m' }
+    PrismaModule,
+    NotificationsModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const secret = config.get<string>('jwt.secret');
+        if (!secret) {
+          throw new Error('JWT secret not configured');
+        }
+
+        return {
+          secret,
+          signOptions: { expiresIn: config.get<string>('jwt.accessTokenTtl') ?? '15m' }
+        };
+      }
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, LoginRateLimiterService, ContactVerificationService],
   exports: [AuthService]
 })
 export class AuthModule {}

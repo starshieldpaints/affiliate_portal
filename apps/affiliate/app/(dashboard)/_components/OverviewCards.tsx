@@ -18,14 +18,16 @@ export function OverviewCards({ items }: OverviewCardsProps) {
       {items.map((item) => (
         <article
           key={item.label}
-          className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg shadow-black/10"
+          className="card-surface rounded-2xl p-6 shadow-lg shadow-slate-200/50 dark:shadow-black/20"
         >
-          <p className="text-xs uppercase tracking-widest text-slate-400">{item.label}</p>
-          <p className="mt-3 text-3xl font-semibold text-white">{item.value}</p>
+          <p className="text-xs uppercase tracking-widest text-muted">{item.label}</p>
+          <p className="mt-3 text-3xl font-semibold text-slate-900 dark:text-white">{item.value}</p>
           <p
             className={cn(
               'mt-2 text-xs font-medium',
-              item.change.startsWith('-') ? 'text-rose-400' : 'text-emerald-400'
+              item.change.startsWith('-')
+                ? 'text-rose-600 dark:text-rose-300'
+                : 'text-emerald-600 dark:text-emerald-300'
             )}
           >
             {item.change} vs last 7 days

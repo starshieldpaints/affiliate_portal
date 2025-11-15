@@ -3,7 +3,29 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+  --bg-body: #f8fafc;
+  --bg-gradient:
+    radial-gradient(circle at 12% 10%, rgba(239, 68, 68, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(14, 165, 233, 0.12), transparent 55%),
+    linear-gradient(160deg, #ffffff, #e2e8f0);
+  --panel-bg: rgba(255, 255, 255, 0.92);
+  --panel-border: rgba(15, 23, 42, 0.08);
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+}
+
+.dark {
   color-scheme: dark;
+  --bg-body: #020617;
+  --bg-gradient:
+    radial-gradient(circle at 20% 15%, rgba(239, 68, 68, 0.14), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+  --panel-bg: rgba(15, 23, 42, 0.9);
+  --panel-border: rgba(148, 163, 184, 0.16);
+  --text-primary: #f8fafc;
+  --text-muted: #cbd5f5;
 }
 
 html,
@@ -12,12 +34,26 @@ body {
 }
 
 body {
-  @apply bg-surface text-slate-100 font-sans antialiased;
-  background-image:
-    radial-gradient(circle at 10% 0%, rgba(239, 68, 68, 0.2), transparent 45%),
-    radial-gradient(circle at 90% 5%, rgba(239, 68, 68, 0.12), transparent 45%),
-    linear-gradient(175deg, rgba(8, 11, 20, 0.96), rgba(3, 7, 18, 0.96));
+  @apply font-sans antialiased transition-colors duration-300;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  background-image: var(--bg-gradient);
   background-attachment: fixed;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.card-surface {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  backdrop-filter: blur(18px);
+}
+
+.form-input {
+  @apply w-full rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-sm text-slate-900 transition focus:border-brand focus:outline-none dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-white;
 }
 
 ::selection {
