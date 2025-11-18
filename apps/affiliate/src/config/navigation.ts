@@ -5,6 +5,7 @@ import {
   Headset,
   Link2,
   PackageSearch,
+  Settings2,
   Wallet
 } from 'lucide-react';
 
@@ -51,6 +52,12 @@ export const navigation: NavItem[] = [
     href: '/notifications',
     icon: BellRing,
     description: 'Sales alerts, policy changes, and payout updates.'
+  },
+  {
+    label: 'Profile & Settings',
+    href: '/settings/profile',
+    icon: Settings2,
+    description: 'Manage payout preferences, verification, and security.'
   },
   {
     label: 'Support',

@@ -157,7 +157,7 @@ export class AuthController {
     tokens: { accessToken: string; refreshToken: string }
   ) {
     const secure = this.config.get<string>('NODE_ENV') === 'production';
-    const domain = this.config.get<string>('security.cookieDomain') || undefined;
+    const domain = this.resolveCookieDomain();
     const accessTtl = this.parseDuration(
       this.config.get<string>('jwt.accessTokenTtl') ?? '15m'
     );
@@ -184,7 +184,7 @@ export class AuthController {
   }
 
   private clearAuthCookies(res: Response) {
-    const domain = this.config.get<string>('security.cookieDomain') || undefined;
+    const domain = this.resolveCookieDomain();
     res.cookie('access_token', '', {
       httpOnly: true,
       secure: this.config.get<string>('NODE_ENV') === 'production',
@@ -200,6 +200,18 @@ export class AuthController {
       domain,
       path: '/auth'
     });
+  }
+
+  private resolveCookieDomain() {
+    const configured = this.config.get<string>('security.cookieDomain')?.trim();
+    if (!configured) {
+      return undefined;
+    }
+    const normalized = configured.toLowerCase();
+    if (normalized === 'localhost' || normalized === '127.0.0.1') {
+      return undefined;
+    }
+    return configured;
   }
 
   private parseDuration(value: string) {

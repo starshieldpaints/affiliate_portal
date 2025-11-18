@@ -2,7 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const AUTH_ROUTES = ['/auth/login', '/auth/register'];
-const PROTECTED_PREFIXES = ['/dashboard', '/links', '/catalog', '/notifications', '/payouts', '/reports', '/support'];
+const PROTECTED_PREFIXES = [
+  '/dashboard',
+  '/links',
+  '/catalog',
+  '/notifications',
+  '/payouts',
+  '/reports',
+  '/support',
+  '/settings'
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

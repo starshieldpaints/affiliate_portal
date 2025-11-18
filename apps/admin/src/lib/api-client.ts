@@ -1,7 +1,11 @@
 import type { AdminUser } from '../types/auth';
 import type { AffiliatesListResponse } from '../types/affiliates';
 import type { CommissionRulesListResponse, CreateCommissionRulePayload } from '../types/commission-rules';
-import type { AdminProduct, CreateAdminProductPayload } from '../types/catalog';
+import type {
+  AdminProduct,
+  CreateAdminProductPayload,
+  UpdateAdminProductPayload
+} from '../types/catalog';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -114,5 +118,9 @@ export const adminApi = {
   listProducts: () =>
     apiFetch<{ data: AdminProduct[]; meta: { total: number; take: number } }>('/admin/products'),
   createProduct: (payload: CreateAdminProductPayload) =>
-    apiFetch<AdminProduct>('/admin/products', { method: 'POST', body: payload })
+    apiFetch<AdminProduct>('/admin/products', { method: 'POST', body: payload }),
+  updateProduct: (productId: string, payload: UpdateAdminProductPayload) =>
+    apiFetch<AdminProduct>(`/admin/products/${productId}`, { method: 'PATCH', body: payload }),
+  deleteProduct: (productId: string) =>
+    apiFetch<{ success: boolean } | null>(`/admin/products/${productId}`, { method: 'DELETE' })
 };

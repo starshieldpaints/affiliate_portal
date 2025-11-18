@@ -33,8 +33,10 @@ export default function OverviewPage() {
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-3">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Operations Command</p>
-        <h1 className="text-4xl font-semibold tracking-tight text-white">Program Overview</h1>
-        <p className="max-w-3xl text-sm text-slate-300">
+        <h1 className="text-4xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          Program Overview
+        </h1>
+        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
           Monitor affiliate health, conversion funnels, payouts, and anomalies. All metrics below
           stream from live telemetry with built-in alerting.
         </p>
@@ -55,11 +57,11 @@ export default function OverviewPage() {
             <li>Fraud scoring job flagged 4 high-risk orders.</li>
           </ol>
         </div>
-        <div className="rounded-3xl border border-brand/30 bg-brand/10 p-6 shadow-accent">
+        <div className="rounded-3xl border border-brand/30 bg-brand/10 p-6 text-slate-900 shadow-accent dark:text-white">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-light">
             Quick Filters
           </h2>
-          <ul className="mt-4 space-y-3 text-sm text-white">
+          <ul className="mt-4 space-y-3 text-sm text-inherit">
             <li>Affiliates pending KYC review (12)</li>
             <li>Orders with manual attribution overrides (5)</li>
             <li>Commission rules modified in last 24h (3)</li>

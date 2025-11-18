@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname as useNextPathname, useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { Space_Grotesk } from 'next/font/google';
 import { navigation } from '../config/navigation';
@@ -13,7 +13,7 @@ import { ThemeToggle } from './theme-toggle';
 const brandFont = Space_Grotesk({ subsets: ['latin'], weight: ['600'] });
 
 export function AppShell({ children }: PropsWithChildren) {
-  const pathname = usePathname();
+  const pathname = useResolvedPathname();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
@@ -169,6 +169,21 @@ export function AppShell({ children }: PropsWithChildren) {
       )}
     </div>
   );
+}
+
+function useResolvedPathname() {
+  try {
+    const pathname = useNextPathname();
+    if (pathname) {
+      return pathname;
+    }
+  } catch {
+    // Ignore context errors during server-side rendering.
+  }
+  if (typeof window !== 'undefined' && window.location?.pathname) {
+    return window.location.pathname;
+  }
+  return '/';
 }
 
 function CompleteProfileBanner() {

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as SendGrid from '@sendgrid/mail';
+import sgMail from '@sendgrid/mail';
 
 @Injectable()
 export class EmailService {
@@ -12,7 +12,7 @@ export class EmailService {
     this.fromEmail = this.config.get<string>('notifications.sendgridFromEmail') ?? '';
     const apiKey = this.config.get<string>('notifications.sendgridApiKey');
     if (apiKey) {
-      SendGrid.setApiKey(apiKey);
+      sgMail.setApiKey(apiKey);
       this.enabled = true;
     } else {
       this.logger.warn('SendGrid API key missing. Email delivery disabled.');
@@ -27,7 +27,7 @@ export class EmailService {
     }
 
     try {
-      await SendGrid.send({
+      await sgMail.send({
         to: options.to,
         from: this.fromEmail || 'no-reply@starshieldpaints.com',
         subject: options.subject,

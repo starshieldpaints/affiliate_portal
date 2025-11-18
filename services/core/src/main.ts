@@ -14,6 +14,27 @@ declare global {
   }
 }
 
+function buildCorsOrigins() {
+  const configuredOrigins =
+    process.env.CORS_ORIGIN?.split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean) ?? [];
+  const allowAny = configuredOrigins.includes('*');
+
+  return (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowAny) {
+      return callback(null, true);
+    }
+    if (configuredOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    if (/^https?:\/\/localhost(?::\d+)?$/i.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS origin ${origin} is not allowed`));
+  };
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true
@@ -30,7 +51,7 @@ async function bootstrap() {
     })
   );
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') ?? [],
+    origin: buildCorsOrigins(),
     credentials: true
   });
   app.useGlobalPipes(new ValidationPipe({

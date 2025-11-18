@@ -14,12 +14,12 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
+    "has-flag": "^4.0.0",
     "prettier": "^3.2.5",
     "turbo": "^2.0.0"
   },
   "dependencies": {
-    "@jridgewell/sourcemap-codec": "1.4.15",
-    "has-flag": "^4.0.0"
+    "@jridgewell/sourcemap-codec": "1.4.15"
   },
   "pnpm": {
     "overrides": {

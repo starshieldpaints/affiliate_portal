@@ -25,13 +25,16 @@ const withPWA = withPWAInit({
 });
 
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = withPWA({
   reactStrictMode: true,
   experimental: {
     // Turbopack config expects an object in Next 14
     turbo: {}
   },
-  output: 'standalone',
+  output: isProd ? 'standalone' : undefined,
+  distDir: isProd ? '.next' : '.next-dev',
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },

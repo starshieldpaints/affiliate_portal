@@ -27,8 +27,10 @@ export default function FraudPage() {
     <div className="flex flex-col gap-8">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Fraud & Alerts</p>
-        <h1 className="text-3xl font-semibold text-white">Risk Command Center</h1>
-        <p className="max-w-3xl text-sm text-slate-300">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">
+          Risk Command Center
+        </h1>
+        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
           Real-time detection for bot traffic, self-purchases, velocity spikes, and ASN anomalies.
           Each alert links back to the raw event stream for forensics.
         </p>

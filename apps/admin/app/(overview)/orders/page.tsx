@@ -33,8 +33,8 @@ export default function OrdersPage() {
     <div className="flex flex-col gap-8">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Orders & Refunds</p>
-        <h1 className="text-3xl font-semibold text-white">Attribution Stream</h1>
-        <p className="max-w-3xl text-sm text-slate-300">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Attribution Stream</h1>
+        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
           All orders are ingested idempotently via webhooks. Attribute by last click or coupon and
           handle manual overrides with a full audit trail.
         </p>

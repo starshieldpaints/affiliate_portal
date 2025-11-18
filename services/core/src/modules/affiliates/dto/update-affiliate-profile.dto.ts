@@ -1,4 +1,12 @@
-import { IsEnum, IsObject, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength
+} from 'class-validator';
 import { KycStatus } from '@prisma/client';
 
 export class UpdateAffiliateProfileDto {
@@ -19,9 +27,27 @@ export class UpdateAffiliateProfileDto {
   @IsEnum(KycStatus)
   kycStatus?: KycStatus;
 
-  @IsOptional()
   @IsString()
+  @IsNotEmpty()
   @MinLength(10)
-  @MaxLength(16)
-  panNumber?: string;
+  @MaxLength(10)
+  panNumber!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(12)
+  @MaxLength(12)
+  aadhaarNumber!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  panImageUrl!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  aadhaarFrontUrl!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  aadhaarBackUrl!: string;
 }

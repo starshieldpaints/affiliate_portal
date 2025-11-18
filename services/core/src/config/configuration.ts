@@ -1,6 +1,9 @@
 export default () => ({
   environment: process.env.NODE_ENV ?? 'development',
   port: parseInt(process.env.PORT ?? '3000', 10),
+  app: {
+    affiliateBaseUrl: process.env.AFFILIATE_APP_URL ?? 'http://localhost:3000'
+  },
   database: {
     url: process.env.DATABASE_URL ?? ''
   },
@@ -31,6 +34,8 @@ export default () => ({
     webhookSecret: process.env.SHOPIFY_WEBHOOK_SECRET ?? ''
   },
   tracking: {
-    fallbackUrl: process.env.TRACKING_FALLBACK_URL ?? 'https://starshieldpaints.com'
+    fallbackUrl: process.env.TRACKING_FALLBACK_URL ?? 'https://starshieldpaints.com',
+    baseUrl:
+      process.env.TRACKING_BASE_URL ?? process.env.AFFILIATE_APP_URL ?? 'http://localhost:4000'
   }
 });

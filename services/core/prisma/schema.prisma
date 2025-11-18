@@ -92,7 +92,11 @@ model AffiliateProfile {
   phone                 String?   @unique
   phoneVerifiedAt       DateTime?
   socialLinks           Json?
-  taxId                 String?
+  panNumber            String
+  aadhaarNumber        String
+  panImageUrl          String?
+  aadhaarFrontUrl      String?
+  aadhaarBackUrl       String?
   kycStatus             KycStatus @default(pending)
   payoutMethod          String?
   payoutDetails         Json?

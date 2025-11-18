@@ -205,6 +205,12 @@ function FooterLinks() {
           Register
         </Link>
       </p>
+      <p>
+        Need to verify or resend your OTP?{' '}
+        <Link href="/auth/verify-email" className="font-semibold text-brand hover:underline">
+          Verify email
+        </Link>
+      </p>
       <p className="text-xs text-slate-500 dark:text-slate-500">
         Need help accessing your account? Contact{' '}
         <Link href="mailto:affiliates@starshield.io" className="text-brand hover:underline">

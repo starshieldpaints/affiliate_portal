@@ -142,7 +142,9 @@ function AffiliateRow({ affiliate }: { affiliate: AdminAffiliate }) {
   return (
     <tr className="hover:bg-brand/10">
       <td className="px-6 py-4">
-        <p className="font-semibold text-white">{affiliate.displayName ?? 'Unnamed affiliate'}</p>
+        <p className="font-semibold text-slate-900 dark:text-white">
+          {affiliate.displayName ?? 'Unnamed affiliate'}
+        </p>
         <p className="text-xs text-slate-400">{affiliate.user.email}</p>
       </td>
       <td className="px-6 py-4">

@@ -234,6 +234,13 @@ export default function RegisterPage() {
           Sign in
         </Link>
       </motion.p>
+      <motion.p variants={itemVariants} className="text-center text-xs text-slate-400">
+        Need to finish verification?{' '}
+        <Link href="/auth/verify-email" className="font-semibold text-brand hover:underline">
+          Confirm your email
+        </Link>
+        .
+      </motion.p>
     </motion.div>
   );
 }

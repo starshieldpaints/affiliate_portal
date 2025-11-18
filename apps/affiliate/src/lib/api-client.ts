@@ -1,5 +1,11 @@
 import type { AuthUser } from '../types/auth';
 import type { CatalogProduct, PaginatedResponse } from '../types/catalog';
+import type {
+  AffiliateDashboardOverview,
+  AffiliateNotification,
+  AffiliatePayoutOverview,
+  AffiliateReportsOverview
+} from '../types/dashboard';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -105,11 +111,15 @@ export const authApi = {
 
 export const affiliatesApi = {
   updateProfile: (payload: {
-    displayName?: string;
-    payoutMethod?: string | null;
-    payoutDetails?: Record<string, unknown> | null;
+    displayName: string;
+    payoutMethod: string;
+    payoutDetails: Record<string, unknown> | null;
     kycStatus?: string;
-    panNumber?: string;
+    panNumber: string;
+    aadhaarNumber: string;
+    panImageUrl: string;
+    aadhaarFrontUrl: string;
+    aadhaarBackUrl: string;
   }) => apiFetch<AuthUser['affiliate']>('/affiliates/me', { method: 'PATCH', body: payload })
 };
 
@@ -129,4 +139,37 @@ export const catalogApi = {
     const path = `/products${query ? `?${query}` : ''}`;
     return apiFetch<PaginatedResponse<CatalogProduct>>(path);
   }
+};
+
+export const dashboardApi = {
+  overview: () => apiFetch<AffiliateDashboardOverview>('/affiliates/dashboard')
+};
+
+export const linksApi = {
+  create: (payload: {
+    productId?: string;
+    productSku?: string;
+    landingUrl: string;
+    referralCode: string;
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+    alias?: string;
+  }) =>
+    apiFetch<{ id: string; code: string; landingUrl: string; shortUrl: string }>(
+      '/affiliates/links',
+      { method: 'POST', body: payload }
+    )
+};
+
+export const notificationsApi = {
+  list: () => apiFetch<AffiliateNotification[]>('/affiliates/notifications')
+};
+
+export const payoutsApi = {
+  overview: () => apiFetch<AffiliatePayoutOverview>('/affiliates/payouts')
+};
+
+export const reportsApi = {
+  overview: () => apiFetch<AffiliateReportsOverview>('/affiliates/reports')
 };

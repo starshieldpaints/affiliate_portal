@@ -8,8 +8,8 @@ export default function ReportsPage() {
     <div className="flex flex-col gap-8">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Reports</p>
-        <h1 className="text-3xl font-semibold text-white">Analytics Delivery</h1>
-        <p className="max-w-3xl text-sm text-slate-300">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Analytics Delivery</h1>
+        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
           Schedule exports to S3, email, or Slack. Each report is generated from ClickHouse to
           provide sub-second rollups across billions of events.
         </p>

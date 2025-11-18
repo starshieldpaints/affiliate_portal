@@ -47,7 +47,7 @@ pnpm --filter core-api exec prisma db seed
 
 Both commands respect `DATABASE_URL`, so be sure it points at the database you intend to wipe.
 
-Environment variables live in `.env`. Start from `.env.example`, copy to `.env`, and tailor secrets per environment before running services.
+Environment variables live in `.env`. Start from `.env.example`, copy to `.env`, and tailor secrets per environment before running services. Set `AFFILIATE_APP_URL` to the public URL of the affiliate PWA so SendGrid emails can link users to the verification page.
 
 ## Product Catalog API
 

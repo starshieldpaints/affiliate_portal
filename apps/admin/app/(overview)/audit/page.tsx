@@ -24,8 +24,8 @@ export default function AuditPage() {
     <div className="flex flex-col gap-8">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Audit Center</p>
-        <h1 className="text-3xl font-semibold text-white">Immutable Ledger</h1>
-        <p className="max-w-3xl text-sm text-slate-300">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Immutable Ledger</h1>
+        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
           Every sensitive mutation is captured with actor, payload, and timestamp. Export for
           compliance reviews or share with finance during quarterly audits.
         </p>

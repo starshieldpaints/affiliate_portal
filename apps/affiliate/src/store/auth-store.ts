@@ -1,7 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { authApi } from '../lib/api-client';
 import type { AuthUser } from '../types/auth';
 
@@ -12,6 +12,7 @@ interface AuthState {
   status: AuthStatus;
   error?: string;
   initialize: () => Promise<void>;
+  restoreSession: () => Promise<boolean>;
   login: (payload: { email: string; password: string }) => Promise<void>;
   register: (payload: {
     email: string;
@@ -28,11 +29,41 @@ interface AuthState {
   markPhoneVerified: (verifiedAt: string) => void;
 }
 
+const memoryStorage: Storage = {
+  get length() {
+    return 0;
+  },
+  clear: () => undefined,
+  getItem: () => null,
+  key: () => null,
+  removeItem: () => undefined,
+  setItem: () => undefined
+};
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
   user: null,
   status: 'idle',
+  async restoreSession() {
+    try {
+      const refreshed = await authApi.refresh();
+      if (refreshed) {
+        set({ user: refreshed, status: 'authenticated', error: undefined });
+        return true;
+      }
+    } catch (refreshError) {
+      set({
+        user: null,
+        status: 'unauthenticated',
+        error:
+          refreshError instanceof Error
+            ? refreshError.message
+            : 'Unable to refresh session'
+      });
+    }
+    return false;
+  },
   async initialize() {
     if (get().status !== 'idle') {
       return;
@@ -46,6 +77,15 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, status: 'unauthenticated', error: undefined });
       }
     } catch (error) {
+      const shouldAttemptRefresh =
+        error instanceof Error &&
+        /unauthorized|token|session/i.test(error.message ?? '');
+      if (shouldAttemptRefresh) {
+        const restored = await get().restoreSession();
+        if (restored) {
+          return;
+        }
+      }
       set({
         user: null,
         status: 'unauthenticated',
@@ -97,7 +137,12 @@ export const useAuthStore = create<AuthState>()(
         payoutMethod: null,
         payoutDetails: null,
         phone: null,
-        phoneVerifiedAt: null
+        phoneVerifiedAt: null,
+        panNumber: null,
+        aadhaarNumber: null,
+        panImageUrl: null,
+        aadhaarFrontUrl: null,
+        aadhaarBackUrl: null
       };
       return {
         ...state,
@@ -142,6 +187,9 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-store',
+      storage: createJSONStorage(() =>
+        typeof window === 'undefined' ? memoryStorage : window.localStorage
+      ),
       partialize: (state) => ({
         user: state.user
       })

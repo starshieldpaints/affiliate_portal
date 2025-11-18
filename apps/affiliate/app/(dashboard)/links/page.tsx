@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LinkBuilder } from '../../../src/components/catalog/LinkBuilder';
-import { fallbackCatalogProducts } from '../../../src/data/products';
 import { catalogApi } from '../../../src/lib/api-client';
 import type { CatalogProduct } from '../../../src/types/catalog';
 
@@ -10,17 +9,15 @@ const PAGE_SIZE = 30;
 
 export default function LinksPage() {
   const [query, setQuery] = useState('');
-  const [products, setProducts] = useState<CatalogProduct[]>(fallbackCatalogProducts);
+  const [products, setProducts] = useState<CatalogProduct[]>([]);
   const [meta, setMeta] = useState({
     page: 1,
     pageSize: PAGE_SIZE,
-    total: fallbackCatalogProducts.length,
+    total: 0,
     totalPages: 1,
     hasNextPage: false
   });
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    fallbackCatalogProducts[0]?.id ?? null
-  );
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastFetchedPage, setLastFetchedPage] = useState(0);

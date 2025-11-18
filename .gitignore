@@ -3,6 +3,8 @@ node_modules
 dist
 .turbo
 .next
+.next-dev
+apps/affiliate/public/uploads
 coverage
 .env*
 !.env.example

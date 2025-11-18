@@ -11,7 +11,6 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { LinkBuilder } from '../../../src/components/catalog/LinkBuilder';
-import { fallbackCatalogProducts } from '../../../src/data/products';
 import { catalogApi } from '../../../src/lib/api-client';
 import type { CatalogCategory, CatalogProduct } from '../../../src/types/catalog';
 
@@ -25,16 +24,13 @@ type VariantGroup = {
 export default function CatalogPage() {
   const PAGE_VIEW_BATCH = 9;
   const pageSize = 100;
-  const initialProducts = fallbackCatalogProducts;
-  const [products, setProducts] = useState<CatalogProduct[]>(initialProducts);
-  const [availableCategories, setAvailableCategories] = useState<CatalogCategory[]>(() =>
-    deriveCategoriesFromProducts(initialProducts)
-  );
+  const [products, setProducts] = useState<CatalogProduct[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<CatalogCategory[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const [selectedCategory, setSelectedCategory] = useState<'all' | string>('all');
   const [stats, setStats] = useState({
-    total: fallbackCatalogProducts.length
+    total: 0
   });
   const [visibleCount, setVisibleCount] = useState(PAGE_VIEW_BATCH);
   const [loading, setLoading] = useState(false);
@@ -79,9 +75,7 @@ export default function CatalogPage() {
         const resolved = aggregated.length ? aggregated : [];
         setProducts(resolved);
         setAvailableCategories(
-          lastFilters?.length
-            ? lastFilters
-            : deriveCategoriesFromProducts(resolved.length ? resolved : initialProducts)
+          lastFilters?.length ? lastFilters : deriveCategoriesFromProducts(resolved)
         );
         setStats({
           total: totalFromServer ?? resolved.length
@@ -189,23 +183,34 @@ export default function CatalogPage() {
   }, [hasMore, handleLoadMore]);
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-16 pt-6 sm:px-6 lg:px-0">
-      <section className="grid gap-6 lg:grid-cols-[3fr,2fr]">
-        <div className="space-y-6 rounded-4xl border border-slate-200/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 px-7 py-8 text-white shadow-2xl dark:border-slate-800">
-          <p className="text-xs uppercase tracking-[0.5em] text-slate-300">Catalog</p>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+      <section className="grid gap-8 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <div className="space-y-6 rounded-[36px] border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-8 text-white shadow-2xl dark:border-slate-800">
+          <p className="text-xs uppercase tracking-[0.55em] text-slate-300">Affiliate catalog</p>
           <h1 className="text-3xl font-semibold leading-tight md:text-4xl">
-            Modern surfaces, ready-to-share stories.
+            Less clutter, more context for every SKU.
           </h1>
-          <p className="max-w-2xl text-sm text-slate-200">
-            Discover every SKU, attach your tracking presets, and grab battle-tested creatives in one
-            spacious view. We sync nightly with the product database so pricing, imagery, and stock
-            data stay trustworthy.
+          <p className="max-w-2xl text-base text-slate-200">
+            Browse grouped variants, grab creative assets, and pair tracking links without leaving the
+            page. The feed refreshes nightly so pricing, copy, and stock stay accurate for your drops.
           </p>
-          <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.3em] text-slate-300">
+          <ul className="space-y-3 text-sm text-slate-200">
             {[
-              `${stats.total.toLocaleString()} SKUs in inventory`,
-              `${availableCategories.length} curated categories`,
-              `${totalVariants.toLocaleString()} live variants`
+              'Nightly pricing sync direct from the product DB',
+              'Ready-to-post creatives bundled with each SKU',
+              'Variant chips show key pack sizes at a glance'
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-brand" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.4em] text-slate-300">
+            {[
+              `${stats.total.toLocaleString()} SKUs live`,
+              `${availableCategories.length} categories`,
+              `${totalVariants.toLocaleString()} variants`
             ].map((badge) => (
               <span
                 key={badge}
@@ -232,14 +237,35 @@ export default function CatalogPage() {
         </div>
       </section>
 
-      <section className="rounded-4xl border border-slate-200/80 bg-white/90 px-5 py-6 shadow-lg dark:border-slate-800/60 dark:bg-slate-900/40">
-        <div className="grid gap-4 md:grid-cols-[2fr,1fr]">
+      <section className="rounded-[32px] border border-slate-200/80 bg-white/95 p-6 shadow-lg dark:border-slate-800/60 dark:bg-slate-900/50">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-slate-400">Filters</p>
+            <p className="text-base font-semibold text-slate-900 dark:text-white">
+              Shape this catalog for your campaign
+            </p>
+          </div>
+          {(searchTerm || selectedCategory !== 'all') && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+              }}
+              className="inline-flex items-center text-sm font-semibold text-brand hover:underline"
+            >
+              Reset filters
+            </button>
+          )}
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)]">
           <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
             Search catalog
             <input
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Try 'Shield Lite' or a SKU"
+              placeholder='Try "Shield Lite" or drop a SKU'
               className="form-input mt-1"
             />
           </label>
@@ -258,9 +284,19 @@ export default function CatalogPage() {
               ))}
             </select>
           </label>
+          <div className="rounded-3xl border border-slate-200/80 bg-slate-50/80 p-4 text-slate-700 dark:border-slate-800/60 dark:bg-slate-900/60 dark:text-slate-200">
+            <p className="text-[11px] uppercase tracking-[0.35em] text-slate-400">Live variants</p>
+            <p className="mt-2 text-2xl font-semibold text-slate-900 dark:text-white">
+              {formatNumber(totalVariants)}
+            </p>
+            <p className="text-xs text-muted">
+              Matching {selectedCategory === 'all' ? 'all categories' : 'current filters'}
+            </p>
+          </div>
         </div>
+
         {highlightedCategories.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2 overflow-x-auto no-scrollbar text-sm">
+          <div className="mt-5 flex flex-wrap gap-2 overflow-x-auto no-scrollbar text-sm">
             {highlightedCategories.map((category) => {
               const isActive = category.id === selectedCategory;
               return (
@@ -280,18 +316,6 @@ export default function CatalogPage() {
             })}
           </div>
         )}
-        {(searchTerm || selectedCategory !== 'all') && (
-          <button
-            type="button"
-            onClick={() => {
-              setSearchTerm('');
-              setSelectedCategory('all');
-            }}
-            className="mt-4 inline-flex items-center text-sm font-medium text-brand hover:underline"
-          >
-            Reset filters
-          </button>
-        )}
       </section>
 
       {error && (
@@ -302,7 +326,7 @@ export default function CatalogPage() {
 
       {loading && (
         <div className="rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-sm dark:border-slate-800/60 dark:bg-slate-900/30">
-          <p className="text-sm text-muted">Syncing catalog…</p>
+          <p className="text-sm text-muted">Syncing catalog...</p>
         </div>
       )}
 
@@ -322,13 +346,13 @@ export default function CatalogPage() {
       )}
       <div ref={loadMoreRef} />
 
-      <section className="rounded-4xl border border-slate-200/80 bg-white/90 px-5 py-4 text-sm text-slate-700 shadow-lg dark:border-slate-800/70 dark:bg-slate-900/40 dark:text-slate-200 sm:flex sm:items-center sm:justify-between">
+      <section className="rounded-[32px] border border-slate-200/80 bg-white/95 px-5 py-5 text-sm text-slate-700 shadow-lg dark:border-slate-800/70 dark:bg-slate-900/50 dark:text-slate-200 sm:flex sm:items-center sm:justify-between">
         <p>
           Showing <span className="font-semibold">{filteredGroups.length}</span> grouped products (
           {totalVariants.toLocaleString()} variants)
         </p>
         {loading && (
-          <span className="text-xs uppercase tracking-wide text-muted">Refreshing catalog…</span>
+          <span className="text-xs uppercase tracking-wide text-muted">Refreshing catalog...</span>
         )}
         {!loading && hasMore && (
           <button
@@ -354,9 +378,10 @@ function StatCard({
   hint?: string;
 }) {
   return (
-    <div className="rounded-3xl border border-slate-200/70 bg-white/90 px-4 py-5 text-slate-800 shadow-sm dark:border-slate-800/60 dark:bg-slate-900/60 dark:text-slate-100">
-      <p className="text-xs uppercase tracking-[0.4em] text-slate-400">{label}</p>
-      <p className="mt-2 text-2xl font-semibold">{value}</p>
+    <div className="rounded-[28px] border border-slate-200/70 bg-white/80 px-5 py-6 text-slate-800 shadow-sm shadow-slate-200/40 dark:border-slate-800/60 dark:bg-slate-900/60 dark:text-slate-100">
+      <span className="inline-flex h-1 w-10 rounded-full bg-brand/70" aria-hidden="true" />
+      <p className="mt-3 text-xs uppercase tracking-[0.45em] text-slate-400">{label}</p>
+      <p className="mt-2 text-3xl font-semibold">{value}</p>
       {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
     </div>
   );
@@ -375,8 +400,8 @@ function CatalogCard({ group }: { group: VariantGroup }) {
   }
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-[32px] border border-slate-100/80 bg-gradient-to-br from-white via-white to-slate-50 shadow-lg shadow-slate-200/60 transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-2xl dark:border-slate-800/60 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
-      <div className="relative h-64 bg-slate-100 dark:bg-slate-800">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[32px] border border-slate-200/70 bg-white shadow-xl shadow-slate-200/60 transition hover:-translate-y-1 hover:border-brand/40 dark:border-slate-800/60 dark:bg-slate-950/70">
+      <div className="relative aspect-[4/3] bg-slate-50 dark:bg-slate-900">
         <Image
           src={variant.imageUrl ?? DEFAULT_PLACEHOLDER}
           alt={variant.name}
@@ -384,22 +409,24 @@ function CatalogCard({ group }: { group: VariantGroup }) {
           sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
           className="object-contain object-center p-6 transition duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/0" />
-        <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/90 px-4 py-2 text-xs font-semibold text-slate-900 shadow-lg shadow-slate-950/10 backdrop-blur dark:bg-slate-900/80 dark:text-white">
-          <span className="truncate">{variant.category?.name ?? 'Uncategorized'}</span>
-          <span className="text-brand">{formatPrice(variant.price, variant.currency)}</span>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/85 via-slate-950/0 px-6 pb-5 pt-16 text-white">
+          <div className="flex items-center justify-between text-sm font-semibold">
+            <span className="truncate">{variant.category?.name ?? 'Uncategorized'}</span>
+            <span>{formatPrice(variant.price, variant.currency)}</span>
+          </div>
+          <p className="text-xs text-slate-200">{deriveVariantLabel(variant)}</p>
         </div>
       </div>
-      <div className="flex flex-1 flex-col gap-5 p-6">
+      <div className="flex flex-1 flex-col gap-6 p-6">
         <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-brand">
-            <span>Featured SKU</span>
+          <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-400">
+            <span>{variant.sku ?? variant.id}</span>
             <span className="rounded-full bg-slate-100 px-3 py-1 tracking-normal text-slate-600 dark:bg-slate-800 dark:text-slate-200">
-              {variant.sku ?? variant.id}
+              {group.variants.length} variant{group.variants.length === 1 ? '' : 's'}
             </span>
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">{group.baseName}</h2>
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">{group.baseName}</h2>
             <DescriptionWithReadMore
               label={deriveVariantLabel(variant)}
               description={variant.description ?? ''}
@@ -408,7 +435,7 @@ function CatalogCard({ group }: { group: VariantGroup }) {
         </div>
 
         {group.variants.length > 1 && (
-          <div className="no-scrollbar flex flex-nowrap gap-2 overflow-x-auto rounded-2xl border border-slate-200/70 bg-slate-50/60 p-2 dark:border-slate-800/60 dark:bg-slate-900/60">
+          <div className="no-scrollbar flex flex-wrap gap-2 overflow-x-auto rounded-2xl border border-slate-200/70 bg-slate-50/70 p-2 dark:border-slate-800/60 dark:bg-slate-900/60">
             {group.variants.map((variantOption, idx) => {
               const active = idx === selectedIndex;
               const measurement = getVariantMeasurement(variantOption);
@@ -417,7 +444,7 @@ function CatalogCard({ group }: { group: VariantGroup }) {
                   key={variantOption.id}
                   type="button"
                   onClick={() => setSelectedIndex(idx)}
-                  className={`inline-flex min-w-[90px] shrink-0 items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-semibold transition ${
+                  className={`inline-flex min-w-[96px] items-center gap-2 rounded-2xl border px-3 py-2 text-xs font-semibold transition ${
                     active
                       ? 'border-brand bg-brand/10 text-brand'
                       : 'border-slate-200 text-slate-500 hover:border-brand/50 hover:text-brand dark:border-slate-700 dark:text-slate-300'
@@ -439,7 +466,7 @@ function CatalogCard({ group }: { group: VariantGroup }) {
           <InfoBubble label="Status" value="Ready" tone="success" />
         </div>
 
-        <div className="mt-auto rounded-2xl border border-slate-200/70 bg-white/80 p-4 dark:border-slate-800/60 dark:bg-slate-900/60">
+        <div className="mt-auto rounded-2xl border border-slate-200/70 bg-slate-50/90 p-4 dark:border-slate-800/60 dark:bg-slate-900/60">
           <LinkBuilder
             product={{
               id: variant.id,
@@ -471,9 +498,9 @@ function InfoBubble({
         ? 'text-amber-600 dark:text-amber-300'
         : 'text-slate-900 dark:text-slate-100';
   return (
-    <div className="flex flex-col rounded-xl bg-white/80 px-3 py-2 text-left dark:bg-slate-900/70">
-      <p className="text-[10px] uppercase tracking-wide text-slate-400">{label}</p>
-      <p className={`mt-1 text-sm font-semibold break-all ${toneClasses}`}>{value}</p>
+    <div className="flex flex-col rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-3 text-left dark:border-slate-800/60 dark:bg-slate-900/70">
+      <p className="text-[11px] uppercase tracking-wide text-slate-400">{label}</p>
+      <p className={`mt-2 text-base font-semibold break-all ${toneClasses}`}>{value}</p>
     </div>
   );
 }
@@ -491,8 +518,8 @@ function DescriptionWithReadMore({
 
   return (
     <>
-      <p className="text-sm leading-relaxed text-muted break-words">
-       {preview}
+      <p className="text-sm leading-relaxed break-words text-slate-600 dark:text-slate-300">
+        {preview}
         {shouldShowButton && (
           <button
             type="button"
@@ -549,7 +576,7 @@ function formatNumber(value: number) {
 
 function truncate(value: string, max = 120) {
   if (!value) return '';
-  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
+  return value.length > max ? `${value.slice(0, max - 3)}...` : value;
 }
 
 function deriveCategoriesFromProducts(products: CatalogProduct[]): CatalogCategory[] {
@@ -645,3 +672,4 @@ function groupProducts(products: CatalogProduct[]): VariantGroup[] {
     variants: variants.sort((a, b) => a.price - b.price)
   }));
 }
+

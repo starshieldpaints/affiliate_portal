@@ -1,15 +1,15 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useAuthStore } from '../../../../src/store/auth-store';
-import { affiliatesApi, authApi } from '../../../../src/lib/api-client';
+import { useAuthStore } from '../../../src/store/auth-store';
+import { affiliatesApi, authApi } from '../../../src/lib/api-client';
 
 const payoutOptions = [
   { value: 'upi', label: 'UPI' },
-  { value: 'bank_transfer', label: 'Bank transfer' }
+  { value: 'bank_transfer', label: 'Bank transfer' },
 ];
 
 type BankOption = {
@@ -53,17 +53,49 @@ const bankOptions: BankOption[] = [
   { value: 'tmb', label: 'Tamilnad Mercantile Bank (TMBL)', category: 'Private sector' },
   { value: 'yes_bank', label: 'Yes Bank (YESB)', category: 'Private sector' },
   { value: 'au_sfb', label: 'AU Small Finance Bank (AUBL)', category: 'Small finance banks' },
-  { value: 'capital_sfb', label: 'Capital Small Finance Bank (CLBL)', category: 'Small finance banks' },
-  { value: 'equitas_sfb', label: 'Equitas Small Finance Bank (ESFB)', category: 'Small finance banks' },
+  {
+    value: 'capital_sfb',
+    label: 'Capital Small Finance Bank (CLBL)',
+    category: 'Small finance banks',
+  },
+  {
+    value: 'equitas_sfb',
+    label: 'Equitas Small Finance Bank (ESFB)',
+    category: 'Small finance banks',
+  },
   { value: 'esaf_sfb', label: 'ESAF Small Finance Bank (ESMF)', category: 'Small finance banks' },
-  { value: 'fincare_sfb', label: 'Fincare Small Finance Bank (FSFB)', category: 'Small finance banks' },
+  {
+    value: 'fincare_sfb',
+    label: 'Fincare Small Finance Bank (FSFB)',
+    category: 'Small finance banks',
+  },
   { value: 'jana_sfb', label: 'Jana Small Finance Bank (JSFB)', category: 'Small finance banks' },
-  { value: 'nesfb', label: 'North East Small Finance Bank (NESF)', category: 'Small finance banks' },
-  { value: 'suryoday_sfb', label: 'Suryoday Small Finance Bank (SURY)', category: 'Small finance banks' },
-  { value: 'ujjivan_sfb', label: 'Ujjivan Small Finance Bank (UJVN)', category: 'Small finance banks' },
-  { value: 'utkarsh_sfb', label: 'Utkarsh Small Finance Bank (UTKS)', category: 'Small finance banks' },
+  {
+    value: 'nesfb',
+    label: 'North East Small Finance Bank (NESF)',
+    category: 'Small finance banks',
+  },
+  {
+    value: 'suryoday_sfb',
+    label: 'Suryoday Small Finance Bank (SURY)',
+    category: 'Small finance banks',
+  },
+  {
+    value: 'ujjivan_sfb',
+    label: 'Ujjivan Small Finance Bank (UJVN)',
+    category: 'Small finance banks',
+  },
+  {
+    value: 'utkarsh_sfb',
+    label: 'Utkarsh Small Finance Bank (UTKS)',
+    category: 'Small finance banks',
+  },
   { value: 'airtel_payments', label: 'Airtel Payments Bank (AIRP)', category: 'Payments banks' },
-  { value: 'india_post_payments', label: 'India Post Payments Bank (IPOS)', category: 'Payments banks' },
+  {
+    value: 'india_post_payments',
+    label: 'India Post Payments Bank (IPOS)',
+    category: 'Payments banks',
+  },
   { value: 'fino_payments', label: 'Fino Payments Bank (FINO)', category: 'Payments banks' },
   { value: 'jio_payments', label: 'Jio Payments Bank (JIOP)', category: 'Payments banks' },
   { value: 'paytm_payments', label: 'Paytm Payments Bank (PYTM)', category: 'Payments banks' },
@@ -71,13 +103,17 @@ const bankOptions: BankOption[] = [
   { value: 'citi', label: 'Citi Bank (CITI)', category: 'Foreign banks in India' },
   { value: 'hsbc', label: 'HSBC (HSBC)', category: 'Foreign banks in India' },
   { value: 'deutsche', label: 'Deutsche Bank (DEUT)', category: 'Foreign banks in India' },
-  { value: 'standard_chartered', label: 'Standard Chartered Bank (SCBL)', category: 'Foreign banks in India' },
+  {
+    value: 'standard_chartered',
+    label: 'Standard Chartered Bank (SCBL)',
+    category: 'Foreign banks in India',
+  },
   { value: 'barclays', label: 'Barclays Bank (BARC)', category: 'Foreign banks in India' },
   { value: 'dbs', label: 'DBS Bank (DBSS)', category: 'Foreign banks in India' },
   { value: 'bank_of_america', label: 'Bank of America (BOFA)', category: 'Foreign banks in India' },
   { value: 'bnp', label: 'BNP Paribas (BNPA)', category: 'Foreign banks in India' },
   { value: 'jp_morgan', label: 'JP Morgan Chase Bank (CHAS)', category: 'Foreign banks in India' },
-  { value: 'rbs', label: 'Royal Bank of Scotland (RBOS)', category: 'Foreign banks in India' }
+  { value: 'rbs', label: 'Royal Bank of Scotland (RBOS)', category: 'Foreign banks in India' },
 ];
 
 export default function ProfileSetupPage() {
@@ -95,18 +131,17 @@ export default function ProfileSetupPage() {
           payoutMethod: affiliate.payoutMethod ?? null,
           payoutDetails: affiliate.payoutDetails ?? null,
           kycStatus: affiliate.kycStatus,
-          defaultReferralCode: affiliate.defaultReferralCode
+          defaultReferralCode: affiliate.defaultReferralCode,
         });
       }
       toast.success('Profile details saved. Admin will review and activate your account.');
-      router.replace('/dashboard');
     },
     onError: (error: unknown) => {
-      const message = error instanceof Error ? error.message : 'Unable to update profile right now.';
+      const message =
+        error instanceof Error ? error.message : 'Unable to update profile right now.';
       toast.error(message);
-    }
+    },
   });
-
   const [submitting, setSubmitting] = useState(false);
   const [displayName, setDisplayName] = useState(user?.affiliate?.displayName ?? '');
   const [payoutMethod, setPayoutMethod] = useState(user?.affiliate?.payoutMethod ?? '');
@@ -116,14 +151,12 @@ export default function ProfileSetupPage() {
   const [bankIfsc, setBankIfsc] = useState('');
   const [bankName, setBankName] = useState('');
   const [panNumber, setPanNumber] = useState('');
+  const [aadhaarNumber, setAadhaarNumber] = useState(user?.affiliate?.aadhaarNumber ?? '');
+  const [panImageUrl, setPanImageUrl] = useState(user?.affiliate?.panImageUrl ?? '');
+  const [aadhaarFrontUrl, setAadhaarFrontUrl] = useState(user?.affiliate?.aadhaarFrontUrl ?? '');
+  const [aadhaarBackUrl, setAadhaarBackUrl] = useState(user?.affiliate?.aadhaarBackUrl ?? '');
   const [marketingOptIn, setMarketingOptIn] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
-    if (user.role !== 'affiliate') {
-      router.replace('/dashboard');
-    }
-  }, [router, user]);
 
   useEffect(() => {
     setUpiId('');
@@ -152,22 +185,43 @@ export default function ProfileSetupPage() {
       toast.error('Bank transfers require bank selection and complete account details.');
       return;
     }
-    if (panNumber && !isValidPan(panNumber)) {
+    const normalizedPan = panNumber.trim().toUpperCase();
+    if (!normalizedPan) {
+      toast.error('Enter your PAN so we can issue payout summaries.');
+      return;
+    }
+    if (!isValidPan(normalizedPan)) {
       toast.error('Enter a valid PAN (e.g., ABCDE1234F).');
+      return;
+    }
+    const normalizedAadhaar = aadhaarNumber.trim();
+    if (!isValidAadhaar(normalizedAadhaar)) {
+      toast.error('Enter a valid 12-digit Aadhaar number.');
+      return;
+    }
+    const normalizedPanDoc = panImageUrl.trim();
+    const normalizedAadhaarFront = aadhaarFrontUrl.trim();
+    const normalizedAadhaarBack = aadhaarBackUrl.trim();
+    if (!isValidUrl(normalizedPanDoc)) {
+      toast.error('Provide a valid URL for your PAN document.');
+      return;
+    }
+    if (!isValidUrl(normalizedAadhaarFront) || !isValidUrl(normalizedAadhaarBack)) {
+      toast.error('Provide valid URLs for Aadhaar front and back.');
       return;
     }
     try {
       setSubmitting(true);
       const payoutDetails =
         payoutMethod === 'upi'
-          ? { upiId, panNumber: panNumber || undefined }
+          ? { upiId, panNumber: normalizedPan }
           : payoutMethod === 'bank_transfer'
             ? {
                 bankName,
                 accountHolder: bankAccountName,
                 accountNumber: bankAccountNumber,
                 ifsc: bankIfsc,
-                panNumber: panNumber || undefined
+                panNumber: normalizedPan,
               }
             : null;
 
@@ -175,7 +229,11 @@ export default function ProfileSetupPage() {
         displayName,
         payoutMethod,
         payoutDetails,
-        panNumber: panNumber || undefined
+        panNumber: normalizedPan,
+        aadhaarNumber: normalizedAadhaar,
+        panImageUrl: normalizedPanDoc,
+        aadhaarFrontUrl: normalizedAadhaarFront,
+        aadhaarBackUrl: normalizedAadhaarBack,
       });
     } finally {
       setSubmitting(false);
@@ -190,8 +248,8 @@ export default function ProfileSetupPage() {
           Complete your affiliate profile
         </h1>
         <p className="max-w-3xl text-sm text-muted">
-          Add payout preferences, compliance details, and communication choices. Once saved, our compliance
-          team reviews everything within 1-2 business days and unlocks link generation.
+          Add payout preferences, compliance details, and communication choices. Once saved, our
+          compliance team reviews everything within 1-2 business days and unlocks link generation.
         </p>
       </header>
 
@@ -209,160 +267,196 @@ export default function ProfileSetupPage() {
               />
             )}
             <form className="space-y-10" onSubmit={handleSubmit}>
-            <FormSection
-              title="Identity & display"
-              description="How your profile appears inside the network and on campaign leaderboards."
-            >
-              <div className="flex flex-col gap-4 md:flex-row md:items-end md:gap-6">
-                <div className="flex-1">
-                  <Field label="Display name" required>
-                    <input
-                      className="form-input"
-                      value={displayName}
-                      onChange={(event) => setDisplayName(event.target.value)}
-                      placeholder="Jane Cooper"
-                    />
-                  </Field>
-                </div>
-                <div className="flex-1">
-                  <Field label="Referral code" description="Auto-generated for your tracking links">
-                    <input
-                      className="form-input"
-                      value={user?.affiliate?.defaultReferralCode ?? 'PENDING'}
-                      disabled
-                    />
-                  </Field>
-                </div>
-              </div>
-            </FormSection>
-
-            <FormSection
-              title="Payout preferences"
-              description="Choose how you'd like us to settle commissions. We currently support UPI and bank transfers in India."
-            >
-              <div className="space-y-4">
-                <div className="flex flex-col gap-4 md:flex-row md:items-end">
+              <FormSection
+                title="Identity & display"
+                description="How your profile appears inside the network and on campaign leaderboards."
+              >
+                <div className="flex flex-col gap-4 md:flex-row md:items-end md:gap-6">
                   <div className="flex-1">
-                    <Field label="Payout method" required>
-                      <select
+                    <Field label="Display name" required>
+                      <input
                         className="form-input"
-                        value={payoutMethod}
-                        onChange={(event) => setPayoutMethod(event.target.value)}
-                      >
-                        <option value="">Select method</option>
-                        {payoutOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                        value={displayName}
+                        onChange={(event) => setDisplayName(event.target.value)}
+                        placeholder="Jane Cooper"
+                      />
                     </Field>
                   </div>
+                  <div className="flex-1">
+                    <Field
+                      label="Referral code"
+                      description="Auto-generated for your tracking links"
+                    >
+                      <input
+                        className="form-input"
+                        value={user?.affiliate?.defaultReferralCode ?? 'PENDING'}
+                        disabled
+                      />
+                    </Field>
+                  </div>
+                </div>
+              </FormSection>
 
-                  {payoutMethod === 'upi' && (
+              <FormSection
+                title="Payout preferences"
+                description="Choose how you'd like us to settle commissions. We currently support UPI and bank transfers in India."
+              >
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-end">
                     <div className="flex-1">
-                      <Field label="UPI ID" description="Example: name@bank" required>
+                      <Field label="Payout method" required>
+                        <select
+                          className="form-input"
+                          value={payoutMethod}
+                          onChange={(event) => setPayoutMethod(event.target.value)}
+                        >
+                          <option value="">Select method</option>
+                          {payoutOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                    </div>
+
+                    {payoutMethod === 'upi' && (
+                      <div className="flex-1">
+                        <Field label="UPI ID" description="Example: name@bank" required>
+                          <input
+                            className="form-input uppercase"
+                            value={upiId}
+                            onChange={(event) => setUpiId(event.target.value)}
+                            placeholder="name@bank"
+                          />
+                        </Field>
+                      </div>
+                    )}
+                  </div>
+
+                  {payoutMethod === 'bank_transfer' && (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <Field label="Select bank" required>
+                        <BankSelect value={bankName} onChange={setBankName} />
+                      </Field>
+                      <Field label="Account holder name" required>
+                        <input
+                          className="form-input"
+                          value={bankAccountName}
+                          onChange={(event) => setBankAccountName(event.target.value)}
+                          placeholder="Jane Cooper"
+                        />
+                      </Field>
+                      <Field label="Account number" required>
+                        <input
+                          className="form-input"
+                          value={bankAccountNumber}
+                          onChange={(event) => setBankAccountNumber(event.target.value)}
+                          placeholder="00123456789"
+                        />
+                      </Field>
+                      <Field label="IFSC code" required>
                         <input
                           className="form-input uppercase"
-                          value={upiId}
-                          onChange={(event) => setUpiId(event.target.value)}
-                          placeholder="name@bank"
+                          value={bankIfsc}
+                          onChange={(event) => setBankIfsc(event.target.value.toUpperCase())}
+                          placeholder="SBIN0000123"
                         />
                       </Field>
                     </div>
                   )}
                 </div>
+              </FormSection>
 
-                {payoutMethod === 'bank_transfer' && (
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Field label="Select bank" required>
-                      <BankSelect value={bankName} onChange={setBankName} />
-                    </Field>
-                    <Field label="Account holder name" required>
-                      <input
-                        className="form-input"
-                        value={bankAccountName}
-                        onChange={(event) => setBankAccountName(event.target.value)}
-                        placeholder="Jane Cooper"
-                      />
-                    </Field>
-                    <Field label="Account number" required>
-                      <input
-                        className="form-input"
-                        value={bankAccountNumber}
-                        onChange={(event) => setBankAccountNumber(event.target.value)}
-                        placeholder="00123456789"
-                      />
-                    </Field>
-                    <Field label="IFSC code" required>
-                      <input
-                        className="form-input uppercase"
-                        value={bankIfsc}
-                        onChange={(event) => setBankIfsc(event.target.value.toUpperCase())}
-                        placeholder="SBIN0000123"
-                      />
-                    </Field>
-                  </div>
-                )}
-              </div>
-            </FormSection>
+              <FormSection
+                title="Compliance"
+                description="PAN and Aadhaar help us comply with payout regulations."
+              >
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Field label="PAN" description="Permanent Account Number for Indian residents" required>
+                    <input
+                      className="form-input uppercase tracking-widest"
+                      value={panNumber}
+                      onChange={(event) => setPanNumber(event.target.value.toUpperCase())}
+                      placeholder="ABCDE1234F"
+                      maxLength={10}
+                      required
+                    />
+                  </Field>
+                  <Field label="Aadhaar number" description="12-digit UIDAI number" required>
+                    <input
+                      className="form-input tracking-widest"
+                      value={aadhaarNumber}
+                      onChange={(event) =>
+                        setAadhaarNumber(event.target.value.replace(/[^0-9]/g, ''))
+                      }
+                      maxLength={12}
+                      placeholder="123412341234"
+                    />
+                  </Field>
+                  <Field label="PAN document" description="Upload a clear image of your PAN card" required>
+                    <DocumentUploadField
+                      value={panImageUrl}
+                      onChange={setPanImageUrl}
+                      placeholder="https://files.example.com/pan.jpg"
+                      kind="pan"
+                    />
+                  </Field>
+                  <Field label="Aadhaar front" description="Front image of Aadhaar card" required>
+                    <DocumentUploadField
+                      value={aadhaarFrontUrl}
+                      onChange={setAadhaarFrontUrl}
+                      placeholder="https://files.example.com/aadhaar-front.jpg"
+                      kind="aadhaar-front"
+                    />
+                  </Field>
+                  <Field label="Aadhaar back" description="Back image of Aadhaar card" required>
+                    <DocumentUploadField
+                      value={aadhaarBackUrl}
+                      onChange={setAadhaarBackUrl}
+                      placeholder="https://files.example.com/aadhaar-back.jpg"
+                      kind="aadhaar-back"
+                    />
+                  </Field>
+                </div>
+              </FormSection>
 
-            <FormSection
-              title="Compliance"
-              description="PAN helps us generate payout summaries for your records. Optional but recommended."
-            >
-              <div className="grid gap-4 md:grid-cols-2">
-                <Field
-                  label="PAN (optional)"
-                  description="Permanent Account Number for Indian residents"
+              <FormSection
+                title="Notifications"
+                description="Stay in the loop about new drops, coupon approvals, and payout reminders."
+              >
+                <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm text-slate-700 dark:border-slate-800/70 dark:bg-slate-950/40 dark:text-slate-200">
+                  <label className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={marketingOptIn}
+                      onChange={(event) => setMarketingOptIn(event.target.checked)}
+                      className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand"
+                    />
+                    <span>
+                      Email me about new campaigns, coupon approvals, payout milestones, and
+                      compliance reminders.
+                    </span>
+                  </label>
+                </div>
+              </FormSection>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <input
-                    className="form-input uppercase tracking-widest"
-                    value={panNumber}
-                    onChange={(event) => setPanNumber(event.target.value.toUpperCase())}
-                    placeholder="ABCDE1234F"
-                    maxLength={10}
-                  />
-                </Field>
+                  {submitting ? 'SavingΓÇª' : 'Submit for review'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.replace('/dashboard')}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-brand hover:text-brand dark:border-slate-600 dark:text-slate-200"
+                >
+                  Cancel
+                </button>
               </div>
-            </FormSection>
-
-            <FormSection
-              title="Notifications"
-              description="Stay in the loop about new drops, coupon approvals, and payout reminders."
-            >
-              <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-4 text-sm text-slate-700 dark:border-slate-800/70 dark:bg-slate-950/40 dark:text-slate-200">
-                <label className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={marketingOptIn}
-                    onChange={(event) => setMarketingOptIn(event.target.checked)}
-                    className="h-4 w-4 rounded border-slate-300 text-brand focus:ring-brand"
-                  />
-                  <span>
-                    Email me about new campaigns, coupon approvals, payout milestones, and
-                    compliance reminders.
-                  </span>
-                </label>
-              </div>
-            </FormSection>
-
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {submitting ? 'Saving…' : 'Submit for review'}
-              </button>
-              <button
-                type="button"
-                onClick={() => router.replace('/dashboard')}
-                className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-brand hover:text-brand dark:border-slate-600 dark:text-slate-200"
-              >
-                Cancel
-              </button>
-            </div>
             </form>
           </div>
         </section>
@@ -383,9 +477,12 @@ export default function ProfileSetupPage() {
               'Valid display name & referral code',
               'Payout method proof (UPI or bank)',
               'PAN (optional but recommended for invoices)',
-              'Notification preference saved'
+              'Notification preference saved',
             ].map((item) => (
-              <li key={item} className="flex items-start gap-3 rounded-2xl bg-white/70 p-3 dark:bg-slate-900/70">
+              <li
+                key={item}
+                className="flex items-start gap-3 rounded-2xl bg-white/70 p-3 dark:bg-slate-900/70"
+              >
                 <span className="mt-0.5 h-2 w-2 rounded-full bg-brand" />
                 {item}
               </li>
@@ -396,7 +493,7 @@ export default function ProfileSetupPage() {
             <a href="mailto:affiliates@starshield.io" className="text-brand underline">
               affiliates@starshield.io
             </a>{' '}
-            and we’ll guide you through onboarding.
+            and weΓÇÖll guide you through onboarding.
           </div>
         </aside>
       </div>
@@ -419,7 +516,7 @@ function ContactVerificationSection({
   phone,
   phoneVerifiedAt,
   onEmailVerified,
-  onPhoneVerified
+  onPhoneVerified,
 }: ContactVerificationSectionProps) {
   return (
     <div className="space-y-4 rounded-[28px] border border-slate-200/80 bg-white/80 p-5 dark:border-slate-800/70 dark:bg-slate-950/30">
@@ -465,7 +562,7 @@ function ContactVerificationCard({
   label,
   value,
   verifiedAt,
-  onVerified
+  onVerified,
 }: ContactVerificationCardProps) {
   const [code, setCode] = useState('');
   const [sending, setSending] = useState(false);
@@ -510,7 +607,7 @@ function ContactVerificationCard({
       const response = await authApi.sendVerification({
         type,
         email: type === 'email' ? normalizedValue : undefined,
-        phone: type === 'phone' ? normalizedValue : undefined
+        phone: type === 'phone' ? normalizedValue : undefined,
       });
 
       if (response.alreadyVerified) {
@@ -550,7 +647,7 @@ function ContactVerificationCard({
         type,
         code: trimmedCode,
         email: type === 'email' ? normalizedValue : undefined,
-        phone: type === 'phone' ? normalizedValue : undefined
+        phone: type === 'phone' ? normalizedValue : undefined,
       });
 
       if (response.verified) {
@@ -592,9 +689,7 @@ function ContactVerificationCard({
           </p>
         </div>
         {isVerified && verifiedAt && (
-          <p className="text-xs text-muted">
-            Verified on {formatVerificationDate(verifiedAt)}.
-          </p>
+          <p className="text-xs text-muted">Verified on {formatVerificationDate(verifiedAt)}.</p>
         )}
         {!hasValue && (
           <p className="text-xs text-muted">
@@ -617,11 +712,7 @@ function ContactVerificationCard({
               disabled={sending || cooldown > 0}
               className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {sending
-                ? 'Sending�?�'
-                : cooldown > 0
-                  ? `Resend in ${cooldown}s`
-                  : 'Send OTP'}
+              {sending ? 'Sending∩┐╜?∩┐╜' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send OTP'}
             </button>
             <input
               className="form-input flex-1 text-base"
@@ -639,7 +730,7 @@ function ContactVerificationCard({
             disabled={!code || verifying}
             className="inline-flex w-full items-center justify-center rounded-full border border-brand px-4 py-2 text-xs font-semibold uppercase tracking-wide text-brand transition hover:bg-brand/10 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {verifying ? 'Verifying�?�' : 'Verify code'}
+            {verifying ? 'Verifying∩┐╜?∩┐╜' : 'Verify code'}
           </button>
           {otpSent && (
             <p className="text-xs text-brand">
@@ -656,7 +747,7 @@ function Field({
   label,
   children,
   description,
-  required
+  required,
 }: {
   label: string;
   children: React.ReactNode;
@@ -678,7 +769,7 @@ function Field({
 function FormSection({
   title,
   description,
-  children
+  children,
 }: {
   title: string;
   description?: string;
@@ -695,28 +786,128 @@ function FormSection({
   );
 }
 
+function DocumentUploadField({
+  value,
+  onChange,
+  kind,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  kind: string;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('kind', kind);
+    setUploading(true);
+    try {
+      const response = await fetch('/api/uploads', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.error ?? 'Upload failed. Try again.');
+      }
+      const payload = (await response.json()) as { url: string };
+      onChange(payload.url);
+      toast.success('Document uploaded successfully.');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Unable to upload document.');
+    } finally {
+      setUploading(false);
+      event.target.value = '';
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <button
+        type="button"
+        onClick={handleUploadClick}
+        disabled={uploading}
+        className="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:text-slate-200"
+      >
+        {uploading ? 'Uploading…' : value ? 'Replace upload' : 'Upload file'}
+      </button>
+      {value ? (
+        <div className="rounded-2xl border border-slate-200/70 bg-white/70 p-3 text-xs dark:border-slate-700/70 dark:bg-slate-900/60">
+          <p className="mb-2 font-semibold text-slate-700 dark:text-slate-200">Preview</p>
+          <div className="flex flex-col gap-2">
+            {/(png|jpg|jpeg|webp)$/i.test(value) ? (
+              <img
+                src={value}
+                alt="Uploaded document"
+                className="max-h-48 rounded-xl object-cover"
+              />
+            ) : (
+              <p className="text-muted">File uploaded. Open it to review.</p>
+            )}
+            <a
+              href={value}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-1.5 text-xs font-semibold text-brand transition hover:bg-brand/10 dark:border-slate-700"
+            >
+              Open in new tab
+            </a>
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs text-muted">No document uploaded yet.</p>
+      )}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,application/pdf"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+    </div>
+  );
+}
+
 function isValidPan(value: string) {
   return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value.toUpperCase());
+}
+
+function isValidAadhaar(value: string) {
+  return /^\d{12}$/.test(value);
+}
+
+function isValidUrl(value: string) {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function formatVerificationDate(value: string) {
   try {
     return new Date(value).toLocaleString(undefined, {
       dateStyle: 'medium',
-      timeStyle: 'short'
+      timeStyle: 'short',
     });
   } catch {
     return value;
   }
 }
 
-function BankSelect({
-  value,
-  onChange
-}: {
-  value: string;
-  onChange: (next: string) => void;
-}) {
+function BankSelect({ value, onChange }: { value: string; onChange: (next: string) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -744,8 +935,7 @@ function BankSelect({
     const q = query.trim().toLowerCase();
     if (!q) return bankOptions;
     return bankOptions.filter(
-      (option) =>
-        option.label.toLowerCase().includes(q) || option.value.toLowerCase().includes(q)
+      (option) => option.label.toLowerCase().includes(q) || option.value.toLowerCase().includes(q)
     );
   }, [query]);
 
@@ -830,4 +1020,3 @@ function BankSelect({
     </div>
   );
 }
-

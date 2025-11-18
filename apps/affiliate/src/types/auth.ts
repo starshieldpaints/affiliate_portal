@@ -13,6 +13,11 @@ export type AuthUser = {
     kycStatus: string;
     payoutMethod: string | null;
     payoutDetails: Record<string, unknown> | null;
+    panNumber: string | null;
+    aadhaarNumber: string | null;
+    panImageUrl: string | null;
+    aadhaarFrontUrl: string | null;
+    aadhaarBackUrl: string | null;
   } | null;
   adminProfile?: {
     id: string;

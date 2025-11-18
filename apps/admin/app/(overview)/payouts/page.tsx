@@ -22,8 +22,10 @@ export default function PayoutBatchesPage() {
     <div className="flex flex-col gap-8">
       <header className="space-y-3">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Payouts</p>
-        <h1 className="text-3xl font-semibold text-white">Batch Orchestration</h1>
-        <p className="max-w-3xl text-sm text-slate-300">
+        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">
+          Batch Orchestration
+        </h1>
+        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
           Aggregate approved commissions into payout batches, submit to Stripe Connect or PayPal,
           and reconcile receipts automatically.
         </p>
@@ -70,11 +72,11 @@ export default function PayoutBatchesPage() {
             ))}
           </div>
         </div>
-        <aside className="rounded-3xl border border-brand/30 bg-brand/10 p-6 shadow-accent">
+        <aside className="rounded-3xl border border-brand/30 bg-brand/10 p-6 text-slate-900 shadow-accent dark:text-white">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-light">
             Reconciliation
           </h2>
-          <ul className="mt-4 space-y-3 text-sm text-white">
+          <ul className="mt-4 space-y-3 text-sm text-inherit">
             <li>Last reconciliation run at 05:42 UTC.</li>
             <li>2 payout lines pending provider confirmation.</li>
             <li>0 discrepancies detected in last 30 days.</li>

@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'StarShield Affiliate'
   },
+  other: {
+    'mobile-web-app-capable': 'yes'
+  },
   applicationName: 'StarShield Affiliate'
 };
 

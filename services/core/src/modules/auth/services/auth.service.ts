@@ -144,6 +144,11 @@ export class AuthService {
           displayName: normalizedDisplayName,
           defaultReferralCode: referralCode,
           phone: normalizedPhone,
+          panNumber: '',
+          aadhaarNumber: '',
+          panImageUrl: null,
+          aadhaarFrontUrl: null,
+          aadhaarBackUrl: null,
           socialLinks: undefined,
           payoutMethod: undefined,
           payoutDetails: {
@@ -442,7 +447,12 @@ export class AuthService {
             phoneVerifiedAt: true,
             kycStatus: true,
             payoutMethod: true,
-            payoutDetails: true
+            payoutDetails: true,
+            panNumber: true,
+            aadhaarNumber: true,
+            panImageUrl: true,
+            aadhaarFrontUrl: true,
+            aadhaarBackUrl: true
           }
         },
         adminProfile: {

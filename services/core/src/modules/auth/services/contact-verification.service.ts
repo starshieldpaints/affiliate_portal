@@ -28,10 +28,36 @@ export class ContactVerificationService {
     const normalizedEmail = this.normalizeValue(VerificationTarget.email, email);
     const code = await this.createCode(userId, VerificationTarget.email, normalizedEmail, 'email');
 
+    const expiresInMinutes = Math.max(Math.floor(this.ttlMs / 1000 / 60), 1);
+    const baseUrl = this.config.get<string>('app.affiliateBaseUrl') ?? '';
+    const trimmedBaseUrl = baseUrl ? baseUrl.replace(/\/$/, '') : '';
+    const verificationUrl = trimmedBaseUrl
+      ? `${trimmedBaseUrl}/auth/verify-email?email=${encodeURIComponent(normalizedEmail)}`
+      : '';
+    const textSections = [
+      `Use the following OTP to verify your email: ${code}`,
+      `It expires in ${expiresInMinutes} minute${expiresInMinutes === 1 ? '' : 's'}.`,
+      verificationUrl
+        ? `Need a direct link? Visit ${verificationUrl} and paste the code to finish verification.`
+        : null,
+      'If you did not request this code you can safely ignore this email.'
+    ].filter((section): section is string => Boolean(section));
+
+    const htmlSections = [
+      '<p>Enter the code below to verify your StarShield affiliate email.</p>',
+      `<p style="font-size:20px;margin:16px 0;"><strong>${code}</strong></p>`,
+      `<p>This code expires in ${expiresInMinutes} minute${expiresInMinutes === 1 ? '' : 's'}.</p>`,
+      verificationUrl
+        ? `<p>You can also <a href="${verificationUrl}">open the verification page</a> and paste the code there.</p>`
+        : '',
+      '<p>If you did not request this verification, you can ignore this email.</p>'
+    ];
+
     await this.emailService.send({
       to: normalizedEmail,
       subject: 'Verify your StarShield email',
-      text: `Use the following OTP to verify your email: ${code}\nIt expires in ${Math.floor(this.ttlMs / 1000 / 60)} minutes.`
+      text: textSections.join('\n\n'),
+      html: htmlSections.join('')
     });
   }
 

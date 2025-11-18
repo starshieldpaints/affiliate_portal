@@ -23,3 +23,5 @@ export type CreateAdminProductPayload = {
   imageUrl?: string | null;
   isActive?: boolean;
 };
+
+export type UpdateAdminProductPayload = Partial<CreateAdminProductPayload>;

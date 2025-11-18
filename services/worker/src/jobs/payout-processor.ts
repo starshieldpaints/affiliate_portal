@@ -18,7 +18,6 @@ export const payoutProcessor =
       }
     });
 
-    // Placeholder for integration with Stripe Connect or PayPal adapters.
     await prisma.payoutBatch.update({
       where: { id: job.data.payoutBatchId },
       data: {
