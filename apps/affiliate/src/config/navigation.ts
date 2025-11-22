@@ -30,12 +30,6 @@ export const navigation: NavItem[] = [
     description: 'Browse products, download creatives, craft deep links.'
   },
   {
-    label: 'Links & Coupons',
-    href: '/links',
-    icon: Link2,
-    description: 'Manage short links, QR codes, and coupon mappings.'
-  },
-  {
     label: 'Reports',
     href: '/reports',
     icon: BarChart3,

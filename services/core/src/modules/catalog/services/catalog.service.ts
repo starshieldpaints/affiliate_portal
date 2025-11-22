@@ -99,6 +99,77 @@ export class CatalogService {
       }
     };
   }
+
+  async findOne(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            description: true
+          }
+        }
+      }
+    });
+
+    if (!product) {
+      return { product: null, variants: [] };
+    }
+
+    const baseName = this.deriveBaseName(product.name);
+    const variants = await this.prisma.product.findMany({
+      where: {
+        OR: [{ categoryId: product.categoryId }, { name: { contains: baseName, mode: 'insensitive' } }]
+      },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        currency: true,
+        sku: true,
+        imageUrl: true
+      },
+      orderBy: { price: 'asc' },
+      take: 8
+    });
+
+    return {
+      product: {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: Number(product.price),
+        currency: product.currency,
+        landingUrl: product.landingUrl ?? '#',
+        imageUrl: product.imageUrl,
+        sku: product.sku ?? product.id,
+        externalProductId: product.externalProductId ?? product.id,
+        categoryId: product.categoryId,
+        category: product.category
+          ? {
+              id: product.category.id,
+              name: product.category.name,
+              description: product.category.description
+            }
+          : null
+      },
+      variants: variants.map((variant) => ({
+        id: variant.id,
+        name: variant.name,
+        price: Number(variant.price),
+        currency: variant.currency,
+        sku: variant.sku ?? variant.id,
+        imageUrl: variant.imageUrl
+      }))
+    };
+  }
+
+  private deriveBaseName(name: string) {
+    if (!name) return '';
+    return name.replace(/\s*[-(]?\s*\d+(\.\d+)?\s*(ltr|l|kg|ml|g)\s*[)]?/gi, '').trim();
+  }
 }
 
 const fallbackCategories = {

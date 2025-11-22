@@ -120,7 +120,17 @@ export const affiliatesApi = {
     panImageUrl: string;
     aadhaarFrontUrl: string;
     aadhaarBackUrl: string;
-  }) => apiFetch<AuthUser['affiliate']>('/affiliates/me', { method: 'PATCH', body: payload })
+  }) => apiFetch<AuthUser['affiliate']>('/affiliates/me', { method: 'PATCH', body: payload }),
+  requestUploadUrl: (payload: { fileName: string; mimeType: string; purpose?: string }) =>
+    apiFetch<{ uploadUrl: string; publicUrl: string; objectName: string; expiresAt: string }>(
+      '/affiliates/uploads/sign',
+      { method: 'POST', body: payload }
+    ),
+  requestDownloadUrl: (payload: { objectName: string }) =>
+    apiFetch<{ downloadUrl: string; objectName: string; expiresAt: string }>(
+      '/affiliates/uploads/access',
+      { method: 'POST', body: payload }
+    )
 };
 
 export const catalogApi = {
@@ -138,7 +148,15 @@ export const catalogApi = {
     const query = searchParams.toString();
     const path = `/products${query ? `?${query}` : ''}`;
     return apiFetch<PaginatedResponse<CatalogProduct>>(path);
-  }
+  },
+  product: (id: string) => apiFetch<{ product: CatalogProduct | null; variants: Array<{
+    id: string;
+    name: string;
+    price: number;
+    currency: string;
+    sku: string | null;
+    imageUrl: string | null;
+  }> }>(`/products/${id}`)
 };
 
 export const dashboardApi = {

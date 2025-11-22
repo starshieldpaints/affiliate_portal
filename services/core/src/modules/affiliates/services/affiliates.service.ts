@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+  Logger
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   CommissionStatus,
@@ -11,12 +17,18 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { UpdateAffiliateProfileDto } from '../dto/update-affiliate-profile.dto';
 import { CreateAffiliateLinkDto } from '../dto/create-affiliate-link.dto';
 import { randomBytes } from 'crypto';
+import { RequestUploadUrlDto } from '../dto/request-upload-url.dto';
+import { RequestDownloadUrlDto } from '../dto/request-download-url.dto';
+import { CloudStorageService } from '../../storage/cloud-storage.service';
 
 @Injectable()
 export class AffiliatesService {
+  private readonly logger = new Logger(AffiliatesService.name);
+
   constructor(
     private readonly prisma: PrismaService,
-    private readonly config: ConfigService
+    private readonly config: ConfigService,
+    private readonly storage: CloudStorageService
   ) {}
 
   async findAll(params?: {
@@ -199,6 +211,49 @@ export class AffiliatesService {
     return updated;
   }
 
+  async requestDocumentUpload(userId: string, dto: RequestUploadUrlDto) {
+    const affiliateId = await this.requireAffiliateId(userId);
+    const purpose = this.slugify(dto.purpose ?? 'document') || 'document';
+    const extension = this.extractExtension(dto.fileName);
+    const timestamp = Date.now();
+    const objectName = [
+      'affiliates',
+      affiliateId,
+      `${purpose}-${timestamp}${extension ? `.${extension}` : ''}`
+    ]
+      .filter(Boolean)
+      .join('/');
+
+    this.logger.log(
+      `Requesting upload URL for user ${userId} (affiliate ${affiliateId}) to ${objectName}`
+    );
+
+    return this.storage.generateSignedUploadUrl({
+      objectName,
+      contentType: dto.mimeType
+    });
+  }
+
+  async requestDocumentAccess(userId: string, dto: RequestDownloadUrlDto) {
+    const affiliateId = await this.requireAffiliateId(userId);
+    const normalizedObjectName = dto.objectName.replace(/^\//, '');
+    const expectedPrefix = `affiliates/${affiliateId}/`;
+    if (!normalizedObjectName.startsWith(expectedPrefix)) {
+      this.logger.warn(
+        `Blocked download URL request for user ${userId} (affiliate ${affiliateId}) to ${normalizedObjectName}`
+      );
+      throw new ForbiddenException('You do not have access to this file');
+    }
+
+    this.logger.log(
+      `Requesting download URL for user ${userId} (affiliate ${affiliateId}) to ${normalizedObjectName}`
+    );
+
+    return this.storage.generateSignedDownloadUrl({
+      objectName: normalizedObjectName
+    });
+  }
+
   async createAffiliateLink(userId: string, dto: CreateAffiliateLinkDto) {
     const profile = await this.prisma.affiliateProfile.findUnique({
       where: { userId },
@@ -278,7 +333,8 @@ export class AffiliatesService {
       upcomingPayout,
       recentLedger,
       topLinks,
-      channelGroups
+      channelGroups,
+      commissionStatusCounts
     ] = await this.prisma.$transaction([
       this.prisma.click.count({
         where: { affiliateLink: { affiliateId } }
@@ -360,6 +416,12 @@ export class AffiliatesService {
         where: { affiliateId },
         orderBy: { model: 'asc' },
         _count: { _all: true }
+      }),
+      this.prisma.commissionLedger.groupBy({
+        by: ['status'],
+        where: { affiliateId },
+        orderBy: { status: 'asc' },
+        _count: { _all: true }
       })
     ]);
 
@@ -372,13 +434,35 @@ export class AffiliatesService {
     }, 0);
 
     return {
-      stats: {
-        clicks: clickCount,
-        conversions: conversionCount,
-        totalCommission: this.toNumber(approvedCommission._sum?.amount),
-        pendingCommission: this.toNumber(pendingCommission._sum?.amount),
-        activeLinks
-      },
+      stats: (() => {
+        const getStatusCount = (status: CommissionStatus) => {
+          const entry = commissionStatusCounts.find((c) => c.status === status);
+          const aggregate = entry?._count as { _all?: number } | null | undefined;
+          return aggregate?._all ?? 0;
+        };
+        const approvedCount = getStatusCount(CommissionStatus.approved);
+        const pendingCount = getStatusCount(CommissionStatus.pending);
+        const totalClicks = clickCount || 0;
+        const ctr = totalClicks ? conversionCount / totalClicks : 0;
+        const epc = totalClicks
+          ? this.toNumber(approvedCommission._sum?.amount) / totalClicks
+          : 0;
+        const approvalRate =
+          approvedCount + pendingCount > 0 ? approvedCount / (approvedCount + pendingCount) : 0;
+
+        return {
+          clicks: clickCount,
+          conversions: conversionCount,
+          totalCommission: this.toNumber(approvedCommission._sum?.amount),
+          pendingCommission: this.toNumber(pendingCommission._sum?.amount),
+          activeLinks,
+          ctr,
+          epc,
+          approvalRate,
+          approvedConversions: approvedCount,
+          pendingConversions: pendingCount
+        };
+      })(),
       upcomingPayout: upcomingPayout
         ? {
             amount: this.toNumber(upcomingPayout.amount),
@@ -704,9 +788,29 @@ export class AffiliatesService {
     try {
       return new URL(pathOrUrl);
     } catch {
+      // If the caller passed a bare domain/path (e.g., "shop.myshopify.com/products/abc"),
+      // prefix https:// before falling back to the app base URL.
+      try {
+        return new URL(`https://${pathOrUrl}`);
+      } catch {
+        /* no-op */
+      }
       const fallback = this.config.get<string>('app.url') ?? 'https://starshield.io';
       return new URL(pathOrUrl, fallback);
     }
+  }
+
+  private extractExtension(fileName?: string | null) {
+    if (!fileName) {
+      return '';
+    }
+    const cleaned = fileName.split('?')[0] ?? fileName;
+    const parts = cleaned.split('.');
+    if (parts.length <= 1) {
+      return '';
+    }
+    const ext = parts.pop();
+    return ext ? this.slugify(ext) : '';
   }
 
   private slugify(value: string) {

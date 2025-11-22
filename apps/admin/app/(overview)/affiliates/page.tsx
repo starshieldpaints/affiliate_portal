@@ -1,222 +1,158 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
-import { adminApi } from '../../../src/lib/api-client';
-import type { AdminAffiliate } from '../../../src/types/affiliates';
-import { Loader2, RefreshCcw } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../src/store/auth-store";
+import { ArrowUpRight } from "lucide-react";
+import { listMockAffiliates } from "../../../src/lib/mock-admin-service";
+import { Badge, EmptyState, FilterPill, LoadingRow, PageHeader, SearchInput, TableShell } from "../../../src/lib/ui";
 
-const statusFilters = [
-  { label: 'All statuses', value: 'all' },
-  { label: 'Active', value: 'active' },
-  { label: 'Suspended', value: 'suspended' }
-];
+ type AffiliateRow = {
+  id: string;
+  email: string;
+  displayName: string;
+  status: string;
+  kycStatus: string;
+  country?: string | null;
+  payoutMethod?: string | null;
+  createdAt: string;
+};
 
-const kycFilters = [
-  { label: 'All KYC states', value: 'all' },
-  { label: 'Pending', value: 'pending' },
-  { label: 'Verified', value: 'verified' },
-  { label: 'Rejected', value: 'rejected' }
-];
+const statusTone: Record<string, string> = {
+  active: "text-emerald-600 bg-emerald-50 ring-emerald-100",
+  pending: "text-amber-700 bg-amber-50 ring-amber-100",
+  blocked: "text-rose-700 bg-rose-50 ring-rose-100"
+};
+
+const kycTone: Record<string, string> = {
+  verified: "text-emerald-700 bg-emerald-50 ring-emerald-100",
+  in_review: "text-blue-700 bg-blue-50 ring-blue-100",
+  pending: "text-amber-700 bg-amber-50 ring-amber-100",
+  rejected: "text-rose-700 bg-rose-50 ring-rose-100"
+};
 
 export default function AffiliatesPage() {
-  const [search, setSearch] = useState('');
-  const [kycStatus, setKycStatus] = useState('all');
-  const [status, setStatus] = useState('all');
+  const tokenReady = useAuthStore((s) => Boolean(s.user));
+  const [rows, setRows] = useState<AffiliateRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ status: "all", kycStatus: "all", search: "" });
 
-  const query = useQuery({
-    queryKey: ['admin-affiliates', { search, kycStatus, status }],
-    queryFn: () =>
-      adminApi.listAffiliates({
-        search: search.trim() || undefined,
-        kycStatus,
-        status
-      })
-  });
-
-  const rows = query.data?.data ?? [];
-  const meta = query.data?.meta;
-
-  const kycSummary = useMemo(() => {
-    if (!meta?.kycBreakdown) {
-      return [];
+  useEffect(() => {
+    if (!tokenReady) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = listMockAffiliates({
+        search: filters.search || undefined,
+        status: filters.status !== "all" ? filters.status : undefined,
+        kycStatus: filters.kycStatus !== "all" ? filters.kycStatus : undefined
+      });
+      setRows(
+        res.data.map((item) => ({
+          id: item.id,
+          email: item.email,
+          displayName: item.displayName,
+          status: item.status,
+          kycStatus: item.kycStatus,
+          country: (item as any).country ?? null,
+          payoutMethod: (item as any).payoutMethod ?? null,
+          createdAt: item.createdAt
+        }))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to load affiliates");
+    } finally {
+      setLoading(false);
     }
-    return Object.entries(meta.kycBreakdown).map(([state, count]) => ({
-      state,
-      count
-    }));
-  }, [meta]);
+  }, [filters, tokenReady]);
 
   return (
-    <div className="flex flex-col gap-8">
-      <header className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.4em] text-brand">Affiliates</p>
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Program Roster</h1>
-        <p className="max-w-3xl text-sm text-muted">
-          Review onboarding status, payouts readiness, and link/coupon usage. Apply filters to zero
-          in on affiliates who need compliance attention.
-        </p>
-        <div className="flex flex-wrap items-center gap-3">
-          <button className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:bg-brand-dark">
-            Invite Affiliate
-          </button>
-          <button
-            className="inline-flex items-center justify-center rounded-full border border-slate-300/80 px-5 py-2 text-sm font-semibold text-slate-700 hover:border-brand hover:text-brand dark:border-slate-700/70 dark:text-slate-200"
-            onClick={() => query.refetch()}
-          >
-            <RefreshCcw className="mr-2 h-4 w-4" />
-            Refresh
-          </button>
-        </div>
-      </header>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Directory & KYC"
+        eyebrow="Affiliates"
+        description="Search, filter, and review affiliate KYC and payout readiness."
+        actions={
+          <div className="flex flex-wrap gap-2 text-sm">
+            <FilterPill
+              label="Status"
+              value={filters.status}
+              onChange={(value) => setFilters((f) => ({ ...f, status: value }))}
+              options={[
+                { value: "all", label: "All" },
+                { value: "active", label: "Active" },
+                { value: "pending", label: "Pending" },
+                { value: "blocked", label: "Blocked" }
+              ]}
+            />
+            <FilterPill
+              label="KYC"
+              value={filters.kycStatus}
+              onChange={(value) => setFilters((f) => ({ ...f, kycStatus: value }))}
+              options={[
+                { value: "all", label: "All" },
+                { value: "verified", label: "Verified" },
+                { value: "in_review", label: "In Review" },
+                { value: "pending", label: "Pending" },
+                { value: "rejected", label: "Rejected" }
+              ]}
+            />
+          </div>
+        }
+      />
 
-      <section className="card-surface grid gap-4 rounded-3xl p-6 text-sm text-slate-800 shadow-lg shadow-black/10 dark:text-slate-200 lg:grid-cols-4">
-        <StatCard title="Total affiliates" value={meta?.total ?? 0} />
-        {kycSummary.length ? (
-          kycSummary.map((item) => (
-            <StatCard key={item.state} title={`KYC ${item.state}`} value={item.count} />
-          ))
-        ) : (
-          <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-4 text-slate-800 dark:border-slate-800/60 dark:bg-slate-950/40 dark:text-slate-200">
-            <p className="text-xs uppercase tracking-[0.3em] text-muted">KYC</p>
-            <p className="mt-2 text-sm text-muted">No affiliates found for the selected view.</p>
+      <div className="flex flex-col gap-3 rounded-3xl border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800/70 dark:bg-slate-900/70">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <SearchInput
+            placeholder="Search by name or email"
+            value={filters.search}
+            onChange={(next) => setFilters((f) => ({ ...f, search: next }))}
+          />
+          <span className="text-xs text-muted">{rows.length} affiliates</span>
+        </div>
+
+        {error && (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50/80 px-3 py-2 text-sm text-rose-700 dark:border-rose-500/50 dark:bg-rose-500/15 dark:text-rose-100">
+            {error}
           </div>
         )}
-      </section>
 
-      <section className="card-surface rounded-3xl p-5 shadow-lg shadow-black/10">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-1 items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-2 shadow-sm dark:border-slate-800/60 dark:bg-slate-950/50">
-            <label className="text-xs font-semibold uppercase tracking-wide text-muted">
-              Search
-            </label>
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search name, email, or referral code..."
-              className="flex-1 rounded-full border border-transparent bg-transparent px-3 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand focus:outline-none dark:text-white"
-            />
-            {query.isFetching && <Loader2 className="h-4 w-4 animate-spin text-slate-400" />}
-          </div>
-          <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-muted dark:text-slate-300">
-            <Select
-              value={status}
-              onChange={setStatus}
-              label="Status"
-              options={statusFilters}
-            />
-            <Select value={kycStatus} onChange={setKycStatus} label="KYC" options={kycFilters} />
-          </div>
-        </div>
-
-        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200/60 dark:border-slate-800/60">
-          <table className="min-w-full divide-y divide-slate-200/60 text-sm text-slate-800 dark:divide-slate-800/70 dark:text-slate-200">
-            <thead className="bg-white text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-950/60 dark:text-slate-400">
-              <tr>
-                <th className="px-6 py-4 text-left font-medium">Affiliate</th>
-                <th className="px-6 py-4 text-left font-medium">Status</th>
-                <th className="px-6 py-4 text-left font-medium">KYC</th>
-                <th className="px-6 py-4 text-left font-medium">Links</th>
-                <th className="px-6 py-4 text-left font-medium">Coupons</th>
-                <th className="px-6 py-4 text-left font-medium">Phone</th>
-                <th className="px-6 py-4 text-right font-medium">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/70">
-              {query.isLoading ? (
-                <TableMessage message="Loading affiliates..." />
-              ) : rows.length === 0 ? (
-                <TableMessage message="No affiliates match this view." />
-              ) : (
-                rows.map((affiliate) => <AffiliateRow key={affiliate.id} affiliate={affiliate} />)
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function AffiliateRow({ affiliate }: { affiliate: AdminAffiliate }) {
-  return (
-    <tr className="hover:bg-brand/10">
-      <td className="px-6 py-4">
-        <p className="font-semibold text-slate-900 dark:text-white">
-          {affiliate.displayName ?? 'Unnamed affiliate'}
-        </p>
-        <p className="text-xs text-slate-400">{affiliate.user.email}</p>
-      </td>
-      <td className="px-6 py-4">
-        <span
-          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-            affiliate.user.status === 'active'
-              ? 'bg-emerald-500/20 text-emerald-300'
-              : 'bg-amber-500/20 text-amber-200'
-          }`}
-        >
-          {affiliate.user.status}
-        </span>
-      </td>
-      <td className="px-6 py-4 text-xs text-slate-600 capitalize dark:text-slate-300">
-        {affiliate.kycStatus}
-      </td>
-      <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-300">{affiliate._count.links}</td>
-      <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-300">{affiliate._count.coupons}</td>
-      <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-300">{affiliate.phone ?? '—'}</td>
-      <td className="px-6 py-4 text-right text-xs">
-        <button className="rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 hover:border-brand hover:text-brand dark:border-slate-700/70 dark:text-slate-200">
-          Review
-        </button>
-      </td>
-    </tr>
-  );
-}
-
-function Select({
-  value,
-  onChange,
-  label,
-  options
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  label: string;
-  options: Array<{ label: string; value: string }>;
-}) {
-  return (
-    <div className="flex flex-col">
-      <span>{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs text-slate-700 focus:border-brand focus:outline-none dark:border-slate-800/60 dark:bg-slate-950/50 dark:text-white"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-}
-
-function TableMessage({ message }: { message: string }) {
-  return (
-    <tr>
-      <td className="px-6 py-8 text-center text-sm text-muted" colSpan={7}>
-        {message}
-      </td>
-    </tr>
-  );
-}
-
-function StatCard({ title, value }: { title: string; value: number }) {
-  return (
-    <div className="card-surface rounded-2xl p-4">
-      <p className="text-xs uppercase tracking-[0.3em] text-muted">{title}</p>
-      <p className="mt-2 text-2xl font-semibold">{value.toLocaleString()}</p>
+        <TableShell headers={["Affiliate", "Status", "KYC", "Payout", "Created"]}>
+          {loading ? (
+            <LoadingRow label="Loading affiliates..." />
+          ) : rows.length === 0 ? (
+            <EmptyState title="No affiliates found." />
+          ) : (
+            rows.map((row) => (
+              <div
+                key={row.id}
+                className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] items-center gap-2 px-4 py-3 text-sm text-slate-700 dark:text-slate-200"
+              >
+                <div className="flex flex-col">
+                  <span className="font-semibold text-slate-900 dark:text-white">{row.displayName}</span>
+                  <span className="text-xs text-muted">{row.email}</span>
+                </div>
+                <Badge tone={row.status === "blocked" ? "warn" : row.status === "active" ? "success" : "muted"}>
+                  {row.status}
+                </Badge>
+                <Badge
+                  tone={
+                    row.kycStatus === "verified"
+                      ? "success"
+                      : row.kycStatus === "rejected"
+                      ? "warn"
+                      : "info"
+                  }
+                >
+                  {row.kycStatus}
+                </Badge>
+                <div className="text-xs uppercase tracking-wide text-slate-500">{row.payoutMethod ?? "-"}</div>
+                <div className="text-xs text-muted">{new Date(row.createdAt).toLocaleDateString()}</div>
+              </div>
+            ))
+          )}
+        </TableShell>
+      </div>
     </div>
   );
 }

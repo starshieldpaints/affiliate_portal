@@ -4,8 +4,20 @@ import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  type ConfirmationResult,
+  isSignInWithEmailLink,
+  sendSignInLinkToEmail,
+  signInWithEmailLink
+} from 'firebase/auth';
+import { firebaseAuth } from '../../../src/lib/firebase';
 import { useAuthStore } from '../../../src/store/auth-store';
 import { affiliatesApi, authApi } from '../../../src/lib/api-client';
+
+const MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const SUPPORTED_UPLOAD_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 
 const payoutOptions = [
   { value: 'upi', label: 'UPI' },
@@ -168,6 +180,12 @@ export default function ProfileSetupPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const hasEmailVerified = Boolean(user?.emailVerifiedAt);
+    const hasPhoneVerified = Boolean(user?.affiliate?.phoneVerifiedAt);
+    if (!hasEmailVerified && !hasPhoneVerified) {
+      toast.error('Verify either your email or phone to submit your profile.');
+      return;
+    }
     if (!displayName.trim() || !payoutMethod) {
       toast.error('Please enter your display name and choose a payout method.');
       return;
@@ -202,12 +220,18 @@ export default function ProfileSetupPage() {
     const normalizedPanDoc = panImageUrl.trim();
     const normalizedAadhaarFront = aadhaarFrontUrl.trim();
     const normalizedAadhaarBack = aadhaarBackUrl.trim();
-    if (!isValidUrl(normalizedPanDoc)) {
-      toast.error('Provide a valid URL for your PAN document.');
+    const hasValidPanDoc = isValidUrl(normalizedPanDoc) || isStorageObjectName(normalizedPanDoc);
+    const hasValidAadhaarFront =
+      isValidUrl(normalizedAadhaarFront) || isStorageObjectName(normalizedAadhaarFront);
+    const hasValidAadhaarBack =
+      isValidUrl(normalizedAadhaarBack) || isStorageObjectName(normalizedAadhaarBack);
+
+    if (!hasValidPanDoc) {
+      toast.error('Provide a valid URL or uploaded document for your PAN.');
       return;
     }
-    if (!isValidUrl(normalizedAadhaarFront) || !isValidUrl(normalizedAadhaarBack)) {
-      toast.error('Provide valid URLs for Aadhaar front and back.');
+    if (!hasValidAadhaarFront || !hasValidAadhaarBack) {
+      toast.error('Provide valid URLs or uploaded documents for Aadhaar front and back.');
       return;
     }
     try {
@@ -242,6 +266,7 @@ export default function ProfileSetupPage() {
 
   return (
     <div className="space-y-8">
+      <div id="recaptcha-container" className="hidden" />
       <header className="space-y-3 md:text-left">
         <p className="text-xs uppercase tracking-[0.4em] text-brand">Profile setup</p>
         <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">
@@ -447,7 +472,7 @@ export default function ProfileSetupPage() {
                   disabled={submitting}
                   className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {submitting ? 'SavingΓÇª' : 'Submit for review'}
+                  {submitting ? 'SavingGÇª' : 'Submit for review'}
                 </button>
                 <button
                   type="button"
@@ -493,7 +518,7 @@ export default function ProfileSetupPage() {
             <a href="mailto:affiliates@starshield.io" className="text-brand underline">
               affiliates@starshield.io
             </a>{' '}
-            and weΓÇÖll guide you through onboarding.
+            and weGÇÖll guide you through onboarding.
           </div>
         </aside>
       </div>
@@ -521,17 +546,17 @@ function ContactVerificationSection({
   return (
     <div className="space-y-4 rounded-[28px] border border-slate-200/80 bg-white/80 p-5 dark:border-slate-800/70 dark:bg-slate-950/30">
       <div>
-        <p className="text-xs uppercase tracking-[0.35em] text-brand">Verification</p>
-        <p className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
-          Verify your contact details
-        </p>
-        <p className="text-xs text-muted">
-          Email and phone need a quick OTP check before we can unlock tracking links and payouts.
-        </p>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        <ContactVerificationCard
-          type="email"
+          <p className="text-xs uppercase tracking-[0.35em] text-brand">Verification</p>
+          <p className="mt-1 text-base font-semibold text-slate-900 dark:text-white">
+            Verify your contact details
+          </p>
+          <p className="text-xs text-muted">
+            Email uses a verification link; phone uses OTP. Complete both to unlock tracking links and payouts.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <ContactVerificationCard
+            type="email"
           label="Email"
           value={email}
           verifiedAt={emailVerifiedAt}
@@ -569,6 +594,19 @@ function ContactVerificationCard({
   const [verifying, setVerifying] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [otpSent, setOtpSent] = useState(false);
+  const confirmationRef = useRef<ConfirmationResult | null>(null);
+  const recaptchaRef = useRef<RecaptchaVerifier | null>(null);
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailVerifying, setEmailVerifying] = useState(false);
+  const [syncedFromFirebase, setSyncedFromFirebase] = useState(false);
+  const isEmail = type === 'email';
+  const normalizedValue = useMemo(() => {
+    const raw = value?.trim() ?? '';
+    if (isEmail) return raw;
+    const digits = raw.replace(/[^\d+]/g, '');
+    if (!digits) return '';
+    return digits.startsWith('+') ? digits : `+${digits}`;
+  }, [isEmail, value]);
 
   useEffect(() => {
     if (!cooldown) return;
@@ -586,9 +624,46 @@ function ContactVerificationCard({
     }
   }, [verifiedAt]);
 
-  const isVerified = Boolean(verifiedAt);
-  const normalizedValue = value?.trim() ?? '';
-  const hasValue = Boolean(normalizedValue);
+  useEffect(() => {
+    return () => {
+      try {
+        recaptchaRef.current?.clear();
+        recaptchaRef.current = null;
+      } catch {
+        /* ignore cleanup errors */
+      }
+    };
+  }, []);
+
+    const isVerified = Boolean(verifiedAt);
+    const hasValue = Boolean(normalizedValue);
+
+    useEffect(() => {
+      const syncIfAlreadyVerified = async () => {
+        if (!isEmail || isVerified || !hasValue || syncedFromFirebase) return;
+        const current = firebaseAuth.currentUser;
+        if (!current) return;
+        await current.reload();
+        if (!current.emailVerified || !current.email) return;
+        try {
+          const token = await current.getIdToken();
+          const response = await authApi.verifyContact({
+            type,
+            email: current.email.toLowerCase(),
+            firebaseIdToken: token,
+          });
+          if (response.verified) {
+            onVerified(new Date().toISOString());
+            setSyncedFromFirebase(true);
+            toast.success(`${label} verified successfully.`);
+            window.localStorage.removeItem('pendingEmail');
+          }
+        } catch (error) {
+          // silent; user can retry via buttons
+        }
+      };
+      void syncIfAlreadyVerified();
+    }, [hasValue, isEmail, isVerified, label, onVerified, syncedFromFirebase, type]);
 
   const handleSend = async () => {
     if (!hasValue || sending) {
@@ -602,30 +677,77 @@ function ContactVerificationCard({
       return;
     }
 
+    if (type === 'email') {
+      setEmailSending(true);
+      try {
+        const appBaseUrl =
+          process.env.NEXT_PUBLIC_APP_URL ??
+          (typeof window !== 'undefined' ? window.location.origin : '');
+          const normalizedEmail = normalizedValue.toLowerCase();
+          const redirectParam = encodeURIComponent('/settings/profile');
+          const actionCodeSettings = {
+            url: `${appBaseUrl || 'http://localhost:3000'}/auth/verify-email?redirect=${redirectParam}&email=${encodeURIComponent(normalizedEmail)}`,
+            handleCodeInApp: true
+          };
+          await sendSignInLinkToEmail(firebaseAuth, normalizedEmail, actionCodeSettings);
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem('pendingEmail', normalizedEmail);
+          }
+          toast.success('Verification link sent to your email.');
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : 'Unable to send verification link.');
+        } finally {
+          setEmailSending(false);
+      }
+      return;
+    }
+
+    if (
+      process.env.NODE_ENV === 'development' ||
+      process.env.NEXT_PUBLIC_FIREBASE_DISABLE_APP_VERIFICATION === 'true'
+    ) {
+      // Prevent Recaptcha Enterprise from blocking local/testing phone auth.
+      firebaseAuth.settings.appVerificationDisabledForTesting = true;
+    }
+
     setSending(true);
     try {
-      const response = await authApi.sendVerification({
-        type,
-        email: type === 'email' ? normalizedValue : undefined,
-        phone: type === 'phone' ? normalizedValue : undefined,
-      });
-
-      if (response.alreadyVerified) {
-        toast.success(`${label} already verified.`);
-        if (!isVerified) {
-          onVerified(new Date().toISOString());
-        }
-        return;
+      if (!/^\+\d{8,15}$/.test(normalizedValue)) {
+        throw new Error('Enter a valid phone number with country code, e.g., +911234567890.');
       }
 
-      if (response.delivered) {
-        toast.success(`OTP sent to your ${label.toLowerCase()}.`);
-        setOtpSent(true);
-        setCooldown(45);
+      if (typeof document !== 'undefined' && !document.getElementById('recaptcha-container')) {
+        throw new Error('reCAPTCHA container missing. Please refresh and try again.');
       }
+
+      if (!recaptchaRef.current) {
+        recaptchaRef.current = new RecaptchaVerifier(firebaseAuth, 'recaptcha-container', {
+          size: 'invisible'
+        });
+      }
+      const verifier = recaptchaRef.current;
+      // Ensure widget is rendered once before use.
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      await verifier.render();
+      const result = await signInWithPhoneNumber(firebaseAuth, normalizedValue, verifier);
+      confirmationRef.current = result;
+      toast.success('OTP sent to your phone.');
+      setOtpSent(true);
+      setCooldown(45);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unable to send OTP right now.';
-      toast.error(message);
+      const code = typeof error === 'object' && error && 'code' in error ? (error as { code?: string }).code : null;
+      if (code === 'auth/too-many-requests') {
+        toast.error('Too many OTP attempts. Please wait a few minutes before trying again.');
+      } else {
+        toast.error(error instanceof Error ? error.message : 'Unable to send OTP right now.');
+      }
+      try {
+        recaptchaRef.current?.clear();
+      } catch {
+        /* ignore cleanup errors */
+      } finally {
+        recaptchaRef.current = null;
+      }
     } finally {
       setSending(false);
     }
@@ -635,19 +757,76 @@ function ContactVerificationCard({
     if (!hasValue || verifying) {
       return;
     }
+
+    if (type === 'email') {
+      setEmailVerifying(true);
+      try {
+        const link = typeof window !== 'undefined' ? window.location.href : '';
+        let token: string | undefined;
+        let verifiedEmail: string | undefined;
+        const normalizedEmail = normalizedValue.toLowerCase();
+
+        if (isSignInWithEmailLink(firebaseAuth, link)) {
+          const storedEmail =
+            window.localStorage.getItem('pendingEmail') || normalizedEmail || undefined;
+          if (!storedEmail) {
+            toast.error('Email not found. Try sending a new link.');
+            return;
+          }
+          const cred = await signInWithEmailLink(firebaseAuth, storedEmail, link);
+          token = await cred.user.getIdToken(true);
+          verifiedEmail = cred.user.email?.toLowerCase() ?? storedEmail.toLowerCase();
+        } else if (firebaseAuth.currentUser) {
+          await firebaseAuth.currentUser.reload();
+          if (firebaseAuth.currentUser.emailVerified) {
+            token = await firebaseAuth.currentUser.getIdToken(true);
+            verifiedEmail = firebaseAuth.currentUser.email?.toLowerCase() ?? normalizedEmail;
+          }
+        }
+
+        if (!token || !verifiedEmail) {
+          toast.error('Open the verification link on this device, then tap confirm.');
+          return;
+        }
+
+        const response = await authApi.verifyContact({
+          type,
+          email: verifiedEmail,
+          firebaseIdToken: token
+        });
+        if (response.verified) {
+          toast.success(`${label} verified successfully.`);
+          onVerified(new Date().toISOString());
+          window.localStorage.removeItem('pendingEmail');
+          setSyncedFromFirebase(true);
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Invalid or expired link.';
+        toast.error(message);
+      } finally {
+        setEmailVerifying(false);
+      }
+      return;
+    }
+
     const trimmedCode = code.trim();
     if (!/^\d{4,8}$/.test(trimmedCode)) {
-      toast.error('Enter the 4-8 digit code we sent.');
+      toast.error('Enter the OTP we sent to your phone.');
+      return;
+    }
+    if (!confirmationRef.current) {
+      toast.error('Request a new OTP before verifying.');
       return;
     }
 
     setVerifying(true);
     try {
+      const cred = await confirmationRef.current.confirm(trimmedCode);
+      const token = await cred.user.getIdToken();
       const response = await authApi.verifyContact({
         type,
-        code: trimmedCode,
-        email: type === 'email' ? normalizedValue : undefined,
-        phone: type === 'phone' ? normalizedValue : undefined,
+        phone: normalizedValue,
+        firebaseIdToken: token,
       });
 
       if (response.verified) {
@@ -690,30 +869,41 @@ function ContactVerificationCard({
         </div>
         {isVerified && verifiedAt && (
           <p className="text-xs text-muted">Verified on {formatVerificationDate(verifiedAt)}.</p>
-        )}
-        {!hasValue && (
-          <p className="text-xs text-muted">
-            Contact support if you need to update your {label.toLowerCase()} on file.
-          </p>
-        )}
-        {!isVerified && hasValue && (
-          <p className="text-xs text-muted">
-            Enter the OTP we send to confirm your {label.toLowerCase()} identity.
-          </p>
-        )}
-      </div>
-
+      )}
+      {!hasValue && (
+        <p className="text-xs text-muted">
+          Contact support if you need to update your {label.toLowerCase()} on file.
+        </p>
+      )}
       {!isVerified && hasValue && (
-        <div className="space-y-2">
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <button
-              type="button"
-              onClick={handleSend}
-              disabled={sending || cooldown > 0}
-              className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {sending ? 'Sending∩┐╜?∩┐╜' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Send OTP'}
-            </button>
+        <p className="text-xs text-muted">
+          {isEmail
+            ? 'Send a verification link to your email, open it on this device, then confirm below.'
+            : 'Enter the OTP we send to confirm your phone identity.'}
+        </p>
+      )}
+    </div>
+
+    {!isVerified && hasValue && (
+      <div className="space-y-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={sending || emailSending || cooldown > 0}
+            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {sending || emailSending
+              ? isEmail
+                ? 'Sending…'
+                : 'Sending OTP…'
+              : cooldown > 0
+                ? `Resend in ${cooldown}s`
+                : isEmail
+                  ? 'Send verification link'
+                  : 'Send OTP'}
+          </button>
+          {!isEmail && (
             <input
               className="form-input flex-1 text-base"
               placeholder="Enter code"
@@ -723,24 +913,67 @@ function ContactVerificationCard({
               inputMode="numeric"
               autoComplete="one-time-code"
             />
-          </div>
+          )}
+        </div>
+        {!isEmail && (
           <button
             type="button"
             onClick={handleVerify}
-            disabled={!code || verifying}
+            disabled={verifying || !code}
             className="inline-flex w-full items-center justify-center rounded-full border border-brand px-4 py-2 text-xs font-semibold uppercase tracking-wide text-brand transition hover:bg-brand/10 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {verifying ? 'Verifying∩┐╜?∩┐╜' : 'Verify code'}
+            {verifying ? 'Verifying…' : 'Verify code'}
           </button>
-          {otpSent && (
-            <p className="text-xs text-brand">
-              OTP sent. Codes expire in a few minutes, so verify soon.
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
+        )}
+        {otpSent && !isEmail && (
+          <p className="text-xs text-brand">
+            OTP sent. Codes expire in a few minutes, so verify soon.
+          </p>
+        )}
+        {isEmail && (
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                if (firebaseAuth.currentUser) {
+                  await firebaseAuth.currentUser.reload();
+                  if (firebaseAuth.currentUser.emailVerified) {
+                    const token = await firebaseAuth.currentUser.getIdToken(true);
+                    const response = await authApi.verifyContact({
+                      type,
+                      email: firebaseAuth.currentUser.email?.toLowerCase() ?? normalizedValue,
+                      firebaseIdToken: token
+                    });
+                    if (response.verified) {
+                      onVerified(new Date().toISOString());
+                      toast.success('Email status refreshed.');
+                      window.localStorage.removeItem('pendingEmail');
+                      return;
+                    }
+                  }
+                }
+                const latest = await authApi.me();
+                if (latest?.emailVerifiedAt) {
+                  onVerified(latest.emailVerifiedAt);
+                  toast.success('Email status refreshed.');
+                } else {
+                  toast.error('Email still not verified. Please open the verification link from your inbox.');
+                }
+              } catch (error) {
+                toast.error(
+                  error instanceof Error ? error.message : 'Could not refresh verification status.'
+                );
+              }
+            }}
+            className="mt-1 inline-flex w-full items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700 transition hover:border-brand hover:text-brand"
+          >
+            Check verification status
+          </button>
+        )}
+      </div>
+    )}
+  </div>
+);
 }
 
 function Field({
@@ -807,21 +1040,39 @@ function DocumentUploadField({
     if (!file) {
       return;
     }
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('kind', kind);
+    if (file.size > MAX_UPLOAD_SIZE_BYTES) {
+      toast.error('Please upload files smaller than 5 MB.');
+      event.target.value = '';
+      return;
+    }
+    if (!file.type || !SUPPORTED_UPLOAD_TYPES.includes(file.type)) {
+      toast.error('Unsupported file type. Upload PNG, JPG, or WEBP only.');
+      event.target.value = '';
+      return;
+    }
     setUploading(true);
     try {
-      const response = await fetch('/api/uploads', {
-        method: 'POST',
-        body: formData,
+      const signed = await affiliatesApi.requestUploadUrl({
+        fileName: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        purpose: kind,
       });
-      if (!response.ok) {
-        const error = await response.json().catch(() => null);
-        throw new Error(error?.error ?? 'Upload failed. Try again.');
+
+      const uploadResponse = await fetch(signed.uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type || 'application/octet-stream',
+          // Must match the precondition used in signed URL to avoid overwrites.
+          'x-goog-if-generation-match': '0'
+        },
+        body: file,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Unable to upload document. Try again.');
       }
-      const payload = (await response.json()) as { url: string };
-      onChange(payload.url);
+
+      onChange(signed.objectName);
       toast.success('Document uploaded successfully.');
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Unable to upload document.');
@@ -830,6 +1081,47 @@ function DocumentUploadField({
       event.target.value = '';
     }
   };
+
+  const [resolvedUrl, setResolvedUrl] = useState('');
+  const [resolving, setResolving] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const resolve = async () => {
+      if (!value) {
+        setResolvedUrl('');
+        return;
+      }
+      if (isValidUrl(value)) {
+        setResolvedUrl(value);
+        return;
+      }
+      setResolving(true);
+      try {
+        const signed = await affiliatesApi.requestDownloadUrl({ objectName: value });
+        if (!cancelled) {
+          setResolvedUrl(signed.downloadUrl);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setResolvedUrl('');
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : 'Could not fetch a download link. Please re-upload.'
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setResolving(false);
+        }
+      }
+    };
+    resolve();
+    return () => {
+      cancelled = true;
+    };
+  }, [value]);
 
   return (
     <div className="space-y-3">
@@ -845,9 +1137,9 @@ function DocumentUploadField({
         <div className="rounded-2xl border border-slate-200/70 bg-white/70 p-3 text-xs dark:border-slate-700/70 dark:bg-slate-900/60">
           <p className="mb-2 font-semibold text-slate-700 dark:text-slate-200">Preview</p>
           <div className="flex flex-col gap-2">
-            {/(png|jpg|jpeg|webp)$/i.test(value) ? (
+            {/(png|jpg|jpeg|webp)$/i.test(resolvedUrl) ? (
               <img
-                src={value}
+                src={resolvedUrl}
                 alt="Uploaded document"
                 className="max-h-48 rounded-xl object-cover"
               />
@@ -855,12 +1147,18 @@ function DocumentUploadField({
               <p className="text-muted">File uploaded. Open it to review.</p>
             )}
             <a
-              href={value}
+              href={resolvedUrl || '#'}
               target="_blank"
               rel="noreferrer"
+              onClick={(event) => {
+                if (!resolvedUrl) {
+                  event.preventDefault();
+                  toast.error('Unable to open file. Please re-upload.');
+                }
+              }}
               className="inline-flex items-center justify-center rounded-full border border-slate-200 px-4 py-1.5 text-xs font-semibold text-brand transition hover:bg-brand/10 dark:border-slate-700"
             >
-              Open in new tab
+              {resolving ? 'Preparing link…' : 'Open in new tab'}
             </a>
           </div>
         </div>
@@ -870,7 +1168,7 @@ function DocumentUploadField({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*,application/pdf"
+        accept={SUPPORTED_UPLOAD_TYPES.join(',')}
         className="hidden"
         onChange={handleFileChange}
       />
@@ -894,6 +1192,11 @@ function isValidUrl(value: string) {
   } catch {
     return false;
   }
+}
+
+function isStorageObjectName(value: string) {
+  if (!value) return false;
+  return /^affiliates\/[a-z0-9]+\/.+/i.test(value) || /^[a-z0-9][a-z0-9._/-]+$/i.test(value);
 }
 
 function formatVerificationDate(value: string) {

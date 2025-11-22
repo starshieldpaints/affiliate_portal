@@ -1,68 +1,101 @@
-const alerts = [
-  {
-    id: 'ALERT-7821',
-    title: 'Velocity spike detected',
-    detail: 'Affiliate ORION LABS drove 90 clicks within 5 minutes from same ASN.',
-    severity: 'High',
-    timestamp: '10 minutes ago'
-  },
-  {
-    id: 'ALERT-7812',
-    title: 'Self purchase attempt',
-    detail: 'Coupon STAR-20 used by affiliate email domain.',
-    severity: 'Medium',
-    timestamp: '2 hours ago'
-  },
-  {
-    id: 'ALERT-7802',
-    title: 'Refund clustering',
-    detail: 'Three refunds triggered for helmet variant within 24 hours.',
-    severity: 'Low',
-    timestamp: '1 day ago'
-  }
-];
+"use client";
+
+import { useEffect, useState } from "react";
+import { listMockAlerts } from "../../../src/lib/mock-admin-service";
+import { Badge, EmptyState, FilterPill, LoadingRow, PageHeader, TableShell } from "../../../src/lib/ui";
+
+type AlertRow = {
+  id: string;
+  type: string;
+  subjectId: string;
+  riskScore: number;
+  status: string;
+  createdAt: string;
+};
 
 export default function FraudPage() {
+  const [rows, setRows] = useState<AlertRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ status: "all" });
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = listMockAlerts({
+        status: filters.status !== "all" ? filters.status : undefined
+      });
+      setRows(
+        res.data.map((item) => ({
+          id: item.id,
+          type: item.type,
+          subjectId: item.subjectId,
+          riskScore: item.riskScore,
+          status: item.status,
+          createdAt: item.createdAt
+        }))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to load alerts");
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
   return (
-    <div className="flex flex-col gap-8">
-      <header className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.4em] text-brand">Fraud & Alerts</p>
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">
-          Risk Command Center
-        </h1>
-        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-          Real-time detection for bot traffic, self-purchases, velocity spikes, and ASN anomalies.
-          Each alert links back to the raw event stream for forensics.
-        </p>
-      </header>
-      <section className="space-y-4">
-        {alerts.map((alert) => (
-          <article
-            key={alert.id}
-            className="rounded-3xl border border-slate-800/70 bg-slate-900/60 p-6 shadow-lg shadow-black/20"
-          >
-            <div className="flex justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-400">{alert.id}</p>
-                <h2 className="mt-1 text-lg font-semibold text-white">{alert.title}</h2>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Fraud & Alerts"
+        eyebrow="Risk"
+        description="Monitor fraud signals and alert triage."
+        actions={
+          <FilterPill
+            label="Status"
+            value={filters.status}
+            onChange={(value) => setFilters((f) => ({ ...f, status: value }))}
+            options={[
+              { value: "all", label: "All" },
+              { value: "open", label: "Open" },
+              { value: "closed", label: "Closed" }
+            ]}
+          />
+        }
+      />
+
+      <div className="flex flex-col gap-3 rounded-3xl border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800/70 dark:bg-slate-900/70">
+        {error && (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50/80 px-3 py-2 text-sm text-rose-700 dark:border-rose-500/50 dark:bg-rose-500/15 dark:text-rose-100">
+            {error}
+          </div>
+        )}
+
+        <TableShell headers={["Alert", "Type", "Risk", "Status", "Created"]}>
+          {loading ? (
+            <LoadingRow label="Loading alerts..." />
+          ) : rows.length === 0 ? (
+            <EmptyState title="No alerts found." />
+          ) : (
+            rows.map((row) => (
+              <div
+                key={row.id}
+                className="grid grid-cols-[1.2fr_1fr_1fr_1fr_1fr] items-center gap-2 px-4 py-3 text-sm text-slate-700 dark:text-slate-200"
+              >
+                <div className="flex flex-col">
+                  <span className="font-semibold text-slate-900 dark:text-white">{row.id}</span>
+                  <span className="text-xs text-muted">Subject: {row.subjectId}</span>
+                </div>
+                <Badge tone="info">{row.type}</Badge>
+                <div className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  {row.riskScore.toFixed(2)}
+                </div>
+                <Badge tone={row.status === "open" ? "warn" : "success"}>{row.status}</Badge>
+                <div className="text-xs text-muted">{new Date(row.createdAt).toLocaleDateString()}</div>
               </div>
-              <span className="text-xs uppercase tracking-wide text-slate-400">{alert.timestamp}</span>
-            </div>
-            <p className="mt-3 text-sm text-slate-200">{alert.detail}</p>
-            <span
-              className={`mt-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                alert.severity === 'High'
-                  ? 'bg-red-500/20 text-red-300'
-                  : alert.severity === 'Medium'
-                  ? 'bg-amber-500/20 text-amber-300'
-                  : 'bg-slate-700/40 text-slate-200'
-              }`}
-            >
-              {alert.severity}
-            </span>
-          </article>
-        ))}
-      </section>
+            ))
+          )}
+        </TableShell>
+      </div>
     </div>
   );
 }

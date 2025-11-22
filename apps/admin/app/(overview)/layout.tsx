@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
-import { AppShell } from '../../src/components/AppShell';
-import { AuthGate } from '../../src/components/AuthGate';
+import { ReactNode } from "react";
+import { AppShell } from "../../src/components/AppShell";
+import { AuthGate } from "../../src/components/AuthGate";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default function OverviewLayout({ children }: { children: ReactNode }) {
   return (
     <AuthGate>
       <AppShell>{children}</AppShell>

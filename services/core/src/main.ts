@@ -1,10 +1,12 @@
-import 'reflect-metadata';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import helmet from 'helmet';
-import { json } from 'express';
-import type { Request } from 'express';
-import { AppModule } from './app.module';
+import "reflect-metadata";
+import { ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import helmet from "helmet";
+import { json } from "express";
+import type { Request } from "express";
+import { Logger } from "nestjs-pino";
+import { AppModule } from "./app.module";
+import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 
 declare global {
   namespace Express {
@@ -16,10 +18,10 @@ declare global {
 
 function buildCorsOrigins() {
   const configuredOrigins =
-    process.env.CORS_ORIGIN?.split(',')
+    process.env.CORS_ORIGIN?.split(",")
       .map((origin) => origin.trim())
       .filter(Boolean) ?? [];
-  const allowAny = configuredOrigins.includes('*');
+  const allowAny = configuredOrigins.includes("*");
 
   return (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin || allowAny) {
@@ -40,11 +42,28 @@ async function bootstrap() {
     bufferLogs: true
   });
 
-  app.useLogger(app.get(Logger));
-  app.use(helmet());
+  const logger = app.get(Logger);
+  app.useLogger(logger);
+  app.use(
+    helmet({
+      contentSecurityPolicy:
+        process.env.NODE_ENV === "production"
+          ? {
+              directives: {
+                defaultSrc: ["'self'"],
+                imgSrc: ["'self'", "https:", "data:"],
+                scriptSrc: ["'self'", "'unsafe-inline'"],
+                styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+                connectSrc: ["'self'", process.env.AFFILIATE_APP_URL ?? ""]
+              }
+            }
+          : false,
+      hsts: process.env.NODE_ENV === "production"
+    })
+  );
   app.use(
     json({
-      limit: '2mb',
+      limit: "2mb",
       verify: (req, _res, buf) => {
         (req as Request & { rawBody?: Buffer }).rawBody = Buffer.from(buf);
       }
@@ -54,18 +73,24 @@ async function bootstrap() {
     origin: buildCorsOrigins(),
     credentials: true
   });
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist:true,
-    forbidNonWhitelisted:true,
-    transform:true
-  }))
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true }
+    })
+  );
+  app.useGlobalFilters(new AllExceptionsFilter(logger));
+  app.enableShutdownHooks();
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  Logger.log(`🚀 Core API running on http://localhost:${port}`, 'Bootstrap');
+  logger.log(`dYs? Core API running on http://localhost:${port}`);
 }
 
 bootstrap().catch((error) => {
-  Logger.error(error, 'Bootstrap');
+  // eslint-disable-next-line no-console
+  console.error("Bootstrap failure", error);
   process.exit(1);
 });

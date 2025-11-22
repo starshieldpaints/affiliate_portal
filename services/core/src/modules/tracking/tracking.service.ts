@@ -23,6 +23,14 @@ export class TrackingService {
       include: {
         affiliate: {
           select: { id: true }
+        },
+        product: {
+          select: {
+            name: true,
+            description: true,
+            imageUrl: true,
+            landingUrl: true
+          }
         }
       }
     });

@@ -1,91 +1,131 @@
-const batches = [
-  {
-    id: 'PB-2025-05',
-    period: 'Apr 1 – Apr 30',
-    total: '$148,230',
-    status: 'Processing',
-    initiatedBy: 'Olivia',
-    lines: 412
-  },
-  {
-    id: 'PB-2025-04',
-    period: 'Mar 1 – Mar 31',
-    total: '$132,980',
-    status: 'Paid',
-    initiatedBy: 'Olivia',
-    lines: 398
-  }
-];
+"use client";
 
-export default function PayoutBatchesPage() {
+import { useEffect, useState } from "react";
+import { listMockPayouts } from "../../../src/lib/mock-admin-service";
+import { Badge, EmptyState, FilterPill, LoadingRow, PageHeader, TableShell } from "../../../src/lib/ui";
+
+type PayoutRow = {
+  id: string;
+  batchId: string;
+  affiliateId: string;
+  amount: number;
+  currency: string;
+  status: string;
+  scheduledFor: string;
+};
+
+export default function PayoutsPage() {
+  const [rows, setRows] = useState<PayoutRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ status: "all" });
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = listMockPayouts({
+        status: filters.status !== "all" ? filters.status : undefined
+      });
+      setRows(
+        res.data.map((item) => ({
+          id: item.id,
+          batchId: item.batchId,
+          affiliateId: item.affiliateId,
+          amount: item.amount,
+          currency: item.currency,
+          status: item.status,
+          scheduledFor: item.scheduledFor
+        }))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to load payouts");
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
   return (
-    <div className="flex flex-col gap-8">
-      <header className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.4em] text-brand">Payouts</p>
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">
-          Batch Orchestration
-        </h1>
-        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-          Aggregate approved commissions into payout batches, submit to Stripe Connect or PayPal,
-          and reconcile receipts automatically.
-        </p>
-        <div className="flex flex-wrap items-center gap-3">
-          <button className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:bg-brand-dark">
-            Create Batch
-          </button>
-          <button className="inline-flex items-center justify-center rounded-full border border-slate-700/70 px-5 py-2 text-sm font-semibold text-slate-200 hover:border-brand hover:text-brand">
-            Upload Receipt
-          </button>
-        </div>
-      </header>
-      <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-        <div className="rounded-3xl border border-slate-800/70 bg-slate-900/60 p-6 shadow-lg shadow-black/20">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            Batches
-          </h2>
-          <div className="mt-4 space-y-4 text-sm text-slate-200">
-            {batches.map((batch) => (
-              <div
-                key={batch.id}
-                className="flex items-center justify-between rounded-2xl border border-slate-800/70 bg-slate-950/60 px-4 py-4"
-              >
-                <div>
-                  <p className="font-semibold text-white">{batch.id}</p>
-                  <p className="text-xs text-slate-400">{batch.period}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-white">{batch.total}</p>
-                  <p className="text-xs text-slate-400">
-                    {batch.lines} lines · {batch.initiatedBy}
-                  </p>
-                </div>
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                    batch.status === 'Paid'
-                      ? 'bg-emerald-500/20 text-emerald-300'
-                      : 'bg-brand/20 text-brand'
-                  }`}
-                >
-                  {batch.status}
-                </span>
-              </div>
-            ))}
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Payouts"
+        eyebrow="Disbursements"
+        description="Review payout batches and update statuses."
+        actions={
+          <FilterPill
+            label="Status"
+            value={filters.status}
+            onChange={(value) => setFilters((f) => ({ ...f, status: value }))}
+            options={[
+              { value: "all", label: "All" },
+              { value: "queued", label: "Queued" },
+              { value: "processing", label: "Processing" },
+              { value: "paid", label: "Paid" },
+              { value: "failed", label: "Failed" }
+            ]}
+          />
+        }
+      />
+
+      <div className="flex flex-col gap-3 rounded-3xl border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800/70 dark:bg-slate-900/70">
+        {error && (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50/80 px-3 py-2 text-sm text-rose-700 dark:border-rose-500/50 dark:bg-rose-500/15 dark:text-rose-100">
+            {error}
           </div>
-        </div>
-        <aside className="rounded-3xl border border-brand/30 bg-brand/10 p-6 text-slate-900 shadow-accent dark:text-white">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-light">
-            Reconciliation
-          </h2>
-          <ul className="mt-4 space-y-3 text-sm text-inherit">
-            <li>Last reconciliation run at 05:42 UTC.</li>
-            <li>2 payout lines pending provider confirmation.</li>
-            <li>0 discrepancies detected in last 30 days.</li>
-          </ul>
-          <button className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:bg-brand-dark">
-            Run reconciliation
-          </button>
-        </aside>
-      </section>
+        )}
+
+        <TableShell headers={["Payout", "Status", "Amount", "Batch", "Scheduled"]}>
+          {loading ? (
+            <LoadingRow label="Loading payouts..." />
+          ) : rows.length === 0 ? (
+            <EmptyState title="No payouts found." />
+          ) : (
+            rows.map((row) => (
+              <div
+                key={row.id}
+                className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] items-center gap-2 px-4 py-3 text-sm text-slate-700 dark:text-slate-200"
+              >
+                <div className="flex flex-col">
+                  <span className="font-semibold text-slate-900 dark:text-white">{row.id}</span>
+                  <span className="text-xs text-muted">Affiliate: {row.affiliateId}</span>
+                </div>
+                <Badge
+                  tone={
+                    row.status === "paid"
+                      ? "success"
+                      : row.status === "failed"
+                      ? "warn"
+                      : row.status === "processing"
+                      ? "info"
+                      : "muted"
+                  }
+                >
+                  {row.status}
+                </Badge>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">
+                  {formatPrice(row.amount, row.currency)}
+                </div>
+                <div className="text-xs text-muted">{row.batchId}</div>
+                <div className="text-xs text-muted">
+                  {new Date(row.scheduledFor).toLocaleDateString()}
+                </div>
+              </div>
+            ))
+          )}
+        </TableShell>
+      </div>
     </div>
   );
+}
+
+function formatPrice(value: number, currency: string) {
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency || "USD",
+      maximumFractionDigits: 0
+    }).format(value);
+  } catch {
+    return `$${value.toFixed(0)}`;
+  }
 }

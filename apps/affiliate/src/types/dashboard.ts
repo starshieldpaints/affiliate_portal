@@ -5,6 +5,11 @@ export type AffiliateDashboardOverview = {
     totalCommission: number;
     pendingCommission: number;
     activeLinks: number;
+    ctr: number;
+    epc: number;
+    approvalRate: number;
+    approvedConversions: number;
+    pendingConversions: number;
   };
   upcomingPayout: {
     amount: number;

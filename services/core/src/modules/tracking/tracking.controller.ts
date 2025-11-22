@@ -40,6 +40,22 @@ export class TrackingController {
       return res.redirect(fallbackUrl);
     }
 
+    const targetUrl = link.landingUrl ?? fallbackUrl;
+    // Show crawlers Open Graph metadata so link previews display product info.
+    if (this.isPreviewCrawler(req.headers['user-agent'])) {
+      return res
+        .status(200)
+        .type('html')
+        .send(
+          this.renderPreviewPage(
+            targetUrl,
+            link.product?.name,
+            link.product?.description,
+            link.product?.imageUrl
+          )
+        );
+    }
+
     const cookieId = this.ensureCookie(req, res);
 
     await this.trackingService.recordClick({
@@ -52,7 +68,6 @@ export class TrackingController {
       utm: this.extractUtm(req)
     });
 
-    const targetUrl = link.landingUrl ?? fallbackUrl;
     return res.redirect(targetUrl);
   }
 
@@ -101,5 +116,59 @@ export class TrackingController {
       }
     });
     return Object.keys(utm).length > 0 ? utm : undefined;
+  }
+
+  private isPreviewCrawler(userAgent?: string | string[]) {
+    if (!userAgent) return false;
+    const ua = Array.isArray(userAgent) ? userAgent.join(' ') : userAgent;
+    const crawlers = [
+      'facebookexternalhit',
+      'Facebot',
+      'Twitterbot',
+      'Slackbot',
+      'WhatsApp',
+      'LinkedInBot',
+      'TelegramBot',
+      'Discordbot'
+    ];
+    return crawlers.some((needle) => ua.toLowerCase().includes(needle.toLowerCase()));
+  }
+
+  private renderPreviewPage(
+    targetUrl: string,
+    title?: string | null,
+    description?: string | null,
+    imageUrl?: string | null
+  ) {
+    const safe = (value?: string | null, fallback = '') =>
+      (value ?? fallback)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .trim();
+    const resolvedTitle = safe(title, 'StarShield Product');
+    const resolvedDescription = safe(description, 'Check out this product from StarShield.');
+    const resolvedImage = imageUrl ? safe(imageUrl) : '';
+    const resolvedUrl = safe(targetUrl);
+    return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${resolvedTitle}</title>
+    <meta property="og:title" content="${resolvedTitle}" />
+    <meta property="og:description" content="${resolvedDescription}" />
+    <meta property="og:url" content="${resolvedUrl}" />
+    <meta property="og:type" content="product" />
+    ${resolvedImage ? `<meta property="og:image" content="${resolvedImage}" />` : ''}
+    <meta name="twitter:card" content="${resolvedImage ? 'summary_large_image' : 'summary'}" />
+    <meta http-equiv="refresh" content="0;url='${resolvedUrl}'" />
+  </head>
+  <body>
+    <p>Redirecting to <a href="${resolvedUrl}">${resolvedUrl}</a>…</p>
+  </body>
+</html>`;
   }
 }

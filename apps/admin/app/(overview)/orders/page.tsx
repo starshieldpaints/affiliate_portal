@@ -1,89 +1,143 @@
-const orders = [
-  {
-    id: 'ORD-54210',
-    customer: 'Masked #98F2',
-    affiliate: 'Alex Carter',
-    total: '$489.00',
-    status: 'Paid',
-    attribution: 'Last Click',
-    risk: 'Low'
-  },
-  {
-    id: 'ORD-54188',
-    customer: 'Masked #77AD',
-    affiliate: 'Mira Solis',
-    total: '$329.00',
-    status: 'Refunded',
-    attribution: 'Coupon',
-    risk: 'Medium'
-  },
-  {
-    id: 'ORD-54162',
-    customer: 'Masked #64BH',
-    affiliate: 'Orion Labs',
-    total: '$249.00',
-    status: 'Paid',
-    attribution: 'Manual Override',
-    risk: 'Review'
-  }
-];
+"use client";
+
+import { useEffect, useState } from "react";
+import { listMockOrders } from "../../../src/lib/mock-admin-service";
+import { Badge, EmptyState, FilterPill, LoadingRow, PageHeader, SearchInput, TableShell } from "../../../src/lib/ui";
+
+type OrderRow = {
+  id: string;
+  orderNumber: string;
+  affiliateId: string;
+  amount: number;
+  currency: string;
+  status: string;
+  manualOverride: boolean;
+  createdAt: string;
+};
 
 export default function OrdersPage() {
+  const [rows, setRows] = useState<OrderRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({ status: "all", search: "" });
+
+  useEffect(() => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = listMockOrders({
+        search: filters.search || undefined,
+        status: filters.status !== "all" ? filters.status : undefined
+      });
+      setRows(
+        res.data.map((item) => ({
+          id: item.id,
+          orderNumber: item.orderNumber,
+          affiliateId: item.affiliateId,
+          amount: item.amount,
+          currency: item.currency,
+          status: item.status,
+          manualOverride: item.attribution?.manualOverride ?? false,
+          createdAt: item.createdAt
+        }))
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to load orders");
+    } finally {
+      setLoading(false);
+    }
+  }, [filters]);
+
   return (
-    <div className="flex flex-col gap-8">
-      <header className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.4em] text-brand">Orders & Refunds</p>
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">Attribution Stream</h1>
-        <p className="max-w-3xl text-sm text-slate-600 dark:text-slate-300">
-          All orders are ingested idempotently via webhooks. Attribute by last click or coupon and
-          handle manual overrides with a full audit trail.
-        </p>
-      </header>
-      <div className="overflow-hidden rounded-3xl border border-slate-800/70 bg-slate-900/60 shadow-lg shadow-black/20">
-        <table className="min-w-full divide-y divide-slate-800/70 text-sm text-slate-200">
-          <thead className="bg-slate-950/60 text-xs uppercase tracking-wide text-slate-400">
-            <tr>
-              <th className="px-6 py-4 text-left font-medium">Order</th>
-              <th className="px-6 py-4 text-left font-medium">Affiliate</th>
-              <th className="px-6 py-4 text-left font-medium">Total</th>
-              <th className="px-6 py-4 text-left font-medium">Status</th>
-              <th className="px-6 py-4 text-left font-medium">Attribution</th>
-              <th className="px-6 py-4 text-left font-medium">Risk</th>
-              <th className="px-6 py-4 text-right font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800/70">
-            {orders.map((order) => (
-              <tr key={order.id} className="hover:bg-brand/10">
-                <td className="px-6 py-4">
-                  <p className="font-semibold text-white">{order.id}</p>
-                  <p className="text-xs text-slate-400">{order.customer}</p>
-                </td>
-                <td className="px-6 py-4 text-xs text-slate-300">{order.affiliate}</td>
-                <td className="px-6 py-4 text-xs text-slate-300">{order.total}</td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                      order.status === 'Paid'
-                        ? 'bg-emerald-500/20 text-emerald-300'
-                        : 'bg-amber-500/20 text-amber-300'
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 text-xs text-slate-300">{order.attribution}</td>
-                <td className="px-6 py-4 text-xs text-brand">{order.risk}</td>
-                <td className="px-6 py-4 text-right text-xs">
-                  <button className="rounded-full border border-slate-700/70 px-3 py-1 text-xs font-semibold text-slate-200 hover:border-brand hover:text-brand">
-                    View timeline
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="flex flex-col gap-6">
+      <PageHeader
+        title="Orders & Refunds"
+        eyebrow="Commerce"
+        description="Review attributed orders, overrides, and refunds."
+        actions={
+          <FilterPill
+            label="Status"
+            value={filters.status}
+            onChange={(value) => setFilters((f) => ({ ...f, status: value }))}
+            options={[
+              { value: "all", label: "All" },
+              { value: "paid", label: "Paid" },
+              { value: "pending", label: "Pending" },
+              { value: "refunded", label: "Refunded" },
+              { value: "flagged", label: "Flagged" }
+            ]}
+          />
+        }
+      />
+
+      <div className="flex flex-col gap-3 rounded-3xl border border-slate-200/70 bg-white/90 p-4 shadow-sm dark:border-slate-800/70 dark:bg-slate-900/70">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <SearchInput
+            placeholder="Search by order ID or number"
+            value={filters.search}
+            onChange={(next) => setFilters((f) => ({ ...f, search: next }))}
+          />
+          <span className="text-xs text-muted">{rows.length} orders</span>
+        </div>
+
+        {error && (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50/80 px-3 py-2 text-sm text-rose-700 dark:border-rose-500/50 dark:bg-rose-500/15 dark:text-rose-100">
+            {error}
+          </div>
+        )}
+
+        <TableShell headers={["Order", "Status", "Amount", "Override", "Created"]}>
+          {loading ? (
+            <LoadingRow label="Loading orders..." />
+          ) : rows.length === 0 ? (
+            <EmptyState title="No orders found." />
+          ) : (
+            rows.map((row) => (
+              <div
+                key={row.id}
+                className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] items-center gap-2 px-4 py-3 text-sm text-slate-700 dark:text-slate-200"
+              >
+                <div className="flex flex-col">
+                  <span className="font-semibold text-slate-900 dark:text-white">{row.orderNumber}</span>
+                  <span className="text-xs text-muted">Affiliate: {row.affiliateId}</span>
+                </div>
+                <Badge
+                  tone={
+                    row.status === "paid"
+                      ? "success"
+                      : row.status === "refunded"
+                      ? "warn"
+                      : row.status === "flagged"
+                      ? "warn"
+                      : "muted"
+                  }
+                >
+                  {row.status}
+                </Badge>
+                <div className="text-xs font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">
+                  {formatPrice(row.amount, row.currency)}
+                </div>
+                <Badge tone={row.manualOverride ? "info" : "muted"}>
+                  {row.manualOverride ? "Manual" : "Auto"}
+                </Badge>
+                <div className="text-xs text-muted">{new Date(row.createdAt).toLocaleDateString()}</div>
+              </div>
+            ))
+          )}
+        </TableShell>
       </div>
     </div>
   );
+}
+
+function formatPrice(value: number, currency: string) {
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency || "USD",
+      maximumFractionDigits: 0
+    }).format(value);
+  } catch {
+    return `$${value.toFixed(0)}`;
+  }
 }

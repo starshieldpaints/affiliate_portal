@@ -49,6 +49,29 @@ Both commands respect `DATABASE_URL`, so be sure it points at the database you i
 
 Environment variables live in `.env`. Start from `.env.example`, copy to `.env`, and tailor secrets per environment before running services. Set `AFFILIATE_APP_URL` to the public URL of the affiliate PWA so SendGrid emails can link users to the verification page.
 
+### Health & Readiness
+
+- Liveness: `GET /health` returns a simple ok payload.
+- Readiness: `GET /health/ready` pings the database via Prisma; point your load balancer/ingress to this for target health.
+
+### Environment & Logging
+
+- Copy `.env.example` files under `services/core`, `apps/affiliate`, and `apps/admin` and fill per environment (development/staging/production).
+- Sensitive keys (JWT, SendGrid, Twilio, GCS, Firebase) must be injected via your secrets manager; do not commit live secrets.
+- Rate limiting defaults are driven by `RATE_LIMIT_*` envs; logging level/pretty-print via `LOG_LEVEL` / `LOG_PRETTY`.
+
+### CI/CD (suggested skeleton)
+
+Add a workflow (e.g., `.github/workflows/ci.yml`) that runs on PRs:
+
+```bash
+pnpm install
+pnpm lint
+pnpm test
+pnpm --filter core-api prisma migrate diff --from-empty --to-schema-datamodel ./services/core/prisma/schema.prisma --output ./tmp.sql
+pnpm build
+```
+
 ## Product Catalog API
 
 - `GET /products?page=1&pageSize=20` (core API) serves paginated products with category labels; defaults to `page=1`, `pageSize=20`, and caps at 100 per call.

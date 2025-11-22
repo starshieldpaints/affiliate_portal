@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode } from 'react';
 import { AppShell } from '../../src/components/AppShell';
 import { AuthGate } from '../../src/components/AuthGate';

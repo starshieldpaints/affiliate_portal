@@ -19,6 +19,18 @@ export type CatalogProduct = {
   conversion?: string | null;
 };
 
+export type CatalogProductDetail = {
+  product: CatalogProduct | null;
+  variants: Array<{
+    id: string;
+    name: string;
+    price: number;
+    currency: string;
+    sku: string | null;
+    imageUrl: string | null;
+  }>;
+};
+
 export type PaginatedResponse<T> = {
   data: T[];
   meta: {

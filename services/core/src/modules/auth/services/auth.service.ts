@@ -15,7 +15,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { LoginRateLimiterService } from './login-rate-limiter.service';
-import { ContactVerificationService } from './contact-verification.service';
+import { FirebaseAuthService } from './firebase-auth.service';
 import { SendVerificationDto } from '../dto/send-verification.dto';
 import { VerifyOtpDto } from '../dto/verify-otp.dto';
 
@@ -32,7 +32,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
     private readonly rateLimiter: LoginRateLimiterService,
-    private readonly contactVerification: ContactVerificationService
+    private readonly firebaseAuth: FirebaseAuthService
   ) {}
 
   private readonly logger = new Logger(AuthService.name);
@@ -122,6 +122,15 @@ export class AuthService {
       typeof marketingOptIn === 'boolean' ? marketingOptIn : null;
 
     const normalizedPhone = phone ? this.normalizePhone(phone) : undefined;
+    if (normalizedPhone) {
+      const phoneUser = await this.prisma.affiliateProfile.findUnique({
+        where: { phone: normalizedPhone },
+        select: { userId: true }
+      });
+      if (phoneUser) {
+        throw new ConflictException('An account with this phone is already registered');
+      }
+    }
 
     const { user } = await this.prisma.$transaction(async (tx) => {
       const createdUser = await tx.user.create({
@@ -185,9 +194,9 @@ export class AuthService {
       if (user.emailVerifiedAt) {
         return { delivered: false, alreadyVerified: true };
       }
-      await this.contactVerification.sendEmailVerification(user.id, email);
-      await this.logAuthEvent(user.id, 'auth.verification.email.sent');
-      return { delivered: true };
+      // Firebase handles OTP/email verification; no email is sent from this service.
+      await this.logAuthEvent(user.id, 'auth.verification.email.delegated');
+      return { delivered: false, useFirebase: true };
     }
 
     const phone = dto.phone ? this.normalizePhone(dto.phone) : null;
@@ -208,9 +217,8 @@ export class AuthService {
       return { delivered: false, alreadyVerified: true };
     }
 
-    await this.contactVerification.sendPhoneVerification(profile.userId, phone);
-    await this.logAuthEvent(profile.userId, 'auth.verification.phone.sent');
-    return { delivered: true };
+    await this.logAuthEvent(profile.userId, 'auth.verification.phone.delegated');
+    return { delivered: false, useFirebase: true };
   }
 
   async verifyContactCode(dto: VerifyOtpDto) {
@@ -233,12 +241,25 @@ export class AuthService {
         return { verified: true, alreadyVerified: true };
       }
 
-      await this.contactVerification.verifyCode(user.id, VerificationTarget.email, dto.code);
+      if (!dto.firebaseIdToken) {
+        throw new BadRequestException('Firebase ID token is required for email verification');
+      }
+
+      const claims = await this.firebaseAuth.verifyIdToken(dto.firebaseIdToken);
+      if (!claims.email || claims.email.toLowerCase() !== email) {
+        throw new BadRequestException('Firebase email does not match the requested email');
+      }
+      if (!claims.email_verified) {
+        throw new BadRequestException('Email is not verified in Firebase');
+      }
+
       await this.prisma.user.update({
         where: { id: user.id },
         data: { emailVerifiedAt: new Date() }
       });
-      await this.logAuthEvent(user.id, 'auth.verification.email.completed');
+      await this.logAuthEvent(user.id, 'auth.verification.email.completed', {
+        via: 'firebase'
+      });
       return { verified: true };
     }
 
@@ -260,12 +281,23 @@ export class AuthService {
       return { verified: true, alreadyVerified: true };
     }
 
-    await this.contactVerification.verifyCode(profile.userId, VerificationTarget.phone, dto.code);
+    if (!dto.firebaseIdToken) {
+      throw new BadRequestException('Firebase ID token is required for phone verification');
+    }
+
+    const claims = await this.firebaseAuth.verifyIdToken(dto.firebaseIdToken);
+    const firebasePhone = claims.phone_number ? this.normalizePhone(claims.phone_number) : null;
+    if (!firebasePhone || firebasePhone !== phone) {
+      throw new BadRequestException('Firebase phone does not match the requested phone');
+    }
+
     await this.prisma.affiliateProfile.update({
       where: { phone },
       data: { phoneVerifiedAt: new Date() }
     });
-    await this.logAuthEvent(profile.userId, 'auth.verification.phone.completed');
+    await this.logAuthEvent(profile.userId, 'auth.verification.phone.completed', {
+      via: 'firebase'
+    });
     return { verified: true };
   }
 
@@ -468,27 +500,12 @@ export class AuthService {
   }
 
   private async sendVerificationChallenges(userId: string, email: string, phone?: string) {
-    try {
-      await this.contactVerification.sendEmailVerification(userId, email);
-    } catch (error) {
-      this.logger.error(
-        `Failed to send email verification for user ${userId}: ${
-          error instanceof Error ? error.message : 'unknown error'
-        }`
-      );
-    }
-
-    if (phone) {
-      try {
-        await this.contactVerification.sendPhoneVerification(userId, phone);
-      } catch (error) {
-        this.logger.error(
-          `Failed to send phone verification for user ${userId}: ${
-            error instanceof Error ? error.message : 'unknown error'
-          }`
-        );
-      }
-    }
+    // Delegated to Firebase OTP; nothing to send from backend.
+    await this.logAuthEvent(userId, 'auth.verification.delegated', {
+      email,
+      phone,
+      provider: 'firebase'
+    });
   }
 
   private normalizePhone(phone: string) {

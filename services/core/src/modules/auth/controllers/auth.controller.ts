@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Throttle } from '@nestjs/throttler';
 import { Public } from '../../../common/decorators/public.decorator';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
@@ -20,6 +21,7 @@ export class AuthController {
 
   @Post('login')
   @Public()
+  @Throttle({ auth: {} })
   async login(
     @Body() body: LoginDto,
     @Req() req: Request,
@@ -33,6 +35,7 @@ export class AuthController {
 
   @Post('register')
   @Public()
+  @Throttle({ auth: {} })
   async register(
     @Body() body: RegisterDto,
     @Req() req: Request,
@@ -46,6 +49,7 @@ export class AuthController {
 
   @Post('refresh')
   @Public()
+  @Throttle({ auth: {} })
   async refresh(
     @Body() body: RefreshTokenDto,
     @Req() req: Request,
@@ -87,18 +91,21 @@ export class AuthController {
 
   @Post('verification/send')
   @Public()
+  @Throttle({ auth: {} })
   async sendVerification(@Body() body: SendVerificationDto) {
     return this.authService.sendVerificationCode(body);
   }
 
   @Post('verification/verify')
   @Public()
+  @Throttle({ auth: {} })
   async verifyContact(@Body() body: VerifyOtpDto) {
     return this.authService.verifyContactCode(body);
   }
 
   @Post('admin/login')
   @Public()
+  @Throttle({ auth: {} })
   async adminLogin(
     @Body() body: LoginDto,
     @Req() req: Request,
@@ -113,6 +120,7 @@ export class AuthController {
 
   @Post('admin/refresh')
   @Public()
+  @Throttle({ auth: {} })
   async adminRefresh(
     @Body() body: RefreshTokenDto,
     @Req() req: Request,

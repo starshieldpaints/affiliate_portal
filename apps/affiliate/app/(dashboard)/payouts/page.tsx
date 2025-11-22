@@ -58,20 +58,20 @@ export default function PayoutsPage() {
           ) : (
             <div className="mt-4 divide-y divide-slate-200/70 dark:divide-slate-800/70">
               {history.map((payout) => (
-                <div key={payout.id} className="flex items-center justify-between py-4 text-sm">
+                <div key={payout.id} className="flex flex-col gap-3 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="font-semibold text-slate-900 dark:text-white">
                       {formatCurrency(payout.amount, payout.currency)}
                     </p>
                     <p className="text-xs text-muted">{payout.id}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left text-xs text-muted sm:text-right">
                     <p className="text-xs uppercase tracking-wide text-muted">
                       {formatDate(payout.createdAt)}
                     </p>
                     <p className="text-xs text-muted">{payout.method ?? 'Stripe'}</p>
                   </div>
-                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClass(payout.status)}`}>
+                  <span className={`inline-flex w-fit items-center justify-center rounded-full px-3 py-1 text-xs font-semibold ${statusClass(payout.status)}`}>
                     {payout.status}
                   </span>
                 </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../../../../src/store/auth-store';
@@ -224,7 +224,7 @@ export default function RegisterPage() {
           whileHover={{ scale: 1.01 }}
         >
           <UserPlus2 className="h-4 w-4" />
-          {submitting ? 'Creating account…' : 'Create account'}
+          {submitting ? 'Creating account...' : 'Create account'}
         </motion.button>
       </motion.form>
 
@@ -432,42 +432,28 @@ function CountrySelectField({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [filtered, setFiltered] = useState(COUNTRY_OPTIONS);
 
-  useEffect(() => {
-    if (!open) {
-      return undefined;
-    }
-    const handler = (event: MouseEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [open]);
-
-  const filteredOptions = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
+  const filterOptions = (needle: string) => {
+    const normalizedQuery = needle.trim().toLowerCase();
     if (!normalizedQuery) {
-      return COUNTRY_OPTIONS;
+      setFiltered(COUNTRY_OPTIONS);
+      return;
     }
-    return COUNTRY_OPTIONS.filter(
-      (option) =>
-        option.name.toLowerCase().includes(normalizedQuery) ||
-        option.iso2.toLowerCase().includes(normalizedQuery) ||
-        option.dialCode.includes(normalizedQuery)
+    setFiltered(
+      COUNTRY_OPTIONS.filter(
+        (option) =>
+          option.name.toLowerCase().includes(normalizedQuery) ||
+          option.iso2.toLowerCase().includes(normalizedQuery) ||
+          option.dialCode.includes(normalizedQuery)
+      )
     );
-  }, [query]);
-
-  const selectedOption = value
-    ? COUNTRY_OPTIONS.find((option) => option.name === value)
-    : null;
+  };
 
   return (
     <div className="space-y-2">
       <label className="text-sm text-slate-600 dark:text-slate-300">Country</label>
-      <div className="relative" ref={containerRef}>
+      <div className="relative">
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
@@ -475,9 +461,7 @@ function CountrySelectField({
           aria-haspopup="listbox"
           aria-expanded={open}
         >
-          <span className="truncate">
-            {value || 'Select your country'}
-          </span>
+          <span className="truncate">{value || 'Select your country'}</span>
           <svg
             className="h-4 w-4 text-slate-500 dark:text-slate-400"
             viewBox="0 0 24 24"
@@ -499,48 +483,45 @@ function CountrySelectField({
               <input
                 type="text"
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  filterOptions(event.target.value);
+                }}
                 placeholder="Search country or dial code"
                 className="w-full rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2 text-sm text-slate-900 focus:border-brand focus:outline-none dark:border-slate-700 dark:bg-slate-900/70 dark:text-white"
               />
             </div>
             <div className="max-h-56 overflow-y-auto px-1 py-2 text-sm">
-              {filteredOptions.length ? (
-                filteredOptions.map((option) => (
+              {filtered.length ? (
+                filtered.map((option) => (
                   <button
                     type="button"
                     key={option.iso2}
                     onClick={() => {
                       onChange(option.name);
                       setQuery('');
+                      setFiltered(COUNTRY_OPTIONS);
                       setOpen(false);
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition ${
                       option.name === value
                         ? 'bg-brand/10 text-brand'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-800/80'
+                        : 'hover:bg-slate-100 dark:hover:bg-slate-800/50'
                     }`}
                   >
-                    <span>{option.name}</span>
-                    <span className="text-xs text-slate-400 dark:text-slate-500">
+                    <span className="truncate">{option.name}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
                       +{option.dialCode}
                     </span>
                   </button>
                 ))
               ) : (
-                <p className="px-3 py-4 text-center text-xs text-slate-400">
-                  No countries match your search.
-                </p>
+                <p className="px-3 py-6 text-center text-xs text-muted">No matches</p>
               )}
             </div>
           </div>
         )}
       </div>
-      {value && selectedOption?.dialCode && (
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Dial code +{selectedOption.dialCode}
-        </p>
-      )}
     </div>
   );
 }

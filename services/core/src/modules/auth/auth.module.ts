@@ -7,15 +7,13 @@ import { AuthService } from './services/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PrismaModule } from '../prisma/prisma.module';
 import { LoginRateLimiterService } from './services/login-rate-limiter.service';
-import { NotificationsModule } from '../notifications/notifications.module';
-import { ContactVerificationService } from './services/contact-verification.service';
+import { FirebaseAuthService } from './services/firebase-auth.service';
 
 @Module({
   imports: [
     ConfigModule,
     PassportModule,
     PrismaModule,
-    NotificationsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -33,7 +31,7 @@ import { ContactVerificationService } from './services/contact-verification.serv
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, LoginRateLimiterService, ContactVerificationService],
+  providers: [AuthService, JwtStrategy, LoginRateLimiterService, FirebaseAuthService],
   exports: [AuthService]
 })
 export class AuthModule {}

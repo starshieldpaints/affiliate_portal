@@ -42,10 +42,10 @@ export default function ReportsPage() {
           for your own dashboards.
         </p>
         <div className="flex flex-wrap items-center gap-3">
-          <button className="inline-flex items-center justify-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:bg-brand-dark">
+          <button className="inline-flex w-full items-center justify-center rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-foreground hover:bg-brand-dark sm:w-auto">
             Schedule Report
           </button>
-          <button className="inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 hover:border-brand hover:text-brand dark:border-slate-700/70 dark:text-slate-200">
+          <button className="inline-flex w-full items-center justify-center rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 hover:border-brand hover:text-brand dark:border-slate-700/70 dark:text-slate-200 sm:w-auto">
             Export CSV
           </button>
         </div>
@@ -67,15 +67,15 @@ export default function ReportsPage() {
               {cohorts.map((cohort) => (
                 <div
                   key={cohort.label}
-                  className="flex items-center justify-between rounded-2xl border border-slate-200/80 bg-white/85 px-4 py-3 text-slate-700 dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200"
+                  className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white/85 px-4 py-3 text-slate-700 dark:border-slate-800/70 dark:bg-slate-950/60 dark:text-slate-200 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs uppercase tracking-wide text-muted">{cohort.label}</p>
                     <p className="text-sm text-muted">
                       {cohort.clicks} clicks · {cohort.conversions} conversions
                     </p>
                   </div>
-                  <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                  <p className="text-lg font-semibold text-slate-900 dark:text-white sm:text-right">
                     {formatCurrency(cohort.commission)}
                   </p>
                 </div>
@@ -130,3 +130,4 @@ function formatCurrency(value: number) {
 function formatNumber(value: number) {
   return new Intl.NumberFormat('en-US').format(value ?? 0);
 }
+
