@@ -24,6 +24,9 @@ function buildCorsOrigins() {
   const allowAny = configuredOrigins.includes("*");
 
   return (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
     if (!origin || allowAny) {
       return callback(null, true);
     }
@@ -54,7 +57,16 @@ async function bootstrap() {
                 imgSrc: ["'self'", "https:", "data:"],
                 scriptSrc: ["'self'", "'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'", "https:"],
-                connectSrc: ["'self'", process.env.AFFILIATE_APP_URL ?? ""]
+                connectSrc: [
+                  "'self'",
+                  process.env.AFFILIATE_APP_URL ?? "",
+                  process.env.ADMIN_APP_URL ?? "",
+                  process.env.NEXT_PUBLIC_APP_URL ?? "",
+                  'https://localhost:3000',
+                  'https://localhost:3001',
+                  'http://localhost:3000',
+                  'http://localhost:3001'
+                ]
               }
             }
           : false,
@@ -70,8 +82,16 @@ async function bootstrap() {
     })
   );
   app.enableCors({
-    origin: buildCorsOrigins(),
-    credentials: true
+    origin: (origin, callback) => {
+      if (process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+      return buildCorsOrigins()(origin, callback);
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"],
+    exposedHeaders: ["Content-Type", "Authorization"]
   });
   app.useGlobalPipes(
     new ValidationPipe({

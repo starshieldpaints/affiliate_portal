@@ -1,4 +1,5 @@
 import type { AdminUser } from '../types/auth';
+import type { AuthUser } from '../types/auth';
 import type { AffiliatesListResponse } from '../types/affiliates';
 import type { CommissionRulesListResponse, CreateCommissionRulePayload } from '../types/commission-rules';
 import type {
@@ -6,8 +7,17 @@ import type {
   CreateAdminProductPayload,
   UpdateAdminProductPayload
 } from '../types/catalog';
+import type { OverviewResponse } from '../types/overview';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+const USE_MOCK = process.env.NEXT_PUBLIC_ADMIN_MOCK === 'true';
+
+const mockUser: AuthUser = {
+  id: 'admin-demo',
+  email: 'admin@example.com',
+  roles: ['admin'],
+  adminProfile: { displayName: 'Console Admin' }
+};
 
 type RequestOptions = Omit<RequestInit, 'body'> & { body?: unknown };
 
@@ -76,10 +86,18 @@ async function apiFetch<T>(
 }
 
 export const adminAuthApi = {
-  me: () => apiFetch<AdminUser | null>('/auth/admin/me'),
-  login: (payload: { email: string; password: string }) =>
-    apiFetch<AdminUser>('/auth/admin/login', { method: 'POST', body: payload }),
-  logout: () => apiFetch('/auth/admin/logout', { method: 'POST', body: {} })
+  me: () => {
+    if (USE_MOCK) return Promise.resolve(mockUser as AdminUser);
+    return apiFetch<AdminUser | null>('/auth/admin/me');
+  },
+  login: (payload: { email: string; password: string }) => {
+    if (USE_MOCK) return Promise.resolve(mockUser as AdminUser);
+    return apiFetch<AdminUser>('/auth/admin/login', { method: 'POST', body: payload });
+  },
+  logout: () => {
+    if (USE_MOCK) return Promise.resolve(null);
+    return apiFetch('/auth/admin/logout', { method: 'POST', body: {} });
+  }
 };
 
 export const adminApi = {
@@ -122,5 +140,6 @@ export const adminApi = {
   updateProduct: (productId: string, payload: UpdateAdminProductPayload) =>
     apiFetch<AdminProduct>(`/admin/products/${productId}`, { method: 'PATCH', body: payload }),
   deleteProduct: (productId: string) =>
-    apiFetch<{ success: boolean } | null>(`/admin/products/${productId}`, { method: 'DELETE' })
+    apiFetch<{ success: boolean } | null>(`/admin/products/${productId}`, { method: 'DELETE' }),
+  overview: () => apiFetch<OverviewResponse>('/admin/overview')
 };

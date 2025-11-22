@@ -93,7 +93,6 @@ export default function CatalogPage() {
         }
       }
     };
-// commit
     fetchProducts();
     return () => {
       isMounted = false;
@@ -125,7 +124,6 @@ export default function CatalogPage() {
       return matchesSearch && matchesCategory;
     });
 
-    // Flatten identical base names to a single group (in case of data anomalies)
     const collapsed = new Map<string, VariantGroup>();
     for (const group of filtered) {
       if (!collapsed.has(group.baseName)) {

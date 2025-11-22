@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "../utils/cn";
-import { Loader2, Search } from "lucide-react";
+import { ChevronDown, Loader2, Search } from "lucide-react";
 import { ReactNode } from "react";
+import { cn } from "../utils/cn";
 
 export function PageHeader({
   title,
@@ -45,19 +45,26 @@ export function FilterPill({
   options: { value: string; label: string }[];
 }) {
   return (
-    <label className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
+    <label className="relative flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300">
       <span>{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="bg-transparent text-slate-800 focus:outline-none dark:text-white"
-      >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+      <div className="relative flex items-center">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="appearance-none rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700 shadow-inner transition focus:border-brand focus:outline-none focus:ring-0 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+        >
+          {options.map((opt) => (
+            <option
+              key={opt.value}
+              value={opt.value}
+              className="bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100"
+            >
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-slate-500" />
+      </div>
     </label>
   );
 }
@@ -72,10 +79,10 @@ export function SearchInput({
   onChange: (next: string) => void;
 }) {
   return (
-    <div className="flex flex-1 items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-inner focus-within:ring-2 focus-within:ring-brand/30 dark:border-slate-800 dark:bg-slate-900/60">
+    <div className="flex flex-1 items-center gap-2 rounded-3xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus-within:border-brand focus-within:ring-0 dark:border-slate-800 dark:bg-slate-900/70">
       <Search className="h-4 w-4 text-slate-400" />
       <input
-        className="w-full bg-transparent outline-none placeholder:text-slate-400"
+        className="w-full border-none bg-transparent text-slate-800 outline-none placeholder:text-slate-400 ring-0 focus:border-none focus:outline-none focus:ring-0 focus-visible:border-none focus-visible:outline-none focus-visible:ring-0 dark:text-white"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}

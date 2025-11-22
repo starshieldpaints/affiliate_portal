@@ -1,27 +1,5 @@
-import {
-  ArrayMinSize,
-  IsArray,
-  IsBoolean,
-  IsDateString,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested
-} from 'class-validator';
-import { Type } from 'class-transformer';
-
-export class CommissionRuleScopeDto {
-  @IsEnum(['product', 'category', 'affiliate', 'country', 'global'], {
-    message: 'Scope type must be one of product, category, affiliate, country, or global'
-  })
-  type!: 'product' | 'category' | 'affiliate' | 'country' | 'global';
-
-  @IsOptional()
-  @IsString()
-  targetId?: string;
-}
+import { IsArray, IsBoolean, IsDateString, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
 
 export class CreateCommissionRuleDto {
   @IsString()
@@ -29,11 +7,11 @@ export class CreateCommissionRuleDto {
   name!: string;
 
   @IsString()
-  @IsNotEmpty()
-  type!: string;
+  @IsIn(['percent', 'fixed'])
+  rateType!: 'percent' | 'fixed';
 
   @IsNumber()
-  rate!: number;
+  rateValue!: number;
 
   @IsBoolean()
   @IsOptional()
@@ -52,7 +30,15 @@ export class CreateCommissionRuleDto {
 
   @IsOptional()
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CommissionRuleScopeDto)
-  scopes?: CommissionRuleScopeDto[];
+  categoryIds?: string[];
+
+  @IsOptional()
+  @IsArray()
+  productIds?: string[];
+
+  @IsOptional()
+  @IsString()
+  status?: 'active' | 'inactive';
 }
+
+export class UpdateCommissionRuleDto extends PartialType(CreateCommissionRuleDto) {}

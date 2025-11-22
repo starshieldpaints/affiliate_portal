@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { Space_Grotesk } from 'next/font/google';
 import { navigation } from '../config/navigation';
@@ -13,7 +13,7 @@ import { ThemeToggle } from './theme-toggle';
 const brandFont = Space_Grotesk({ subsets: ['latin'], weight: ['600'] });
 
 export function AppShell({ children }: PropsWithChildren) {
-  const [pathname, setPathname] = useState<string>('/');
+  const pathname = usePathname() || '/';
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
@@ -25,12 +25,6 @@ export function AppShell({ children }: PropsWithChildren) {
   useEffect(() => {
     setMobileNavOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setPathname(window.location.pathname);
-    }
-  }, []);
 
   const handleLogout = async () => {
     await logout();

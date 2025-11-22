@@ -21,7 +21,20 @@ export const mockAffiliates = Array.from({ length: 12 }).map((_, idx) => {
     phone: '+911234567890',
     country: 'IN',
     payoutMethod: idx % 2 === 0 ? 'upi' : 'bank_transfer',
-    payoutDetails: idx % 2 === 0 ? { upiId: 'name@bank' } : { bank: 'HDFC', account: 'XXXX' },
+    payoutDetails:
+      idx % 2 === 0
+        ? { upiId: 'name@bank', panNumber: 'ABCDE1234F', aadhaarNumber: '123412341234' }
+        : {
+            bank: 'HDFC',
+            accountHolder: 'Affiliate ' + (idx + 1),
+            account: 'XXXXXXXX1234',
+            ifsc: 'HDFC0001234',
+            panNumber: 'ABCDE1234F',
+            aadhaarNumber: '123412341234'
+          },
+    panImageUrl: 'https://placehold.co/320x200/png?text=PAN',
+    aadhaarFrontUrl: 'https://placehold.co/320x200/png?text=Aadhaar+Front',
+    aadhaarBackUrl: 'https://placehold.co/320x200/png?text=Aadhaar+Back',
     createdAt,
     updatedAt: createdAt
   };
@@ -63,16 +76,39 @@ export const mockCommissionRules = Array.from({ length: 6 }).map((_, idx) => {
 export const mockOrders = Array.from({ length: 8 }).map((_, idx) => {
   const createdAt = addDays(now, -idx).toISOString();
   const statuses = ['paid', 'pending', 'refunded', 'flagged'] as const;
+  const paymentStatuses = ['paid', 'pending', 'refunded', 'paid'] as const;
   return {
     id: `ord_${idx + 1}`,
     orderNumber: `SO-${1000 + idx}`,
+    externalOrderId: `EXT-${5000 + idx}`,
     affiliateId: `aff_${idx + 1}`,
     productId: `prod_${idx + 1}`,
     amount: 2599 + idx * 100,
     currency: 'INR',
     status: statuses[idx % statuses.length],
+    paymentStatus: paymentStatuses[idx % paymentStatuses.length],
+    placedAt: addDays(now, -(idx + 1)).toISOString(),
+    couponCode: idx % 2 === 0 ? 'SAVE10' : null,
+    storeId: idx % 2 === 0 ? 'store_india' : 'store_global',
     attribution: { ruleId: `rule_${(idx % 3) + 1}`, manualOverride: idx % 3 === 0 },
-    createdAt
+    risk: idx % 4 === 0 ? 'high' : 'normal',
+    createdAt,
+    items: [
+      {
+        name: `Shield Paint ${idx + 1}L`,
+        sku: `SL-${idx + 1}L`,
+        quantity: 1 + (idx % 2),
+        unitPriceNet: 1299 + idx * 50,
+        lineTotalNet: (1299 + idx * 50) * (1 + (idx % 2))
+      },
+      {
+        name: 'Primer A',
+        sku: `PR-${idx + 10}`,
+        quantity: 1,
+        unitPriceNet: 499,
+        lineTotalNet: 499
+      }
+    ]
   };
 });
 

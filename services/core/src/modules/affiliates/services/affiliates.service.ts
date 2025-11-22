@@ -829,12 +829,32 @@ export class AffiliatesService {
     return profile?.id ?? null;
   }
 
+  private async ensureAffiliateProfile(userId: string) {
+    const existing = await this.findAffiliateId(userId);
+    if (existing) return existing;
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+
+    const referral = `ref_${Math.random().toString(36).slice(2, 8)}`;
+    const created = await this.prisma.affiliateProfile.create({
+      data: {
+        userId,
+        displayName: user.email,
+        defaultReferralCode: referral,
+        kycStatus: KycStatus.pending,
+        payoutMethod: 'upi',
+        payoutDetails: Prisma.JsonNull,
+        panNumber: 'PENDING',
+        aadhaarNumber: 'PENDING'
+      },
+      select: { id: true }
+    });
+    return created.id;
+  }
+
   private async requireAffiliateId(userId: string) {
-    const affiliateId = await this.findAffiliateId(userId);
-    if (!affiliateId) {
-      throw new NotFoundException('Affiliate profile not found');
-    }
-    return affiliateId;
+    return this.ensureAffiliateProfile(userId);
   }
 
   private weekKey(date: Date) {

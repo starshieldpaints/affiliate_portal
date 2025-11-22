@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, CommissionRule } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateCommissionRuleDto, CommissionRuleScopeDto } from '../dto/commission-rule.dto';
+import { CreateCommissionRuleDto } from '../dto/commission-rule.dto';
 
 type ListParams = {
-  status?: 'all' | 'active' | 'scheduled' | 'expired' | 'inactive';
+  status?: 'all' | 'active' | 'inactive';
   search?: string;
-  take?: number;
+  page?: number;
+  pageSize?: number;
 };
 
 type RuleWithScopes = Prisma.CommissionRuleGetPayload<{
@@ -27,14 +28,17 @@ export class CommissionRulesService {
 
   async list(params: ListParams = {}) {
     const where = this.buildWhereClause(params);
-    const take = Math.min(Math.max(params.take ?? 50, 1), 200);
+    const take = Math.min(Math.max(params.pageSize ?? 20, 1), 200);
+    const page = params.page && params.page > 0 ? params.page : 1;
+    const skip = (page - 1) * take;
 
     const [rules, total] = await this.prisma.$transaction([
       this.prisma.commissionRule.findMany({
         where,
         include: this.scopeInclude(),
         orderBy: [{ isActive: 'desc' }, { startsAt: 'desc' }],
-        take
+        take,
+        skip
       }),
       this.prisma.commissionRule.count({ where })
     ]);
@@ -52,7 +56,9 @@ export class CommissionRulesService {
       data,
       meta: {
         total,
-        take,
+        page,
+        pageSize: take,
+        pageCount: Math.ceil(total / take),
         statusCounts: stats
       }
     };
@@ -93,18 +99,6 @@ export class CommissionRulesService {
             AND: [{ OR: [{ endsAt: null }, { endsAt: { gte: now } }] }]
           });
           break;
-        case 'scheduled':
-          filters.push({
-            isActive: true,
-            startsAt: { gt: now }
-          });
-          break;
-        case 'expired':
-          filters.push({
-            isActive: true,
-            endsAt: { lt: now }
-          });
-          break;
         case 'inactive':
           filters.push({
             isActive: false
@@ -125,17 +119,33 @@ export class CommissionRulesService {
   async createRule(input: CreateCommissionRuleDto) {
     const payload: Prisma.CommissionRuleCreateInput = {
       name: input.name.trim(),
-      type: input.type.trim(),
-      rate: new Prisma.Decimal(input.rate),
+      type: input.rateType.trim(),
+      rate: new Prisma.Decimal(input.rateValue),
       excludeTaxShipping: input.excludeTaxShipping ?? true,
       startsAt: input.startsAt ? new Date(input.startsAt) : null,
       endsAt: input.endsAt ? new Date(input.endsAt) : null,
-      conditions: input.conditions ?? undefined
+      conditions: input.conditions ?? undefined,
+      isActive: input.status ? input.status === 'active' : true
     };
 
-    if (input.scopes?.length) {
+    const scopeCreates: Prisma.CommissionRuleScopeCreateWithoutCommissionRuleInput[] = [];
+    if (input.categoryIds?.length) {
+      scopeCreates.push(
+        ...input.categoryIds.map((id) => ({
+          category: { connect: { id } }
+        }))
+      );
+    }
+    if (input.productIds?.length) {
+      scopeCreates.push(
+        ...input.productIds.map((id) => ({
+          product: { connect: { id } }
+        }))
+      );
+    }
+    if (scopeCreates.length) {
       payload.scopes = {
-        create: input.scopes.map((scope) => this.mapScope(scope))
+        create: scopeCreates
       };
     }
 
@@ -147,20 +157,49 @@ export class CommissionRulesService {
     return this.serializeRule(created, this.deriveStatus(created));
   }
 
-  private mapScope(scope: CommissionRuleScopeDto): Prisma.CommissionRuleScopeCreateWithoutCommissionRuleInput {
-    switch (scope.type) {
-      case 'product':
-        return { product: scope.targetId ? { connect: { id: scope.targetId } } : undefined };
-      case 'category':
-        return { category: scope.targetId ? { connect: { id: scope.targetId } } : undefined };
-      case 'affiliate':
-        return { affiliate: scope.targetId ? { connect: { id: scope.targetId } } : undefined };
-      case 'country':
-        return { country: scope.targetId ?? null };
-      case 'global':
-      default:
-        return {};
+  async updateRule(id: string, input: Partial<CreateCommissionRuleDto>) {
+    const existing = await this.prisma.commissionRule.findUnique({
+      where: { id },
+      include: { scopes: true }
+    });
+    if (!existing) {
+      throw new NotFoundException('Commission rule not found');
     }
+    const data: Prisma.CommissionRuleUpdateInput = {};
+    if (input.name) data.name = input.name.trim();
+    if (input.rateType) data.type = input.rateType.trim();
+    if (typeof input.rateValue === 'number') data.rate = new Prisma.Decimal(input.rateValue);
+    if (typeof input.excludeTaxShipping === 'boolean') data.excludeTaxShipping = input.excludeTaxShipping;
+    if (input.status) data.isActive = input.status === 'active';
+    if (input.startsAt !== undefined) data.startsAt = input.startsAt ? new Date(input.startsAt) : null;
+    if (input.endsAt !== undefined) data.endsAt = input.endsAt ? new Date(input.endsAt) : null;
+    if (input.conditions !== undefined) data.conditions = input.conditions as Prisma.InputJsonValue;
+
+    if ((input.categoryIds && input.categoryIds.length) || (input.productIds && input.productIds.length)) {
+      data.scopes = {
+        deleteMany: { commissionRuleId: id },
+        create: [
+          ...(input.categoryIds?.map((cid) => ({ category: { connect: { id: cid } } })) ?? []),
+          ...(input.productIds?.map((pid) => ({ product: { connect: { id: pid } } })) ?? [])
+        ]
+      };
+    }
+
+    const updated = (await this.prisma.commissionRule.update({
+      where: { id },
+      data,
+      include: this.scopeInclude()
+    })) as unknown as RuleWithScopes;
+    return this.serializeRule(updated, this.deriveStatus(updated));
+  }
+
+  async setActive(id: string, active: boolean) {
+    const updated = (await this.prisma.commissionRule.update({
+      where: { id },
+      data: { isActive: active },
+      include: this.scopeInclude()
+    })) as unknown as RuleWithScopes;
+    return this.serializeRule(updated, this.deriveStatus(updated));
   }
 
   private scopeInclude(): Prisma.CommissionRuleInclude {
@@ -209,33 +248,17 @@ export class CommissionRulesService {
     return {
       id: rule.id,
       name: rule.name,
-      type: rule.type,
-      rate: Number(rule.rate),
+      rateType: rule.type,
+      rateValue: Number(rule.rate),
       excludeTaxShipping: rule.excludeTaxShipping,
       startsAt: rule.startsAt,
       endsAt: rule.endsAt,
-      isActive: rule.isActive,
       status,
       conditions: rule.conditions,
-      scopes: rule.scopes.map((scope) => {
-        if (scope.product) {
-          return { type: 'product', label: scope.product.name, id: scope.product.id };
-        }
-        if (scope.category) {
-          return { type: 'category', label: scope.category.name, id: scope.category.id };
-        }
-        if (scope.affiliate) {
-          return {
-            type: 'affiliate',
-            label: scope.affiliate.displayName ?? scope.affiliate.defaultReferralCode,
-            id: scope.affiliate.id
-          };
-        }
-        if (scope.country) {
-          return { type: 'country', label: scope.country, id: scope.country };
-        }
-        return { type: 'global', label: 'All inventory', id: 'global' };
-      })
+      appliesTo: {
+        categoryIds: rule.scopes.filter((s) => s.category).map((s) => s.category!.id),
+        productIds: rule.scopes.filter((s) => s.product).map((s) => s.product!.id)
+      }
     };
   }
 }
