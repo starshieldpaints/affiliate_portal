@@ -1,7 +1,11 @@
-import { Controller, Get, Param, Patch, Body, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { FraudService } from '../services/fraud.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { AdminGuard } from '../../../common/guards/admin.guard';
+import { ResolveFraudAlertDto } from '../dto/fraud.dto';
 
 @Controller('admin/fraud/alerts')
+@UseGuards(JwtAuthGuard, AdminGuard)
 export class FraudController {
   constructor(private readonly fraudService: FraudService) {}
 
@@ -20,8 +24,8 @@ export class FraudController {
     return this.fraudService.get(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() body: { status: 'open' | 'closed'; note?: string }) {
-    return this.fraudService.update(id, body.status, body.note);
+  @Patch(':id/resolve')
+  resolve(@Param('id') id: string, @Req() req: any, @Body() body: ResolveFraudAlertDto) {
+    return this.fraudService.resolve(id, req.user?.id, body.notes);
   }
 }

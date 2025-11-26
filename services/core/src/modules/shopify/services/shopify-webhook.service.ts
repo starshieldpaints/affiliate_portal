@@ -13,6 +13,7 @@ import {
 } from '@prisma/client';
 import * as crypto from 'crypto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CommissionEvaluatorService } from '../../commission/services/commission-evaluator.service';
 
 type ShopifyOrderPayload = {
   id?: number | string;
@@ -58,7 +59,8 @@ export class ShopifyWebhookService {
 
   constructor(
     private readonly prisma: PrismaService,
-    configService: ConfigService
+    configService: ConfigService,
+    private readonly commissionEvaluator: CommissionEvaluatorService
   ) {
     this.webhookSecret = configService.get<string>('shopify.webhookSecret', '');
   }
@@ -145,6 +147,29 @@ export class ShopifyWebhookService {
     });
 
     await this.syncLineItems(order.id, payload.line_items ?? [], order.currency);
+    // Evaluate commissions (affiliate attribution not yet resolved here; evaluator skips if none)
+    const items = await this.prisma.orderItem.findMany({
+      where: { orderId: order.id },
+      select: {
+        id: true,
+        lineTotalNet: true,
+        productId: true,
+        product: { select: { categoryId: true } }
+      }
+    });
+    await this.commissionEvaluator.evaluateOrder({
+      orderId: order.id,
+      affiliateId: null, // TODO: inject resolved affiliate attribution when available
+      currency: order.currency,
+      placedAt: order.placedAt,
+      paymentStatus,
+      items: items.map((i) => ({
+        id: i.id,
+        lineTotalNet: i.lineTotalNet,
+        productId: i.productId,
+        categoryId: i.product?.categoryId ?? null
+      }))
+    });
     await this.syncLedgerStatus(order.id, paymentStatus);
   }
 
@@ -331,4 +356,3 @@ export class ShopifyWebhookService {
     }
   }
 }
-

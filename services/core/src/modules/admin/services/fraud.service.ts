@@ -1,81 +1,78 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
-export type Alert = {
-  id: string;
-  type: string;
-  subjectId: string;
-  riskScore: number;
-  status: 'open' | 'closed';
-  createdAt: Date;
-  note?: string;
-};
+type ListParams = { status?: string; type?: string; page?: number; pageSize?: number };
 
 @Injectable()
 export class FraudService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list(params: { status?: string; type?: string; page?: number; pageSize?: number }) {
+  async list(params: ListParams) {
     const { status, type, page = 1, pageSize = 20 } = params;
-    // No fraud table exists; derive alerts from audit logs tagged as FRAUD_ALERT.
-    const where: any = { action: 'FRAUD_ALERT' };
+    const where: Prisma.FraudAlertWhereInput = {};
+    if (status && status !== 'all') where.status = status;
+    if (type) where.type = type;
     const take = Math.min(Math.max(pageSize, 1), 100);
     const skip = (page - 1) * take;
-    const [logs, total] = await this.prisma.$transaction([
-      this.prisma.auditLog.findMany({
+    const [alerts, total] = await this.prisma.$transaction([
+      this.prisma.fraudAlert.findMany({
         where,
+        include: { affiliate: true, order: true, click: true, resolvedBy: true },
         orderBy: { createdAt: 'desc' },
         take,
         skip
       }),
-      this.prisma.auditLog.count({ where })
+      this.prisma.fraudAlert.count({ where })
     ]);
 
-    let alerts: Alert[] = logs.map((l) => ({
-      id: l.id,
-      type: (l.meta as any)?.type ?? 'unknown',
-      subjectId: l.entityId ?? 'unknown',
-      riskScore: Number((l.meta as any)?.riskScore ?? 0),
-      status: ((l.meta as any)?.status as 'open' | 'closed') ?? 'open',
-      createdAt: l.createdAt,
-      note: (l.meta as any)?.note
-    }));
-    if (status && status !== 'all') alerts = alerts.filter((a) => a.status === status);
-    if (type) alerts = alerts.filter((a) => a.type === type);
-
-    return { data: alerts, meta: { page, pageSize: take, total } };
-  }
-
-  async get(id: string): Promise<Alert> {
-    const log = await this.prisma.auditLog.findUnique({ where: { id } });
-    if (!log || log.action !== 'FRAUD_ALERT') throw new NotFoundException('Alert not found');
     return {
-      id: log.id,
-      type: (log.meta as any)?.type ?? 'unknown',
-      subjectId: log.entityId ?? 'unknown',
-      riskScore: Number((log.meta as any)?.riskScore ?? 0),
-      status: ((log.meta as any)?.status as 'open' | 'closed') ?? 'open',
-      createdAt: log.createdAt,
-      note: (log.meta as any)?.note
+      meta: { page, pageSize: take, total, totalPages: Math.ceil(total / take) || 1 },
+      data: alerts.map((a) => this.mapAlert(a))
     };
   }
 
-  async update(id: string, status: 'open' | 'closed', note?: string) {
-    const current = await this.prisma.auditLog.findUnique({ where: { id } });
-    if (!current || current.action !== 'FRAUD_ALERT') throw new NotFoundException('Alert not found');
-    const meta = { ...(current.meta as any), status, note };
-    const updated = await this.prisma.auditLog.update({
+  async get(id: string) {
+    const alert = await this.prisma.fraudAlert.findUnique({
       where: { id },
-      data: { meta }
+      include: { affiliate: true, order: true, click: true, resolvedBy: true }
     });
+    if (!alert) throw new NotFoundException('Fraud alert not found');
+    return { data: this.mapAlert(alert) };
+  }
+
+  async resolve(id: string, userId: string, notes?: string) {
+    const alert = await this.prisma.fraudAlert.findUnique({ where: { id } });
+    if (!alert) throw new NotFoundException('Fraud alert not found');
+    const updated = await this.prisma.fraudAlert.update({
+      where: { id },
+      data: { status: 'resolved', notes, resolvedById: userId, resolvedAt: new Date() }
+    });
+    await this.prisma.auditLog.create({
+      data: {
+        userId,
+        action: 'FRAUD_RESOLVE',
+        entityType: 'fraud_alert',
+        entityId: id,
+        meta: { notes }
+      }
+    });
+    return { ok: true, data: this.mapAlert(updated) };
+  }
+
+  private mapAlert(a: any) {
     return {
-      id: updated.id,
-      type: (updated.meta as any)?.type ?? 'unknown',
-      subjectId: updated.entityId ?? 'unknown',
-      riskScore: Number((updated.meta as any)?.riskScore ?? 0),
-      status: ((updated.meta as any)?.status as 'open' | 'closed') ?? 'open',
-      createdAt: updated.createdAt,
-      note: (updated.meta as any)?.note
+      id: a.id,
+      type: a.type,
+      affiliateId: a.affiliateId,
+      orderId: a.orderId,
+      clickId: a.clickId,
+      riskScore: Number(a.riskScore),
+      status: a.status,
+      notes: a.notes ?? null,
+      resolvedAt: a.resolvedAt,
+      resolvedBy: a.resolvedById ?? null,
+      createdAt: a.createdAt
     };
   }
 }

@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useAuthStore } from "../../../src/store/auth-store";
 import { ArrowUpRight, CheckCircle2, ShieldX } from "lucide-react";
-import { listMockAffiliates } from "../../../src/lib/mock-admin-service";
+import { adminApi } from "../../../src/lib/api-client";
 import {
   Badge,
   EmptyState,
@@ -32,102 +31,110 @@ type AffiliateRow = {
   aadhaarBackUrl?: string | null;
 };
 
-const statusTone: Record<string, string> = {
-  active: "text-emerald-600 bg-emerald-50 ring-emerald-100",
-  pending: "text-amber-700 bg-amber-50 ring-amber-100",
-  blocked: "text-rose-700 bg-rose-50 ring-rose-100"
-};
-
-const kycTone: Record<string, string> = {
-  verified: "text-emerald-700 bg-emerald-50 ring-emerald-100",
-  in_review: "text-blue-700 bg-blue-50 ring-blue-100",
-  pending: "text-amber-700 bg-amber-50 ring-amber-100",
-  rejected: "text-rose-700 bg-rose-50 ring-rose-100"
-};
-
 export default function AffiliatesPage() {
-  const tokenReady = useAuthStore((s) => Boolean(s.user));
   const [rows, setRows] = useState<AffiliateRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({ status: "all", kycStatus: "all", search: "" });
   const [selected, setSelected] = useState<AffiliateRow | null>(null);
   const [noteInput, setNoteInput] = useState("");
+  const [page, setPage] = useState(1);
+  const [meta, setMeta] = useState<{ total?: number; totalPages?: number }>({});
 
   const stats = useMemo(() => {
-    const total = rows.length;
+    const total = meta.total ?? rows.length;
     const active = rows.filter((r) => r.status === "active").length;
     const verified = rows.filter((r) => r.kycStatus === "verified").length;
     const onHold = rows.filter((r) => r.payoutOnHold).length;
     return { total, active, verified, onHold };
-  }, [rows]);
+  }, [rows, meta]);
 
-  const updateStatus = (id: string, status: string) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
-    setSelected((prev) => (prev && prev.id === id ? { ...prev, status } : prev));
-  };
+  const load = useMemo(
+    () => async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await adminApi.listAffiliates({
+          search: filters.search || undefined,
+          status: filters.status !== "all" ? filters.status : undefined,
+          kycStatus: filters.kycStatus !== "all" ? filters.kycStatus : undefined,
+          page,
+          pageSize: 10
+        } as any);
 
-  const updateKyc = (id: string, kycStatus: string) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, kycStatus } : r)));
-    setSelected((prev) => (prev && prev.id === id ? { ...prev, kycStatus } : prev));
-  };
-
-  const togglePayoutHold = (id: string) => {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, payoutOnHold: !r.payoutOnHold } : r)));
-    setSelected((prev) => (prev && prev.id === id ? { ...prev, payoutOnHold: !prev.payoutOnHold } : prev));
-  };
-
-  const resetKyc = (id: string) => {
-    updateKyc(id, "pending");
-  };
-
-  const addNote = (id: string) => {
-    const text = noteInput.trim();
-    if (!text) return;
-    setRows((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, notes: [...(r.notes ?? []), text] } : r))
-    );
-    setSelected((prev) =>
-      prev && prev.id === id ? { ...prev, notes: [...(prev.notes ?? []), text] } : prev
-    );
-    setNoteInput("");
-  };
+        setRows(
+          res.data.map((item: any) => ({
+            id: item.id,
+            email: item.email,
+            displayName: item.displayName ?? item.email,
+            status: item.status,
+            kycStatus: item.kycStatus ?? "pending",
+            country: item.country ?? null,
+            payoutMethod: item.payoutMethod ?? null,
+            createdAt: item.createdAt,
+            phone: item.phone ?? null,
+            notes: [],
+            payoutDetails: item.payoutDetails ?? null,
+            panImageUrl: item.panImageUrl ?? null,
+            aadhaarFrontUrl: item.aadhaarFrontUrl ?? null,
+            aadhaarBackUrl: item.aadhaarBackUrl ?? null,
+            payoutOnHold: Boolean(item.payoutOnHold)
+          }))
+        );
+        setMeta(res.meta ?? {});
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Unable to load affiliates");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [filters, page]
+  );
 
   useEffect(() => {
-    if (!tokenReady) return;
+    load();
+  }, [load]);
+
+  const updateStatus = async (id: string, status: string) => {
     setLoading(true);
-    setError(null);
     try {
-      const res = listMockAffiliates({
-        search: filters.search || undefined,
-        status: filters.status !== "all" ? filters.status : undefined,
-        kycStatus: filters.kycStatus !== "all" ? filters.kycStatus : undefined
-      });
-      setRows(
-        res.data.map((item) => ({
-          id: item.id,
-          email: item.email,
-          displayName: item.displayName,
-          status: item.status,
-          kycStatus: item.kycStatus,
-          country: (item as any).country ?? null,
-          payoutMethod: (item as any).payoutMethod ?? null,
-          createdAt: item.createdAt,
-          phone: (item as any).phone ?? null,
-          notes: [],
-          payoutDetails: (item as any).payoutDetails ?? null,
-          panImageUrl: (item as any).panImageUrl ?? null,
-          aadhaarFrontUrl: (item as any).aadhaarFrontUrl ?? null,
-          aadhaarBackUrl: (item as any).aadhaarBackUrl ?? null,
-          payoutOnHold: false
-        }))
-      );
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load affiliates");
+      await adminApi.updateAffiliateStatus(id, status);
+      await load();
+    } catch (err: any) {
+      setError(err?.message ?? "Failed to update status");
     } finally {
       setLoading(false);
     }
-  }, [filters, tokenReady]);
+  };
+
+  const updateKyc = async (id: string, decision: "approved" | "rejected") => {
+    setLoading(true);
+    try {
+      await adminApi.decideAffiliateKyc(id, decision);
+      await load();
+    } catch (err: any) {
+      setError(err?.message ?? "Failed to update KYC");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetKyc = async (id: string) => {
+    await updateKyc(id, "rejected");
+    await updateKyc(id, "approved");
+  };
+
+  const togglePayoutHold = async (id: string) => {
+    const target = rows.find((r) => r.id === id);
+    const next = target?.status === "blocked" ? "active" : "blocked";
+    await updateStatus(id, next);
+  };
+
+  const addNote = () => {
+    setNoteInput("");
+  };
+
+  const totalPages = meta.totalPages ?? 1;
 
   return (
     <div className="flex flex-col gap-6">
@@ -140,7 +147,10 @@ export default function AffiliatesPage() {
             <FilterPill
               label="Status"
               value={filters.status}
-              onChange={(value) => setFilters((f) => ({ ...f, status: value }))}
+              onChange={(value) => {
+                setFilters((f) => ({ ...f, status: value }));
+                setPage(1);
+              }}
               options={[
                 { value: "all", label: "All" },
                 { value: "active", label: "Active" },
@@ -151,7 +161,10 @@ export default function AffiliatesPage() {
             <FilterPill
               label="KYC"
               value={filters.kycStatus}
-              onChange={(value) => setFilters((f) => ({ ...f, kycStatus: value }))}
+              onChange={(value) => {
+                setFilters((f) => ({ ...f, kycStatus: value }));
+                setPage(1);
+              }}
               options={[
                 { value: "all", label: "All" },
                 { value: "verified", label: "Verified" },
@@ -178,7 +191,9 @@ export default function AffiliatesPage() {
             value={filters.search}
             onChange={(next) => setFilters((f) => ({ ...f, search: next }))}
           />
-          <span className="text-xs text-muted">{rows.length} affiliates</span>
+          <span className="text-xs text-muted">
+            {(meta.total ?? rows.length) || 0} affiliates — Page {page} of {totalPages}
+          </span>
         </div>
 
         {error && (
@@ -224,18 +239,18 @@ export default function AffiliatesPage() {
                       </Badge>
                     </div>
                   </div>
-                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
-                      <Info label="Payout" value={row.payoutMethod ?? "-"} />
-                      <Info label="Country" value={row.country ?? "-"} />
-                      <Info label="Phone" value={row.phone ?? "-"} />
-                      <Info label="Created" value={new Date(row.createdAt).toLocaleDateString()} />
-                      <Info label="Payout hold" value={row.payoutOnHold ? "On hold" : "OK"} />
-                      <Info label="KYC" value={row.kycStatus} />
-                    </div>
-                    <div className="mt-3 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
-                      Notes: {(row.notes?.length ?? 0) || "None yet"}
-                    </div>
-                    <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-600 dark:text-slate-300">
+                    <Info label="Payout" value={row.payoutMethod ?? "-"} />
+                    <Info label="Country" value={row.country ?? "-"} />
+                    <Info label="Phone" value={row.phone ?? "-"} />
+                    <Info label="Created" value={new Date(row.createdAt).toLocaleDateString()} />
+                    <Info label="Payout hold" value={row.payoutOnHold ? "On hold" : "OK"} />
+                    <Info label="KYC" value={row.kycStatus} />
+                  </div>
+                  <div className="mt-3 line-clamp-2 text-sm text-slate-600 dark:text-slate-300">
+                    Notes: {(row.notes?.length ?? 0) || "None yet"}
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                     <div className="text-xs text-muted">
                       Status: <span className="font-semibold text-slate-900 dark:text-white">{row.status}</span>
                     </div>
@@ -248,7 +263,7 @@ export default function AffiliatesPage() {
                       </button>
                       <button
                         className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold transition hover:border-brand hover:text-brand dark:border-slate-700 dark:bg-slate-800"
-                        onClick={() => updateKyc(row.id, "verified")}
+                        onClick={() => updateKyc(row.id, "approved")}
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" /> Approve
                       </button>
@@ -276,6 +291,25 @@ export default function AffiliatesPage() {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="flex items-center justify-end gap-2 text-xs text-muted">
+          <button
+            type="button"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            className="rounded-lg border border-slate-200 px-3 py-1 disabled:opacity-50 dark:border-white/10"
+          >
+            Prev
+          </button>
+          <button
+            type="button"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            className="rounded-lg border border-slate-200 px-3 py-1 disabled:opacity-50 dark:border-white/10"
+          >
+            Next
+          </button>
         </div>
       </div>
 
@@ -346,14 +380,14 @@ export default function AffiliatesPage() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <button
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
-                onClick={() => updateKyc(selected.id, "verified")}
+                onClick={() => updateKyc(selected.id, "approved")}
               >
                 <CheckCircle2 className="h-4 w-4" />
                 Approve KYC
               </button>
               <button
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600"
-                onClick={() => updateKyc(selected.id, "in_review")}
+                onClick={() => updateKyc(selected.id, "rejected")}
               >
                 Mark In Review
               </button>
@@ -389,7 +423,7 @@ export default function AffiliatesPage() {
                 />
                 <button
                   className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900"
-                  onClick={() => addNote(selected.id)}
+                  onClick={() => addNote()}
                   disabled={!noteInput.trim()}
                 >
                   Save
@@ -460,13 +494,15 @@ function PayoutField({ label, value }: { label: string; value?: string | null })
   );
 }
 
-function StatCard({ label, value, tone }: { label: string; value: string; tone?: "success" | "info" }) {
+function StatCard({ label, value, tone }: { label: string; value: string; tone?: "success" | "info" | "warn" }) {
   const toneClasses =
     tone === "success"
       ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200"
       : tone === "info"
-      ? "bg-sky-50 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200"
-      : "bg-slate-100 text-slate-800 dark:bg-slate-800/60 dark:text-slate-200";
+        ? "bg-sky-50 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200"
+        : tone === "warn"
+          ? "bg-amber-50 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+          : "bg-slate-100 text-slate-800 dark:bg-slate-800/60 dark:text-slate-200";
   return (
     <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
       <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-300">{label}</p>

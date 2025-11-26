@@ -1,35 +1,48 @@
-import { Controller, Get, Post, Patch, Body, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { PayoutsService } from '../services/payouts.service';
+import { CreatePayoutBatchDto, ReconcileBatchDto } from '../dto/payouts.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { AdminGuard } from '../../../common/guards/admin.guard';
 
 @Controller('admin/payouts')
+@UseGuards(JwtAuthGuard, AdminGuard)
 export class PayoutsController {
   constructor(private readonly payoutsService: PayoutsService) {}
 
   @Get()
-  list(
-    @Query('status') status?: string,
+  listLines(
+    @Query('status') status = 'all',
     @Query('page') page = '1',
     @Query('pageSize') pageSize = '20'
   ) {
-    return this.payoutsService.list(status, Number(page), Number(pageSize));
+    return this.payoutsService.listLines({ status, page: Number(page), pageSize: Number(pageSize) });
   }
 
   @Get('batches')
-  batches(
-    @Query('status') status?: string,
+  listBatches(
+    @Query('status') status = 'all',
     @Query('page') page = '1',
     @Query('pageSize') pageSize = '20'
   ) {
-    return this.payoutsService.getBatches(status, Number(page), Number(pageSize));
+    return this.payoutsService.listBatches({
+      status,
+      page: Number(page),
+      pageSize: Number(pageSize)
+    });
   }
 
   @Post('batch')
-  createBatch(@Body() body: { affiliateIds: string[]; scheduledFor: string }) {
-    return this.payoutsService.createBatch(body.affiliateIds ?? [], body.scheduledFor);
+  createBatch(@Body() body: CreatePayoutBatchDto) {
+    return this.payoutsService.createBatch(body.affiliateIds, body.scheduledFor);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() body: { status: 'paid' | 'failed'; notes?: string }) {
-    return this.payoutsService.updateStatus(id, body.status, body.notes);
+  @Post('batch/:id/process')
+  processBatch(@Param('id') id: string) {
+    return this.payoutsService.processBatch(id);
+  }
+
+  @Patch('batch/:id/reconcile')
+  reconcile(@Param('id') id: string, @Body() body: ReconcileBatchDto) {
+    return this.payoutsService.reconcileBatch(id, body.receiptUrl);
   }
 }

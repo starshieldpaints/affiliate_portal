@@ -1,25 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { listMockReports } from "../../../src/lib/mock-admin-service";
+import { adminApi } from "../../../src/lib/api-client";
 import { Badge, EmptyState, FilterPill, LoadingRow, PageHeader, SearchInput } from "../../../src/lib/ui";
 import { Download, FileText, RefreshCcw } from "lucide-react";
-import { cn } from "../../../src/utils/cn";
-
-type ReportRow = {
-  id: string;
-  type: string;
-  label: string;
-  generatedAt: string;
-  url?: string | null;
-};
+import type { AdminReport } from "../../../src/types/reports";
 
 export default function ReportsPage() {
-  const [rows, setRows] = useState<ReportRow[]>([]);
+  const [rows, setRows] = useState<AdminReport[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({ type: "all", search: "" });
-  const [selected, setSelected] = useState<ReportRow | null>(null);
+  const [selected, setSelected] = useState<AdminReport | null>(null);
 
   const stats = useMemo(() => {
     const total = rows.length;
@@ -28,33 +20,47 @@ export default function ReportsPage() {
     return { total, payouts, orders };
   }, [rows]);
 
-  useEffect(() => {
+  const load = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = listMockReports({
+      const res = await adminApi.listReports({
         type: filters.type !== "all" ? filters.type : undefined
       });
-      setRows(
-        res.data.map((item) => ({
-          id: item.id,
-          type: item.type,
-          label: item.label,
-          generatedAt: item.generatedAt,
-          url: item.url
-        }))
-      );
+      setRows(res.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to load reports");
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters.type]);
 
-  const filteredRows = rows.filter(
-    (r) =>
-      filters.type === "all" || r.type === filters.type
-  ).filter((r) => r.label.toLowerCase().includes(filters.search.toLowerCase()) || r.id.toLowerCase().includes(filters.search.toLowerCase()));
+  const filteredRows = rows
+    .filter((r) => filters.type === "all" || r.type === filters.type)
+    .filter(
+      (r) =>
+        r.id.toLowerCase().includes(filters.search.toLowerCase()) ||
+        (r.filename ?? "").toLowerCase().includes(filters.search.toLowerCase()) ||
+        r.type.toLowerCase().includes(filters.search.toLowerCase())
+    );
+
+  const generate = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await adminApi.createReport({ type: filters.type === "all" ? "summary" : filters.type, range: "last_30d", format: "csv" });
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to request report");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -77,15 +83,8 @@ export default function ReportsPage() {
             />
             <button
               className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-900"
-              onClick={() =>
-                setSelected({
-                  id: "new",
-                  type: "orders",
-                  label: "New report",
-                  generatedAt: new Date().toISOString(),
-                  url: null
-                })
-              }
+              onClick={generate}
+              disabled={loading}
             >
               <RefreshCcw className="h-4 w-4" /> Generate
             </button>
@@ -132,26 +131,22 @@ export default function ReportsPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-xs uppercase tracking-[0.25em] text-slate-400">Report</p>
-                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{row.label}</h3>
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{row.filename ?? row.type}</h3>
                       <p className="text-xs text-muted">{row.id}</p>
                     </div>
                     <Badge tone="info">{row.type}</Badge>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-slate-700 dark:text-slate-200">
                     <Info label="Generated" value={new Date(row.generatedAt).toLocaleString()} />
-                    <Info label="Link" value={row.url ? "Available" : "Processing"} />
+                    <Info label="Range" value={row.range ?? "recent"} />
                   </div>
                   <div className="mt-4 flex flex-wrap items-center justify-end gap-2 text-xs">
-                    {row.url ? (
-                      <a
-                        href={row.url}
-                        className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold transition hover:border-brand hover:text-brand dark:border-slate-700 dark:bg-slate-800"
-                      >
-                        <Download className="h-3.5 w-3.5" /> Download
-                      </a>
-                    ) : (
-                      <span className="text-muted text-xs">Not ready</span>
-                    )}
+                    <a
+                      href={adminApi.downloadReport(row.id)}
+                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold transition hover:border-brand hover:text-brand dark:border-slate-700 dark:bg-slate-800"
+                    >
+                      <Download className="h-3.5 w-3.5" /> Download
+                    </a>
                     <button
                       className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold transition hover:border-brand hover:text-brand dark:border-slate-700 dark:bg-slate-800"
                       onClick={() => setSelected(row)}
@@ -172,9 +167,7 @@ export default function ReportsPage() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-[0.35em] text-brand">Report</p>
-                <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
-                  {selected.label}
-                </h3>
+                <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">{selected.filename ?? selected.type}</h3>
                 <p className="text-sm text-muted">{selected.id}</p>
               </div>
               <button
@@ -188,11 +181,18 @@ export default function ReportsPage() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <Info label="Type" value={selected.type} />
               <Info label="Generated" value={new Date(selected.generatedAt).toLocaleString()} />
-              <Info label="Link" value={selected.url ? selected.url : "Processing"} />
+              <Info label="Range" value={selected.range ?? "recent"} />
+              <Info label="Download" value={adminApi.downloadReport(selected.id)} />
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900"
+                href={adminApi.downloadReport(selected.id)}
+              >
+                <Download className="h-4 w-4" /> Download
+              </a>
               <button
-                className="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-900"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand hover:text-brand dark:border-slate-700 dark:text-slate-200"
                 onClick={() => setSelected(null)}
               >
                 Close
@@ -210,8 +210,8 @@ function StatCard({ label, value, tone }: { label: string; value: string; tone?:
     tone === "info"
       ? "bg-sky-50 text-sky-800 dark:bg-sky-900/40 dark:text-sky-200"
       : tone === "muted"
-      ? "bg-slate-100 text-slate-800 dark:bg-slate-800/60 dark:text-slate-200"
-      : "bg-white text-slate-900 dark:bg-slate-900/40 dark:text-slate-100";
+        ? "bg-slate-100 text-slate-800 dark:bg-slate-800/60 dark:text-slate-200"
+        : "bg-white text-slate-900 dark:bg-slate-900/40 dark:text-slate-100";
   return (
     <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
       <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-300">{label}</p>

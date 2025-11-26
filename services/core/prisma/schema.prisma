@@ -70,6 +70,7 @@ model User {
   payoutBatches  PayoutBatch[] @relation("PayoutBatchInitiator")
   refreshTokens  RefreshToken[]
   verificationCodes VerificationCode[]
+  resolvedFraudAlerts FraudAlert[] @relation("FraudAlertResolver")
 }
 
 model AdminProfile {
@@ -90,10 +91,16 @@ model AffiliateProfile {
   displayName           String?
   defaultReferralCode   String    @unique
   phone                 String?   @unique
+  phoneEnc              String?   @db.Text
+  phoneHash             String?   @unique
   phoneVerifiedAt       DateTime?
   socialLinks           Json?
-  panNumber            String
-  aadhaarNumber        String
+  panNumber             String
+  panEnc                String?   @db.Text
+  panHash               String?   @unique
+  aadhaarNumber         String
+  aadhaarEnc            String?   @db.Text
+  aadhaarHash           String?   @unique
   panImageUrl          String?
   aadhaarFrontUrl      String?
   aadhaarBackUrl       String?
@@ -109,6 +116,7 @@ model AffiliateProfile {
   commissionLedger      CommissionLedger[]
   payoutLines           PayoutLine[]
   commissionScopes      CommissionRuleScope[]
+  fraudAlerts           FraudAlert[]
 }
 
 model Category {
@@ -187,7 +195,11 @@ model Click {
   utm              Json?
   clickedAt        DateTime    @default(now())
   isBot            Boolean     @default(false)
+  consentGiven     Boolean     @default(false)
+  botFlags         Int         @default(0)
+  riskScore        Decimal?    @db.Decimal(6, 2)
   attributions     Attribution[]
+  fraudAlerts      FraudAlert[]
 
   @@index([affiliateLinkId, clickedAt])
   @@index([cookieId, clickedAt])
@@ -210,6 +222,7 @@ model Order {
   attributions     Attribution[]
   commissionLedger CommissionLedger[]
   refunds          RefundEvent[]
+  fraudAlerts      FraudAlert[]
 
   @@index([storeId, placedAt])
   @@index([paymentStatus, placedAt])
@@ -298,6 +311,7 @@ model CommissionLedger {
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   lockedAt       DateTime?
+  graceUntil     DateTime?
   payoutLine     PayoutLine?        @relation(fields: [payoutLineId], references: [id])
   payoutLineId   String?
 
@@ -310,6 +324,10 @@ model PayoutBatch {
   periodStart  DateTime
   periodEnd    DateTime
   method       String?
+  provider     String?
+  providerBatchId String?
+  receiptUrl   String?
+  reconciledAt DateTime?
   status       PayoutBatchStatus @default(open)
   totalAmount  Decimal?      @db.Decimal(12, 2)
   currency     String       @default("USD")
@@ -362,6 +380,29 @@ model AuditLog {
   createdAt   DateTime @default(now())
 
   @@index([entityType, entityId])
+}
+
+model FraudAlert {
+  id           String    @id @default(cuid())
+  affiliate    AffiliateProfile @relation(fields: [affiliateId], references: [id])
+  affiliateId  String
+  order        Order?    @relation(fields: [orderId], references: [id])
+  orderId      String?
+  click        Click?    @relation(fields: [clickId], references: [id])
+  clickId      String?
+  riskScore    Decimal   @db.Decimal(5, 2)
+  type         String
+  details      Json?
+  status       String    @default("open")
+  notes        String?
+  resolvedAt   DateTime?
+  resolvedBy   User?     @relation("FraudAlertResolver", fields: [resolvedById], references: [id])
+  resolvedById String?
+  createdAt    DateTime  @default(now())
+
+  @@index([affiliateId, status, createdAt])
+  @@index([orderId])
+  @@index([clickId])
 }
 
 model RefreshToken {

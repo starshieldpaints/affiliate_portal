@@ -12,7 +12,7 @@ import {
   sendSignInLinkToEmail,
   signInWithEmailLink
 } from 'firebase/auth';
-import { firebaseAuth } from '../../../src/lib/firebase';
+import { firebaseAuth, firebaseReady } from '../../../src/lib/firebase';
 import { useAuthStore } from '../../../src/store/auth-store';
 import { affiliatesApi, authApi } from '../../../src/lib/api-client';
 
@@ -129,6 +129,15 @@ const bankOptions: BankOption[] = [
 ];
 
 export default function ProfileSetupPage() {
+  if (!firebaseReady || !firebaseAuth) {
+    return (
+      <div className="p-6 text-sm text-rose-600">
+        Firebase is not configured. Add your Firebase web config to apps/affiliate/.env.local to
+        enable profile verification.
+      </div>
+    );
+  }
+
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const updateAffiliateProfile = useAuthStore((state) => state.updateAffiliateProfile);
@@ -707,7 +716,10 @@ function ContactVerificationCard({
       process.env.NEXT_PUBLIC_FIREBASE_DISABLE_APP_VERIFICATION === 'true'
     ) {
       // Prevent Recaptcha Enterprise from blocking local/testing phone auth.
-      firebaseAuth.settings.appVerificationDisabledForTesting = true;
+  if (firebaseAuth?.settings) {
+    // Guard to prevent runtime crash when settings is undefined in certain envs
+    firebaseAuth.settings.appVerificationDisabledForTesting = true;
+  }
     }
 
     setSending(true);

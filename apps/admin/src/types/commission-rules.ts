@@ -26,8 +26,10 @@ export type CommissionRulesListResponse = {
 
 export type CreateCommissionRulePayload = {
   name: string;
-  type: string;
-  rate: number;
+  type?: string;
+  rate?: number;
+  rateType?: string;
+  rateValue?: number;
   excludeTaxShipping?: boolean;
   startsAt?: string | null;
   endsAt?: string | null;

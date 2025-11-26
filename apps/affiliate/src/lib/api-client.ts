@@ -15,23 +15,31 @@ let refreshPromise: Promise<AuthUser | null> | null = null;
 
 async function refreshSession(): Promise<AuthUser | null> {
   if (!refreshPromise) {
-    refreshPromise = fetch(`${API_BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({})
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          const data = await response.json().catch(() => null);
-          const message = (data && (data.message || data.error)) ?? 'Unable to refresh session';
-          throw new Error(message);
-        }
-        return response.json().catch(() => null);
-      })
-      .finally(() => {
-        refreshPromise = null;
+    refreshPromise = (async () => {
+      const refreshResponse = await fetch(`${API_BASE_URL}/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({})
       });
+      if (!refreshResponse.ok) {
+        const data = await refreshResponse.json().catch(() => null);
+        const message = (data && (data.message || data.error)) ?? 'Unable to refresh session';
+        throw new Error(message);
+      }
+      // After refreshing tokens, fetch the latest user to ensure integrity.
+      const meResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { Accept: 'application/json' }
+      });
+      if (!meResponse.ok) {
+        return null;
+      }
+      return (await meResponse.json().catch(() => null)) as AuthUser | null;
+    })().finally(() => {
+      refreshPromise = null;
+    });
   }
   return refreshPromise;
 }

@@ -23,6 +23,8 @@ import { FraudService } from './services/fraud.service';
 import { AuditController } from './controllers/audit.controller';
 import { AuditService } from './services/audit.service';
 import { HealthController } from './controllers/health.controller';
+import { PAYOUT_PROVIDER } from '../payouts/providers/payout-provider.interface';
+import { StubPayoutProvider } from '../payouts/providers/stub-payout.provider';
 
 @Module({
   imports: [PrismaModule],
@@ -48,6 +50,7 @@ import { HealthController } from './controllers/health.controller';
     AdminProductsService,
     OrdersService,
     PayoutsService,
+    { provide: PAYOUT_PROVIDER, useClass: StubPayoutProvider },
     ReportsService,
     FraudService,
     AuditService,

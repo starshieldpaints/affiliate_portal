@@ -415,11 +415,13 @@ export class AuthService {
       expiresIn: accessTokenTtl
     });
 
-    const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: refreshTokenTtl
-    });
-
-    await this.persistRefreshToken(userId, refreshToken, refreshTokenTtl, ipAddress);
+    const refreshToken = await this.generateRefreshToken(
+      userId,
+      role,
+      tokenVersion,
+      refreshTokenTtl,
+      ipAddress
+    );
 
     return {
       accessToken,
@@ -428,23 +430,44 @@ export class AuthService {
     };
   }
 
-  private async persistRefreshToken(
+  private async generateRefreshToken(
     userId: string,
-    refreshToken: string,
+    role: UserRole,
+    tokenVersion: number,
     ttl: string,
     ipAddress?: string
-  ) {
+  ): Promise<string> {
     const expiresAt = new Date(Date.now() + durationToMs(ttl));
-    const tokenHash = this.hashToken(refreshToken);
-
-    await this.prisma.refreshToken.create({
-      data: {
-        userId,
-        tokenHash,
-        expiresAt,
-        createdByIp: ipAddress ?? null
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const refreshPayload = {
+        sub: userId,
+        role,
+        v: tokenVersion,
+        jti: randomBytes(16).toString('hex')
+      };
+      const refreshToken = await this.jwtService.signAsync(refreshPayload, {
+        expiresIn: ttl
+      });
+      const tokenHash = this.hashToken(refreshToken);
+      try {
+        await this.prisma.refreshToken.create({
+          data: {
+            userId,
+            tokenHash,
+            expiresAt,
+            createdByIp: ipAddress ?? null
+          }
+        });
+        return refreshToken;
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+          // Hash collision, retry with a new JTI/refresh token.
+          continue;
+        }
+        throw error;
       }
-    });
+    }
+    throw new Error('Unable to issue refresh token after multiple attempts');
   }
 
   private hashToken(token: string) {
