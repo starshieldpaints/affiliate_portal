@@ -1,6 +1,26 @@
+// {
+//   "$schema": "https://turbo.build/schema.json",
+//   "pipeline": {
+//     "build": {
+//       "dependsOn": ["^build"],
+//       "outputs": ["dist/**", "build/**", ".next/**"]
+//     },
+//     "lint": {
+//       "outputs": []
+//     },
+//     "test": {
+//       "dependsOn": ["build"],
+//       "outputs": ["coverage/**"]
+//     },
+//     "dev": {
+//       "cache": false
+//     }
+//   }
+// }
+
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", ".next/**"]
@@ -13,7 +33,8 @@
       "outputs": ["coverage/**"]
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     }
   }
 }
