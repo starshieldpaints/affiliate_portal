@@ -6,6 +6,7 @@ import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { MailCheck, RefreshCw, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import { verifyContact } from '@/lib/api-client';
 import { firebaseApp } from '../../../../src/lib/firebase';
 import {
   applyActionCode,
