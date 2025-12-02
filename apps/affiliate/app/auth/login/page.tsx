@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '../../../../src/store/auth-store';
+import { useAuthStore } from '../../../src/store/auth-store';
 import { ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 

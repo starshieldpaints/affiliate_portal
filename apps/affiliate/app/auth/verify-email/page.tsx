@@ -6,8 +6,9 @@ import { Suspense, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { MailCheck, RefreshCw, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
-import { verifyContact } from '@/lib/api-client';
-import { firebaseApp } from '../../../../src/lib/firebase';
+
+import { firebaseApp } from '../../../src/lib/firebase';
+
 import {
   applyActionCode,
   getAuth,
@@ -17,8 +18,8 @@ import {
   signInWithEmailLink,
   type User
 } from 'firebase/auth';
-import { useAuthStore } from '../../../../src/store/auth-store';
-import { authApi } from '../../../../src/lib/api-client';
+import { useAuthStore } from '../../../src/store/auth-store';
+import { authApi } from '../../../src/lib/api-client';
 
 const containerVariants = {
   hidden: { opacity: 0, y: 32 },

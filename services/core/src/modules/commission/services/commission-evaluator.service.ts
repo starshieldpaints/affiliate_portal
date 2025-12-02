@@ -26,8 +26,6 @@ export class CommissionEvaluatorService {
     if (!input.affiliateId) {
       return [];
     }
-
-    // Only evaluate on paid/authorized states
     if (input.paymentStatus && input.paymentStatus !== PaymentStatus.paid) {
       return [];
     }

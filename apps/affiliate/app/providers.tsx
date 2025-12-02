@@ -5,6 +5,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 import { useAuthStore } from '../src/store/auth-store';
+import { usePathname } from 'next/navigation';
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -21,14 +22,16 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 
 function AuthInitializer() {
-  const initialize = useAuthStore((state) => state.initialize);
-  const [initialized, setInitialized] = useState(false);
+  const pathname = usePathname();
+  const initialize = useAuthStore((s) => s.initialize);
+
+  const isAuthRoute = pathname.startsWith('/auth');
 
   useEffect(() => {
-    if (!initialized) {
-      initialize().finally(() => setInitialized(true));
+    if (!isAuthRoute) {
+      initialize();
     }
-  }, [initialize, initialized]);
+  }, [isAuthRoute, initialize]);
 
   return null;
 }

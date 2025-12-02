@@ -150,7 +150,7 @@ export class AffiliatesService {
       data: { kycStatus },
       include: { user: true }
     });
-    // Optionally log reason to audit log
+
     if (reason) {
       await this.prisma.auditLog.create({
         data: {

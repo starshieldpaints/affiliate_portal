@@ -147,7 +147,6 @@ export class ShopifyWebhookService {
     });
 
     await this.syncLineItems(order.id, payload.line_items ?? [], order.currency);
-    // Evaluate commissions (affiliate attribution not yet resolved here; evaluator skips if none)
     const items = await this.prisma.orderItem.findMany({
       where: { orderId: order.id },
       select: {

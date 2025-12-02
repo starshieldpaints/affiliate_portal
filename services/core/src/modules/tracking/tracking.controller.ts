@@ -14,7 +14,7 @@ import { getCookie } from '../../common/utils/cookie';
 import { TrackingService } from './tracking.service';
 
 const CLICK_COOKIE_NAME = 'af_click';
-const COOKIE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const COOKIE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; 
 
 @Controller('r')
 export class TrackingController {
@@ -41,7 +41,6 @@ export class TrackingController {
     }
 
     const targetUrl = link.landingUrl ?? fallbackUrl;
-    // Show crawlers Open Graph metadata so link previews display product info.
     if (this.isPreviewCrawler(req.headers['user-agent'])) {
       return res
         .status(200)

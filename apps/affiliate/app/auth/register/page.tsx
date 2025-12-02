@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '../../../../src/store/auth-store';
+import { useAuthStore } from '../../../src/store/auth-store';
 import { Eye, EyeOff, ShieldCheck, Sparkles, Target, UserPlus2 } from 'lucide-react';
 import { PhoneInput, defaultCountries, type CountryData } from 'react-international-phone';
 import 'react-international-phone/style.css';

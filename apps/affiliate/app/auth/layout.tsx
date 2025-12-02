@@ -1,6 +1,10 @@
+export const metadata = {};
+export const dynamic = "force-static";
+
+
 import type { ReactNode } from 'react';
 import { ArrowUpRight, ShieldCheck, Sparkles, Target } from 'lucide-react';
-import { ThemeToggle } from '../../../src/components/theme-toggle';
+import { ThemeToggle } from '../../src/components/theme-toggle';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (

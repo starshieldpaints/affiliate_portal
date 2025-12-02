@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
       }
     } catch (err: any) {
-      // Swallow 401s to avoid noisy crashes; user stays logged out.
       setUser(null);
       const message =
         typeof err?.message === 'string' && !err.message.startsWith('<')
@@ -67,7 +66,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setError(null);
       try {
         await api.post('/auth/admin/login', { email, password });
-        // Tokens are set via HttpOnly cookies; fetch profile next.
         setAccessToken(null);
         await fetchMe();
       } catch (err: any) {

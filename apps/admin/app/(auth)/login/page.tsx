@@ -50,7 +50,6 @@ export default function AdminLoginPage() {
               onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
             />
           </label>
-          {error && <p className="text-sm text-rose-200">{error}</p>}
           <button
             type="submit"
             disabled={status === "loading"}
