@@ -241,13 +241,6 @@ const memoryStorage: Storage = {
   removeItem: () => undefined,
   setItem: () => undefined
 };
-
-/**
- * NOTE:
- * - We persist only the minimal state (user + wasLoggedOut) to avoid hydration issues.
- * - We NEVER persist `status`. Persisting transient fields like status causes rehydration bugs.
- * - The logout flow clears the persisted storage via `useAuthStore.persist.clearStorage()` which is the safe API.
- */
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -275,8 +268,6 @@ export const useAuthStore = create<AuthState>()(
 
       async initialize() {
         const { wasLoggedOut } = get();
-
-        // If user explicitly logged out, do not auto-restore
         if (wasLoggedOut) {
           set({ user: null, status: 'unauthenticated', error: undefined });
           return;
@@ -285,7 +276,6 @@ export const useAuthStore = create<AuthState>()(
         set({ status: 'loading', error: undefined });
 
         try {
-          // Important: api-client should fetch /auth/me with cache: 'no-store' to avoid 304-cached responses.
           const user = await authApi.me();
           if (user) {
             set({ user, status: 'authenticated', error: undefined });
@@ -338,36 +328,22 @@ export const useAuthStore = create<AuthState>()(
 
       async logout() {
         try {
-          // Make sure server gets a shot at revoking the refresh token.
           await authApi.logout();
         } catch (err) {
-          // swallow: we still want to clear local client state/cookies regardless
-          // console.warn('logout request failed (ignored):', err.message ?? err);
         }
-
-        // Safely clear persistent storage using Zustand's API (don't manipulate localStorage directly here)
-        // This removes the persisted key so rehydration cannot reintroduce the old user.
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - `persist` is a runtime prop on the resulting hook object
         if (typeof useAuthStore.persist?.clearStorage === 'function') {
-          // prefer the provided API
           useAuthStore.persist.clearStorage();
         } else if (typeof window !== 'undefined') {
-          // fallback (shouldn't be necessary, but safe)
           try {
             window.localStorage.removeItem('auth-store');
           } catch { }
         }
-
-        // Reset in-memory state
         set({
           user: null,
           status: 'unauthenticated',
           error: undefined,
           wasLoggedOut: true
         });
-
-        // Force navigation to login via hard reload so that no stale React state remains
         if (typeof window !== 'undefined') {
           window.location.replace('/auth/login');
         }
@@ -418,7 +394,6 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-store',
       storage: createJSONStorage(() => (typeof window === 'undefined' ? memoryStorage : window.localStorage)),
-      // Persist only what's required — not transient status values.
       partialize: (state) => ({
         user: state.user,
         wasLoggedOut: state.wasLoggedOut

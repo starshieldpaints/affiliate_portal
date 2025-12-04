@@ -71,7 +71,6 @@ async function apiFetch<T>(
     body: isJson ? JSON.stringify(options.body) : undefined
   });
 
-  // 401 -> try refresh workflow
   if (response.status === 401 && !config?.skipAuthRefresh) {
     try {
       await refreshSession();
@@ -94,9 +93,7 @@ async function apiFetch<T>(
   return data as T;
 }
 
-// -----------------------------
-// AUTH API
-// -----------------------------
+
 export const authApi = {
   me: () => apiFetch<AuthUser | null>('/auth/me'),
 

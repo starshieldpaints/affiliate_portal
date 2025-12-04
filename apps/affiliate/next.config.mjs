@@ -14,7 +14,7 @@ const withPWA = withPWAInit({
         networkTimeoutSeconds: 10,
         expiration: {
           maxEntries: 200,
-          maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+          maxAgeSeconds: 60 * 60 * 24 * 30 
         },
         cacheableResponse: {
           statuses: [0, 200]

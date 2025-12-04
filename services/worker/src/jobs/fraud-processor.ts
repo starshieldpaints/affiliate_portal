@@ -10,7 +10,6 @@ export async function runFraudScan(prisma: PrismaClient, windowMinutes = 10) {
   const clickWindow = new Date(Date.now() - windowMinutes * 60 * 1000);
   const orderWindow = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
-  // Velocity: clicks per affiliate in window
   const clicks = await prisma.click.groupBy({
     by: ['affiliateLinkId'],
     where: { clickedAt: { gte: clickWindow } },
@@ -20,7 +19,7 @@ export async function runFraudScan(prisma: PrismaClient, windowMinutes = 10) {
   for (const c of clicks) {
     if (c._count._all > 20) {
       const link = await prisma.affiliateLink.findUnique({ where: { id: c.affiliateLinkId } });
-      if (!link) continue;
+      if (!link) continue;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
       const existing = await prisma.fraudAlert.findFirst({
         where: { affiliateId: link.affiliateId, type: 'velocity', clickId: null, status: 'open' }
       });
@@ -38,7 +37,8 @@ export async function runFraudScan(prisma: PrismaClient, windowMinutes = 10) {
     }
   }
 
-  // UA anomaly: clicks flagged bot
+
+
   const botClicks = await prisma.click.findMany({
     where: { clickedAt: { gte: clickWindow }, botFlags: { gt: 0 } },
     take: 50
@@ -63,7 +63,8 @@ export async function runFraudScan(prisma: PrismaClient, windowMinutes = 10) {
     }
   }
 
-  // Self-purchase: order customerHash equals affiliateId
+  
+
   const orders = await prisma.order.findMany({
     where: { placedAt: { gte: orderWindow } },
     include: { attributions: true }
