@@ -1,0 +1,3243 @@
+{
+  "catalog": [
+    {
+      "category": "Heat Protective",
+      "products": [
+        {
+          "id": "star-cool-shield",
+          "serialNumber": 1,
+          "name": "Star Cool Shield",
+          "hsn": "32099090",
+          "description": "Star Cool Shield, a groundbreaking solution that combines the excellence of cool roof coating and paint technology. This innovative product stands out as an energy-saving coating, providing superior heat reflective and insulation properties, making it the go-to choice for those seeking high albedo paint with the highest Solar Reflectance Index (SRI) - 130 .",
+          "landingUrl": "https://starshieldpaints.com/products/star-cool-shield?variant=45835105698020",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketStarCoolShield_f6049495-1e0e-4929-9653-c38992f7d52f-optimized-1722079427.jpg?v=1722079430&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 357.12
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3190.0,
+              "promoPrice": 1790.0,
+              "dpl": 1304.58
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 7390.0,
+              "promoPrice": 4090.0,
+              "dpl": 2980.85
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 14190.0,
+              "promoPrice": 7890.0,
+              "dpl": 5750.34
+            }
+          ]
+        },
+        {
+          "id": "star-cool-shield-plus",
+          "serialNumber": 2,
+          "name": "Star Cool Shield +",
+          "hsn": "39095000",
+          "description": "Star Cool Shield +, the groundbreaking 2-in-1 solution that transforms your space into a cooler and waterproof haven.\nThis cutting-edge cool roof coating, fortified with complete waterproofing capabilities, is crafted to deliver exceptional thermal insulation, heat reflection, and water protection.\nIt stands as the ultimate choice for elevating the longevity and comfort of your surfaces, featuring cool roof coating, high albedo paint, heat reflective properties, thermal insulation paint, solar reflective technology, sun control, and heat-resistant attributes.",
+          "landingUrl": "https://starshieldpaints.com/products/star-cool-shield-plus?_pos=1&_sid=cee315cf6&_ss=r",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20litSTARCOOLSHIELDPLUSfront_71e00d26-0464-4d0d-8a0d-96b904a9d20c.jpg?v=1706686297&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 430.0
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3390.0,
+              "promoPrice": 1890.0,
+              "dpl": 1377.46
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 8250.0,
+              "promoPrice": 4590.0,
+              "dpl": 3345.25
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 16190.0,
+              "promoPrice": 8990.0,
+              "dpl": 6552.03
+            }
+          ]
+        },
+        {
+          "id": "star-cool-shield-extreme",
+          "serialNumber": 3,
+          "name": "Star Cool Shield Extreme",
+          "hsn": "39095000",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1590.0,
+              "promoPrice": 890.0,
+              "dpl": 648.64
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 5590.0,
+              "promoPrice": 3090.0,
+              "dpl": 2252.03
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 13690.0,
+              "promoPrice": 7590.0,
+              "dpl": 5531.69
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 26990.0,
+              "promoPrice": 14990.0,
+              "dpl": 10924.92
+            }
+          ]
+        },
+        {
+          "id": "star-cool-shield-walls",
+          "serialNumber": 4,
+          "name": "Star Cool Shield Walls",
+          "hsn": "32099090",
+          "description": "Star Cool Shield - Walls, an innovative heat-reflective paint that keeps surfaces up to 5 degrees Celsius cooler, courtesy of its high Solar Reflective Index (SRI).\nOffering complete protection against sun, dust, and wind, this extraordinary product delivers unmatched benefits.",
+          "landingUrl": "https://starshieldpaints.com/products/star-cool-shield-walls?_pos=2&_sid=df0d4e577&_ss=r",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/starcoolshieldwalls_14e136fb-6ced-44d6-8adc-c538e7892e22.jpg?v=1706698752&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 357.12
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2990.0,
+              "promoPrice": 1690.0,
+              "dpl": 1231.69
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 7390.0,
+              "promoPrice": 4090.0,
+              "dpl": 2980.85
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 14390.0,
+              "promoPrice": 7990.0,
+              "dpl": 5823.22
+            }
+          ]
+        },
+        {
+          "id": "star-cool-shield-flexi",
+          "serialNumber": 5,
+          "name": "Star Cool Shield Flexi",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 357.12
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2990.0,
+              "promoPrice": 1690.0,
+              "dpl": 1231.69
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 7390.0,
+              "promoPrice": 4090.0,
+              "dpl": 2980.85
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4730.0
+            }
+          ]
+        },
+        {
+          "id": "star-cool-shield-industrial",
+          "serialNumber": 6,
+          "name": "Star Cool Shield Industrial",
+          "hsn": "39069090",
+          "description": "Star Cool shield industrial High Heat Protective, Heat Proof, High Albedo, Highest SRI, Sun Controlling Solar Reflective Paint is manufactured considering the tough demands of the industry",
+          "landingUrl": "https://starshieldpaints.com/products/star-cool-shield-industrial?variant=45826544304356",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20litdrumStarCoolShieldindustrialAANDBPART.png?v=1740752983&width=493",
+          "variants": [
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 9490.0,
+              "promoPrice": 5290.0,
+              "dpl": 3855.42
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 17990.0,
+              "promoPrice": 9990.0,
+              "dpl": 7280.85
+            }
+          ]
+        },
+        {
+          "id": "star-cool-shield-floor",
+          "serialNumber": 7,
+          "name": "Star  Cool Shield Floor",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "20 Kgs",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3763.64
+            }
+          ]
+        },
+        {
+          "id": "star-cool-plaster",
+          "serialNumber": 8,
+          "name": "Star  Cool  Plaster",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-cool-plaster?srsltid=AfmBOopxlV9fT2ai_6mSfYA8a08TlxkJHySdX-TBgQtZl3Sec3pOIu7G",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_STAR_cool_plaster_metalic_or_alluminium_cylendrical_bucket_-_New.png?v=1728821322&width=493",
+          "variants": [
+            {
+              "volume": "20 Kgs",
+              "mrp": 3190.0,
+              "promoPrice": 1790.0,
+              "dpl": 1350.08
+            }
+          ]
+        },
+        {
+          "id": "star-heat-shield",
+          "serialNumber": 9,
+          "name": "Star Heat Shield",
+          "hsn": "32149090",
+          "description": "Star Heat Shield, your go-to solution for advanced Nano-coating on glass, offering anti-heat, sun control, and heat blocking benefits.\nReduce temperatures by up to 31? with this cost-effective, DIY solution, blocking IR and UV rays without compromising visibility",
+          "landingUrl": "https://starshieldpaints.com/products/star-heat-shield?variant=45835548557540",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/StarHeatShield2.png?v=1706884431&width=493",
+          "variants": [
+            {
+              "volume": "100 ML",
+              "mrp": 5890.0,
+              "promoPrice": 3290.0,
+              "dpl": 2397.8
+            },
+            {
+              "volume": "225 ML",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4730.0
+            },
+            {
+              "volume": "930 ML",
+              "mrp": 43190.0,
+              "promoPrice": 23990.0,
+              "dpl": 17484.24
+            }
+          ]
+        },
+        {
+          "id": "star-heat-shield-industrial",
+          "serialNumber": 10,
+          "name": "Star Heat Shield Industrial",
+          "hsn": "32149090",
+          "description": "Star Heat Shield Industrial is a high-performance, heat-resistant coating that protects industrial equipment and surfaces from extreme temperatures, thermal stress, and corrosion.\nIts specialized formulation provides superior insulation, reflecting radiant heat and minimizing heat transfer, thereby ensuring the safety and longevity of industrial assets.",
+          "landingUrl": "https://starshieldpaints.com/products/star-heat-shield-industrial?variant=44370168840420",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/STARHEATSHIELDINDUSTRIAL_cffba8bf-97f6-4756-b7b9-c1ffeea04d00-optimized-1722079345.jpg?v=1722079348&width=493",
+          "variants": [
+            {
+              "volume": "100 ML",
+              "mrp": 6690.0,
+              "promoPrice": 3690.0,
+              "dpl": 2689.32
+            },
+            {
+              "volume": "225 ML",
+              "mrp": 13490.0,
+              "promoPrice": 7490.0,
+              "dpl": 5458.81
+            },
+            {
+              "volume": "930 ML",
+              "mrp": 50390.0,
+              "promoPrice": 27990.0,
+              "dpl": 20399.49
+            }
+          ]
+        },
+        {
+          "id": "star-heat-shield-xtreme",
+          "serialNumber": 11,
+          "name": "Star Heat Shield Xtreme",
+          "hsn": "32149090",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "100 ML",
+              "mrp": 7190.0,
+              "promoPrice": 3990.0,
+              "dpl": 2907.97
+            },
+            {
+              "volume": "225 ML",
+              "mrp": 14190.0,
+              "promoPrice": 7890.0,
+              "dpl": 5750.34
+            },
+            {
+              "volume": "930 ML",
+              "mrp": 53990.0,
+              "promoPrice": 29990.0,
+              "dpl": 21857.12
+            }
+          ]
+        },
+        {
+          "id": "star-thermal-shield-solvent",
+          "serialNumber": 12,
+          "name": "Star Thermal Shield Solvent",
+          "hsn": "32081090",
+          "description": "Star Thermal Shield - a polysiloxane-based, high-heat-resistant coating.\nIdeal for chimneys, machinery, and surfaces emitting heat and smoke.",
+          "landingUrl": "https://starshieldpaints.com/products/star-thermal-shield-solvent?variant=45830226084068",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Starthermalshield_S_2k.png?v=1747998115&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1190.0,
+              "promoPrice": 690.0,
+              "dpl": 502.88
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 6290.0,
+              "promoPrice": 3490.0,
+              "dpl": 2543.56
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 11990.0,
+              "promoPrice": 6690.0,
+              "dpl": 4875.76
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 23390.0,
+              "promoPrice": 12990.0,
+              "dpl": 9467.29
+            }
+          ]
+        },
+        {
+          "id": "star-insulation-foam",
+          "serialNumber": 13,
+          "name": "Star insulation foam",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "590/ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            }
+          ]
+        },
+        {
+          "id": "star-insulation-shield",
+          "serialNumber": 14,
+          "name": "Star Insulation Shield",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-insulation-shield",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Insulation_Shield.jpg?v=1715142404&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 284.24
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 1990.0,
+              "promoPrice": 1090.0,
+              "dpl": 794.41
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 4690.0,
+              "promoPrice": 2590.0,
+              "dpl": 1887.63
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3636.78
+            }
+          ]
+        },
+        {
+          "id": "star-insulation-shield-plus",
+          "serialNumber": 15,
+          "name": "Star Insulation Shield Plus",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 284.24
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 1990.0,
+              "promoPrice": 1090.0,
+              "dpl": 794.41
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 4690.0,
+              "promoPrice": 2590.0,
+              "dpl": 1887.63
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3636.78
+            }
+          ]
+        },
+        {
+          "id": "star-insulation-shield-industrial",
+          "serialNumber": 16,
+          "name": "Star Insulation Shield Industrial",
+          "hsn": "32091090",
+          "description": "Star Insulation Shield Industrial Is An Advanced, Acrylic-Based, Nano-Technology-Enhanced Elastomeric Coating Formulated To Provide Exceptional Thermal Insulation For Industrial Surfaces.\nIts Reflective And Insulative Properties Ensure Significant Energy Savings, Enhanced Operational Efficiency, And Increased Equipment Lifespan By Minimizing Thermal Stresses",
+          "landingUrl": "https://starshieldpaints.com/products/star-insulation-shield-industrial?_pos=4&_psq=star+insul&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star__Insulation_Shield_Industrial_2K.png?v=1746023041&width=1100",
+          "variants": [
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 8290.0,
+              "promoPrice": 4590.0,
+              "dpl": 3345.25
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 16190.0,
+              "promoPrice": 8990.0,
+              "dpl": 6552.03
+            }
+          ]
+        },
+        {
+          "id": "star-insulation-foam",
+          "serialNumber": 17,
+          "name": "Star insulation foam",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-insulation-foam?_pos=3&_psq=star+ins&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star__insulation_foam_2K.png?v=1746022811&width=493",
+          "variants": [
+            {
+              "volume": "50 Ltr",
+              "mrp": 53990.0,
+              "promoPrice": 29990.0,
+              "dpl": 21857.12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Fire",
+      "products": [
+        {
+          "id": "star-fire-shield-flexi",
+          "serialNumber": 18,
+          "name": "Star Fire Shield Flexi",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1390.0,
+              "promoPrice": 790.0,
+              "dpl": 575.76
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 4490.0,
+              "promoPrice": 2490.0,
+              "dpl": 1814.75
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 10990.0,
+              "promoPrice": 6090.0,
+              "dpl": 4438.47
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 21590.0,
+              "promoPrice": 11990.0,
+              "dpl": 8738.47
+            }
+          ]
+        },
+        {
+          "id": "star-fire-shield-retardant",
+          "serialNumber": 19,
+          "name": "Star Fire Shield Retardant",
+          "hsn": "32099090",
+          "description": "Star Fire Shield Retardant Water based paint that resists fire and provide extra safety for steel, timber, and plaster from burning and destruction?\n# Inflammable and non-combustible # Reduces the expansion of fire # Instant action to avoid entrance in substrate # No or very less smoke generation # Non-toxic and low VOC # Time period of 30- 120 minutes",
+          "landingUrl": "https://starshieldpaints.com/products/star-fire-shield-retardant?variant=45823934824676",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketStarfireshiledretardantintumescent08-12-202412_56_11_747.png?v=1747998892&width=491",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1590.0,
+              "promoPrice": 890.0,
+              "dpl": 648.64
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 5390.0,
+              "promoPrice": 2990.0,
+              "dpl": 2179.15
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 13290.0,
+              "promoPrice": 7390.0,
+              "dpl": 5385.93
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 26090.0,
+              "promoPrice": 14490.0,
+              "dpl": 10560.51
+            }
+          ]
+        },
+        {
+          "id": "star-fire-shield-intumescent",
+          "serialNumber": 20,
+          "name": "Star Fire Shield Intumescent",
+          "hsn": "32099090",
+          "description": "Star Fire Shield Intumescent Water based paint that resists fire and provide extra safety for steel, timber, and plaster from burning and destruction?\n# Inflammable and non-combustible # Reduces the expansion of fire # Instant action to avoid entrance in substrate # No or very less smoke generation # Non-toxic and low VOC # Time period of 30- 120 minutes",
+          "landingUrl": "https://starshieldpaints.com/products/star-fire-shield-intumescent?variant=45824125567204",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketSTARFIRESHIELD-optimized-1722079402.jpg?v=1722079406&width=494",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1590.0,
+              "promoPrice": 890.0,
+              "dpl": 648.64
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 5390.0,
+              "promoPrice": 2990.0,
+              "dpl": 2179.15
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 13290.0,
+              "promoPrice": 7390.0,
+              "dpl": 5385.93
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 26090.0,
+              "promoPrice": 14490.0,
+              "dpl": 10560.51
+            }
+          ]
+        },
+        {
+          "id": "star-fire-shield-fabric",
+          "serialNumber": 21,
+          "name": "Star Fire Shield Fabric",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-fire-shield-retardant?variant=45823934824676",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketStarfireshiledretardantintumescent08-12-202412_56_11_747.png?v=1747998892&width=491",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1390.0,
+              "promoPrice": 790.0,
+              "dpl": 575.76
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 4790.0,
+              "promoPrice": 2690.0,
+              "dpl": 1960.51
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 11890.0,
+              "promoPrice": 6590.0,
+              "dpl": 4802.88
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 23390.0,
+              "promoPrice": 12990.0,
+              "dpl": 9467.29
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Waterproofing",
+      "products": [
+        {
+          "id": "star-water-shield-solvent",
+          "serialNumber": 22,
+          "name": "Star Water Shield solvent",
+          "hsn": "39100090",
+          "description": "Star Water Shield is a high-performance solvent-based ultra hydrophobic coating from StarShield.\nIt forms a long-lasting hydrophobic layer on surfaces to protect them from water, moisture, and dampness.\nThis solvent-based ultrahydrophobic coating is designed to repel water and provide long-lasting durability, making it the go-to choice for professionals and DIY enthusiasts alike.",
+          "landingUrl": "https://starshieldpaints.com/products/star-water-shield-solvent?variant=44371887948004",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/star_water_shield.jpg?v=1713029556&width=600",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 352.97
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 3790.0,
+              "promoPrice": 2090.0,
+              "dpl": 1505.51
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 14390.0,
+              "promoPrice": 7990.0,
+              "dpl": 5755.51
+            }
+          ]
+        },
+        {
+          "id": "star-water-shield-water-based",
+          "serialNumber": 23,
+          "name": "Star Water Shield water based",
+          "hsn": "29319090",
+          "description": "Star Water Shield- water based, a cutting-edge water-based coating that offers unparalleled long-term protection against water and moisture damage.\nThis advanced eco-friendly solution is formulated with renewable plant extracts, ensuring a non-toxic and sustainable choice for your waterproofing needs.\nWith its ultra-hydrophobic properties and water contact angle of over 130°, Star Water Shield creates a transparent and crystal-clear finish that preserves the original esthetics of your surfaces.\nNot only is Star Water Shield environmentally friendly, but it also provides exceptional performance.\nIts 100% water-based, zero VOC, and solvent-free formulation make it safe for both indoor and outdoor use, even on delicate surfaces.\nThis innovative coating offers up to 5 years of reliable protection with just a single application, making it a cost-effective solution that saves on maintenance expenses.",
+          "landingUrl": "https://starshieldpaints.com/products/star-water-shield-water-based?variant=45234011406564",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_water_Shield_water_based.jpg?v=1715240030&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2290.0,
+              "promoPrice": 1290.0,
+              "dpl": 972.97
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3763.64
+            }
+          ]
+        },
+        {
+          "id": "star-water-shield-concentrate",
+          "serialNumber": 24,
+          "name": "Star Water Shield concentrate",
+          "hsn": "38249900",
+          "description": "Star Water Shield Concentrate Superhydrophobic transparent penetrating waterproofing compound is the innovative waterproofing protection for various surfaces against damage due to water.\nThis high-performance product is designed for long-lasting protection by forming a true barrier against moisture, hence suitable for residential and commercial applications.",
+          "landingUrl": "https://starshieldpaints.com/products/star-water-shield-concentrate?variant=45236189266148",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_water_Shield_concentrate.jpg?v=1715870991&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2290.0,
+              "promoPrice": 1290.0,
+              "dpl": 972.97
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3763.64
+            }
+          ]
+        },
+        {
+          "id": "star-aqua-shield",
+          "serialNumber": 25,
+          "name": "Star Aqua Shield",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-aqua-shield?variant=44371875561700",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketSTARAQUASHIELD-optimized-1722079374.jpg?v=1722079378&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 1990.0,
+              "promoPrice": 1090.0,
+              "dpl": 822.12
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 4790.0,
+              "promoPrice": 2690.0,
+              "dpl": 2028.9
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 9490.0,
+              "promoPrice": 5290.0,
+              "dpl": 3989.92
+            }
+          ]
+        },
+        {
+          "id": "star-aqua-shield-plus",
+          "serialNumber": 26,
+          "name": "Star Aqua Shield +",
+          "hsn": "39095000",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-aqua-shield-plus?_pos=4&_psq=star+Aqua+shield&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketSTARAQUASHIELDPLUS-optimized-1722079402.jpg?v=1722079406&width=1100",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3390.0,
+              "promoPrice": 1890.0,
+              "dpl": 1425.51
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 8290.0,
+              "promoPrice": 4590.0,
+              "dpl": 3461.95
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 16190.0,
+              "promoPrice": 8990.0,
+              "dpl": 6780.59
+            }
+          ]
+        },
+        {
+          "id": "star-aqua-shield-walls",
+          "serialNumber": 27,
+          "name": "Star Aqua Shield Walls",
+          "hsn": "32099090",
+          "description": "Star Aqua Shield - walls is an elastomeric waterproofing coating for roofs that offers superior protection against water damage.\nIt is a high-quality product manufactured by Star Shield Paints, a renowned company in the industry.",
+          "landingUrl": "https://starshieldpaints.com/products/star-aqua-shield-walls?variant=45554245533924",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/StarAquaShieldWalls.jpg?v=1724313339&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 790.0,
+              "promoPrice": 449.0,
+              "dpl": 338.65
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2690.0,
+              "promoPrice": 1490.0,
+              "dpl": 1123.81
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 6690.0,
+              "promoPrice": 3690.0,
+              "dpl": 2783.14
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 12590.0,
+              "promoPrice": 6990.0,
+              "dpl": 5272.12
+            }
+          ]
+        },
+        {
+          "id": "star-aqua-seal-2k",
+          "serialNumber": 28,
+          "name": "Star Aqua Seal 2K",
+          "hsn": "32099090",
+          "description": "A Food-Grade, Epoxy-Based Waterproofing And Repairing Coating Designed For Areas Requiring Strict Hygiene Standards And Safe Contact With Potable Water.\nIt Forms A Seamless, Impermeable Barrier With Superior Adhesion And Chemical Resistance.",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "3 Ltr",
+              "mrp": 5190.0,
+              "promoPrice": 2890.0,
+              "dpl": 2179.75
+            },
+            {
+              "volume": "15 Ltr",
+              "mrp": 25690.0,
+              "promoPrice": 14290.0,
+              "dpl": 10778.05
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 50390.0,
+              "promoPrice": 27990.0,
+              "dpl": 21111.1
+            }
+          ]
+        },
+        {
+          "id": "star-damp-primer-water-based",
+          "serialNumber": 29,
+          "name": "Star Damp Primer water based",
+          "hsn": "32149090",
+          "description": "Star Damp Primer Water-Based is an advanced wall primer designed to combat dampness and ensure a smooth, long-lasting paint finish.\nIts water-based formulation makes it eco-friendly and easy to apply, offering superior adhesion and moisture resistance.",
+          "landingUrl": "https://starshieldpaints.com/products/star-damp-primer-water-based?variant=45834787455204",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_ltr_bucket_Star_Damp_Shield_water_based_1.png?v=1717834948&width=493",
+          "variants": [
+            {
+              "volume": "2 Ltr",
+              "mrp": 3390.0,
+              "promoPrice": 1890.0,
+              "dpl": 1425.51
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 16490.0,
+              "promoPrice": 9190.0,
+              "dpl": 6931.44
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 32390.0,
+              "promoPrice": 17990.0,
+              "dpl": 13568.73
+            }
+          ]
+        },
+        {
+          "id": "star-effloroscence-seal",
+          "serialNumber": 30,
+          "name": "Star Effloroscence Seal",
+          "hsn": "38249090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-efflorescence-seal?_pos=1&_psq=eff&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_ltr_bucket_Star_effloroscence_Seal.jpg?v=1717250810&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 294.15
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2890.0,
+              "promoPrice": 1590.0,
+              "dpl": 1199.24
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 10790.0,
+              "promoPrice": 5990.0,
+              "dpl": 4517.88
+            }
+          ]
+        },
+        {
+          "id": "star-leak-proof-pu",
+          "serialNumber": 31,
+          "name": "Star Leak Proof PU",
+          "hsn": "39095000",
+          "description": "Star Leak Proof Pu-Based Is A Single-Component, Elastic, Moisture-Curing Polyurethane-Based Waterproofing Sealant.\nIt Is Designed For High Durability, Exceptional Adhesion, And Excellent Weather Resistance, Making It Ideal For Diverse Waterproofing And Sealing Tasks Both Internally And Externally.\nIt Offers Strong Performance Even Under Varying Weather Conditions, From Intense Heat To Heavy Rainfall",
+          "landingUrl": "https://starshieldpaints.com/products/star-leak-proof-pu-based?_pos=1&_psq=star+leak&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Leak_Proof_PU_Based.png?v=1717606729&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1390.0,
+              "promoPrice": 790.0,
+              "dpl": 595.85
+            }
+          ]
+        },
+        {
+          "id": "star-leak-proof-epoxy",
+          "serialNumber": 32,
+          "name": "Star Leak Proof Epoxy",
+          "hsn": "39073090",
+          "description": "Star Leak Proof Epoxy Injection Is A High-Performance, Solvent-Free, Two-Component Epoxy Resin Specifically Designed For Sealing And Structurally Reinforcing Cracks And Cavities In Concrete, Brick, And Natural Stone Substrates.\nWith Its Exceptional Low Viscosity And Deep Penetration Capability, It Effectively Fills Cracks As Narrow As 0.2 Mm, Restoring Structural Integrity And Preventing Further Deterioration.",
+          "landingUrl": "https://starshieldpaints.com/products/star-leak-proof-epoxy?_pos=4&_psq=star+leak&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Leak_Proof_Epoxy_2K.png?v=1746167544&width=493",
+          "variants": [
+            {
+              "volume": "3 Ltr",
+              "mrp": 3990.0,
+              "promoPrice": 2190.0,
+              "dpl": 1577.54
+            },
+            {
+              "volume": "15 Ltr",
+              "mrp": 18890.0,
+              "promoPrice": 10490.0,
+              "dpl": 7556.36
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 35990.0,
+              "promoPrice": 19990.0,
+              "dpl": 14399.58
+            }
+          ]
+        },
+        {
+          "id": "star-aqua-seal-colour",
+          "serialNumber": 33,
+          "name": "Star Aqua Seal Colour",
+          "hsn": "32099090",
+          "description": "Star Aqua Seal Colour is a high-performance waterproofing coating.\nProvides superior moisture protection and prevents water seepage.\nIdeal for both residential and commercial applications.\nAvailable in a range of vibrant, aesthetic colors.\nSuitable for protecting roofs, walls, terraces, water tanks, and more.",
+          "landingUrl": "https://starshieldpaints.com/products/star-aqua-seal-colour?variant=45829706711268",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Aqua_Seal_2k.jpg?v=1717441651&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 2890.0,
+              "promoPrice": 1590.0,
+              "dpl": 1199.24
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 26990.0,
+              "promoPrice": 14990.0,
+              "dpl": 11306.02
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 52190.0,
+              "promoPrice": 28990.0,
+              "dpl": 21865.34
+            }
+          ]
+        },
+        {
+          "id": "star-water-seal-2k",
+          "serialNumber": 34,
+          "name": "Star Water Seal 2k",
+          "hsn": "32149090",
+          "description": "Star Water Seal 2K, the game-changing nano-modified cementitious waterproofing compound that will revolutionize the way you protect your buildings from water damage.\nWith its advanced technology, Star Water Seal 2K creates a powerful barrier that repels water molecules like nothing else.\nSay goodbye to leaks, seepage, and water damage that can wreak havoc on your construction projects.\nThis versatile product is suitable for both indoor and outdoor applications, making it perfect for a wide range of construction projects.\nWhether it's a residential building, commercial complex, or industrial facility, Star Water Seal 2K has got you covered.",
+          "landingUrl": "https://starshieldpaints.com/pages/star-water-seal-2k?_pos=1&_psq=Star+Water+Seal+2K&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_water_Seal_2k.jpg?v=1715251486&width=535",
+          "variants": [
+            {
+              "volume": "3 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 294.15
+            },
+            {
+              "volume": "15 Ltr",
+              "mrp": 2990.0,
+              "promoPrice": 1690.0,
+              "dpl": 1274.66
+            }
+          ]
+        },
+        {
+          "id": "star-water-seal-2k-plus",
+          "serialNumber": 35,
+          "name": "Star Water Seal 2k +",
+          "hsn": "32149090",
+          "description": "Seal and Protect with Star Water Seal 2K+\nSafeguard your surfaces from water damage and extend their lifespan with Star Water Seal 2K+, an advanced solution designed for superior waterproofing and protection.\nThis cutting-edge product excels in sealing surfaces effectively, making it an ideal choice for a variety of residential and commercial applications.",
+          "landingUrl": "https://starshieldpaints.com/products/star-water-seal-2k-plus?_pos=1&_psq=Star+Water+Seal+2K+Plus&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_water_Seal_2k_5f6b3a39-69fd-428b-8a0a-06dc1199c7cf.jpg?v=1715315391&width=493",
+          "variants": [
+            {
+              "volume": "15 Ltr",
+              "mrp": 9490.0,
+              "promoPrice": 5290.0,
+              "dpl": 3989.92
+            }
+          ]
+        },
+        {
+          "id": "star-water-seal-industrial",
+          "serialNumber": 36,
+          "name": "Star Water Seal Industrial",
+          "hsn": "32149090",
+          "description": "Star Water Seal - Industrial a Complete Waterproof Coating is a single component, polymer-modified, cement-based, fast setting, flexible waterproofing and crack-bridging membrane for concrete surfaces.\nIt is a polymer-modified cementitious coating that can be applied to concrete surfaces to provide a waterproof barrier, as well as repair and fill small cracks.\nIt is suitable for both internal and external surfaces, and can be used on a variety of substrates including concrete, brick, and mortar.",
+          "landingUrl": "https://starshieldpaints.com/products/star-water-seal-industrial?variant=44371890536676",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20LTRPLASTICCANSTARWATERSEALINDUSTRIAL-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 294.15
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2890.0,
+              "promoPrice": 1590.0,
+              "dpl": 1199.24
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 10790.0,
+              "promoPrice": 5990.0,
+              "dpl": 4517.88
+            }
+          ]
+        },
+        {
+          "id": "star-cement-cure",
+          "serialNumber": 37,
+          "name": "Star Cement Cure",
+          "hsn": "28366000",
+          "description": "Star Cement Cure enhances and protects your cement surface with our cement cure\nWaterproofing paint.\nThis advanced formula combines superior curing and\nwaterproofing properties to ensure your structure remains strong, resilient and\nvisually appealing.\nIt is UV resistant, highly durable, strengthens the\nconcrete, permeable, resistant to corrosion.\nChoose Our innovative solution for\nlong-lasting protection and durability in all your construction projects.",
+          "landingUrl": "https://starshieldpaints.com/products/star-cement-cure?variant=45236155547876",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Cement_Cure.jpg?v=1717179288&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 290.0,
+              "promoPrice": 190.0,
+              "dpl": 138.47
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 1590.0,
+              "promoPrice": 890.0,
+              "dpl": 648.64
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 6290.0,
+              "promoPrice": 3490.0,
+              "dpl": 2543.56
+            }
+          ]
+        },
+        {
+          "id": "star-cement-cure-blocks",
+          "serialNumber": 38,
+          "name": "Star Cement Cure Blocks",
+          "hsn": "28366000",
+          "description": "Star Cement Cure - Blocks, the ultimate integral waterproofing compound for concrete and mortar.\nIf you're involved in the construction industry or planning any construction projects, you need to know about this incredible product.\nStar Cement Cure - Blocks is a revolutionary solution designed to provide superior protection against water damage for your constructions.\nIt acts as a powerful water-repellent barrier, effectively preventing dampness, efflorescence, and other water-related issues that can weaken and damage your structures.\nWith Star Cement Cure - Blocks, you can ensure the longevity and durability of your constructions.\nBy creating a moisture-free environment, it safeguards your projects from the harmful effects of water, ensuring they remain strong and intact for years to come",
+          "landingUrl": "https://starshieldpaints.com/products/star-cement-cure-blocks?variant=45234982781156",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Cement_Cure_Blocks.jpg?v=1715851574&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 369.58
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 3790.0,
+              "promoPrice": 2090.0,
+              "dpl": 1576.36
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 14390.0,
+              "promoPrice": 7990.0,
+              "dpl": 6026.36
+            }
+          ]
+        },
+        {
+          "id": "star-aqua-shield-transparent",
+          "serialNumber": 39,
+          "name": "Star Aqua Shield transparent",
+          "hsn": "3209090",
+          "description": "Star Aqua Shield - Transparent is a high-quality waterproofing coating designed for roofs, tiles, and industrial sheds.\nIt offers excellent transparency while providing effective protection against water damage.",
+          "landingUrl": "https://starshieldpaints.com/products/star-aqua-shield-transparent?variant=44371891093732",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20LTRPLASTICCANSTARAQUASHIELDTRANSPARENT-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1190.0,
+              "promoPrice": 690.0,
+              "dpl": 520.42
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 6090.0,
+              "promoPrice": 3390.0,
+              "dpl": 2556.86
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 23390.0,
+              "promoPrice": 12990.0,
+              "dpl": 9797.54
+            }
+          ]
+        },
+        {
+          "id": "star-water-proof-exterior",
+          "serialNumber": 40,
+          "name": "Star Water Proof Exterior",
+          "hsn": "38249090",
+          "description": "STAR WATER PROOF - EXTERIOR Universal repairing UV Resistant, Waterproof compound for Interior and Exterior surfaces.\nAcrylic based compound makes the product flexible to use not only for internal but also for external application and makes the waterproofed surface UV resistant too.\nThis formulation also accounts for bonding new and old concrete mortar.",
+          "landingUrl": "https://starshieldpaints.com/products/star-waterproof-exterior",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20LTRPLASTICCANStarWaterProofExterior-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 1990.0,
+              "promoPrice": 1090.0,
+              "dpl": 822.12
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 6990.0,
+              "promoPrice": 3890.0,
+              "dpl": 2933.98
+            }
+          ]
+        },
+        {
+          "id": "star-water-proof-interior",
+          "serialNumber": 41,
+          "name": "Star Water Proof interior",
+          "hsn": "38249090",
+          "description": "Star Water Proof Interior is a modified styrene butadiene latex that is intended to be used in cementitious systems as a measuring liquid, bonding agent, and waterproofing agent.\nBecause of its excellent hydrolysis resistance, it is said to be a universal waterproofing compound.",
+          "landingUrl": "https://starshieldpaints.com/products/star-waterproof-exterior?variant=45829079761124",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20LTRPLASTICCANStarWaterProofExterior-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 1990.0,
+              "promoPrice": 1090.0,
+              "dpl": 822.12
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 6990.0,
+              "promoPrice": 3890.0,
+              "dpl": 2933.98
+            }
+          ]
+        },
+        {
+          "id": "star-curing-shield-water-curing-agent",
+          "serialNumber": 42,
+          "name": "Star Curing Shield Water Curing Agent",
+          "hsn": "32100040",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2690.0,
+              "promoPrice": 1490.0,
+              "dpl": 1123.81
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 9890.0,
+              "promoPrice": 5490.0,
+              "dpl": 4140.76
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Construction Chemicals",
+      "products": [
+        {
+          "id": "star-cement-shield-hydro",
+          "serialNumber": 43,
+          "name": "Star Cement Shield Hydro",
+          "hsn": "28366000",
+          "description": "STAR CEMENT SHIELD - HYDRO is a nano-based liquid waterproofing admixture added to concrete or mortar during mixing to enhance water resistance and prevent water penetration of the plastered / screed surface.\nIt offers protection against water seepage and staining on walls and surfaces for several years, preserving the pristine condition of the surfaces.\nStar Cement Shield - Hydro is a hydro/aqua version of\nthe popular Star Water Shield, but with a silicon-based added twist, hence\nmaking it more powerful in repelling water and keeping your plastered surfaces looking great.\nStar Cement Shield – Hydro can be used in a variety of applications, including\nbelow-grade structures, swimming pools, and water tanks.\nUnlike external\nmembranes, this admixture cannot be torn or damaged during backfill operations.",
+          "landingUrl": "https://starshieldpaints.com/products/star-cement-shield-hydro?variant=45234888769764",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Cement_Shield_-_Hydro.jpg?v=1715833694&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 8.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 8.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 8.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Smart Paints",
+      "products": [
+        {
+          "id": "star-smart-paint-white-exterior",
+          "serialNumber": 44,
+          "name": "Star Smart Paint White Exterior",
+          "hsn": "32091090",
+          "description": "Star Smart Paint Exterior is an anti-fading, UV resistant, Exterior Paint with self-cleanable feature Can be applied even on wet walls No Primer needed UV Resistant, Dust Repellent, and hydrophobic to prevent dampness and leakage# Elastomeric so help in crack bridging Quick drying reduces the work pause Strong adhesion for life 10 years",
+          "landingUrl": "https://starshieldpaints.com/products/star-smart-paint-exterior?variant=44371876020452",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/smartpaintexterior-optimized-1722079426.jpg?v=1722079429&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "3.6 Ltr (Deep Base)",
+              "mrp": 3390.0,
+              "promoPrice": 1890.0,
+              "dpl": 1425.51
+            },
+            {
+              "volume": "9.1 Ltr (Pastal Base)",
+              "mrp": 7890.0,
+              "promoPrice": 4390.0,
+              "dpl": 3311.1
+            },
+            {
+              "volume": "18.2 Ltr (Neutral Base)",
+              "mrp": 16190.0,
+              "promoPrice": 8990.0,
+              "dpl": 6780.59
+            }
+          ]
+        },
+        {
+          "id": "star-smart-paint-white-base-interior",
+          "serialNumber": 45,
+          "name": "Star Smart Paint White Base Interior",
+          "hsn": "32091090",
+          "description": "Star Smart Paint Interior is an innovative, high-quality interior paint designed to provide a beautiful, durable finish while offering advanced features like easy application and enhanced performance.\nThis smart paint is formulated to offer excellent coverage, quick drying times, and a variety of modern finishes that cater to the needs of both residential and commercial interiors.\nIt is perfect for creating aesthetically pleasing and functional spaces with minimal effort.",
+          "landingUrl": "https://starshieldpaints.com/products/star-smart-paint-interior?variant=45343622070500",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Smart_Paint_Interior.jpg?v=1718620260&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "3.6 Ltr (Deep Base)",
+              "mrp": 3390.0,
+              "promoPrice": 1890.0,
+              "dpl": 1425.51
+            },
+            {
+              "volume": "9.1 Ltr (Pastal Base)",
+              "mrp": 7890.0,
+              "promoPrice": 4390.0,
+              "dpl": 3311.1
+            },
+            {
+              "volume": "18.2 Ltr (Neutral Base)",
+              "mrp": 15290.0,
+              "promoPrice": 8490.0,
+              "dpl": 6403.47
+            }
+          ]
+        },
+        {
+          "id": "star-premium-emulsion-white-base-interior",
+          "serialNumber": 46,
+          "name": "Star Premium Emulsion White Base Interior",
+          "hsn": "32091090",
+          "description": "Star Premium Emulsion Interior is a high-quality paint designed to give your walls a flawless finish that will last for years to come.\nThis premium paint is specially formulated to provide excellent coverage and durability, making it the perfect choice for homeowners who want their walls to look their best.One of the key features of Star Premium Emulsion interior is its smooth and even application.\nThis paint goes on easily and dries quickly, leaving behind a beautiful, seamless finish that will make any room look like it was professionally painted.\nWhether you are painting a small bathroom or a large living room, this paint will make the job easy and leave you with stunning results.",
+          "landingUrl": "https://starshieldpaints.com/products/star-smart-paint-interior?variant=45343622168804",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Smart_Paint_Interior.jpg?v=1718620260&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 294.15
+            },
+            {
+              "volume": "3.6 Ltr (Deep Base)",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1048.39
+            },
+            {
+              "volume": "9.1 Ltr (Pastal Base)",
+              "mrp": 6090.0,
+              "promoPrice": 3390.0,
+              "dpl": 2556.86
+            },
+            {
+              "volume": "18.2 Ltr (Neutral Base)",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4895.0
+            }
+          ]
+        },
+        {
+          "id": "star-premium-emulsion-white-base-exterior",
+          "serialNumber": 47,
+          "name": "Star Premium Emulsion White Base Exterior",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-premium-emulsion",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_ltr_bucket_star_Premium_Emulsion_Dirt_Repellent_Paint.png?v=1718540463&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 294.15
+            },
+            {
+              "volume": "3.6 Ltr (Deep Base)",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1048.39
+            },
+            {
+              "volume": "9.1 Ltr (Pastal Base)",
+              "mrp": 6090.0,
+              "promoPrice": 3390.0,
+              "dpl": 2556.86
+            },
+            {
+              "volume": "18.2 Ltr (Neutral Base)",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4895.0
+            }
+          ]
+        },
+        {
+          "id": "star-elegant-shield-white-base-interior",
+          "serialNumber": 48,
+          "name": "Star Elegant  Shield White Base Interior",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-elegant-shield-interior",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Interior_Emulsion_star_elegant_shield_indiamart.jpg?v=1730174675&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 290.0,
+              "promoPrice": 190.0,
+              "dpl": 143.31
+            },
+            {
+              "volume": "3.6 Ltr (Deep Base)",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "9.1 Ltr (Pastal Base)",
+              "mrp": 2690.0,
+              "promoPrice": 1490.0,
+              "dpl": 1123.81
+            },
+            {
+              "volume": "18.2 Ltr (Neutral Base)",
+              "mrp": 5190.0,
+              "promoPrice": 2890.0,
+              "dpl": 2179.75
+            }
+          ]
+        },
+        {
+          "id": "star-elegant-shield-white-base-exterior",
+          "serialNumber": 49,
+          "name": "Star Elegant  Shield White Base Exterior",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-elegant-shield-interior",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Interior_Emulsion_star_elegant_shield_indiamart.jpg?v=1730174675&width=496",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 290.0,
+              "promoPrice": 190.0,
+              "dpl": 143.31
+            },
+            {
+              "volume": "3.6 Ltr (Deep Base)",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "9.1 Ltr (Pastal Base)",
+              "mrp": 2690.0,
+              "promoPrice": 1490.0,
+              "dpl": 1123.81
+            },
+            {
+              "volume": "18.2 Ltr (Neutral Base)",
+              "mrp": 5190.0,
+              "promoPrice": 2890.0,
+              "dpl": 2179.75
+            }
+          ]
+        },
+        {
+          "id": "star-oxy-shield",
+          "serialNumber": 50,
+          "name": "Star Oxy Shield",
+          "hsn": "32099090",
+          "description": "Star Oxy Shield Is A Revolutionary Water-Based Emulsion Paint Specifically Designed For Interior Walls, Offering Not Just Aesthetic Brilliance But Also Actively Contributing To Healthier Indoor Environments.\nFormulated With Advanced Nano Technology, Star Oxy Shield Neutralizes Harmful Indoor Pollutants Such As Formaldehyde, Ammonia, Cigarette Smoke, And Other Vocs, Significantly Improving Indoor Air Quality.\nIt Also Provides A Soothing, Long-Lasting Fragrance And Ensures Clean And Fresh Indoor Air For Healthier Living Spaces",
+          "landingUrl": "https://starshieldpaints.com/products/star-coil-shield?_pos=1&_psq=coil&_ss=e&_v=1.2",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_ltr_bucket_Star_oxy_shield.jpg?v=1718012952&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1190.0,
+              "promoPrice": 690.0,
+              "dpl": 520.42
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3590.0,
+              "promoPrice": 1990.0,
+              "dpl": 1500.93
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 8490.0,
+              "promoPrice": 4690.0,
+              "dpl": 3537.37
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 16190.0,
+              "promoPrice": 8990.0,
+              "dpl": 6780.59
+            }
+          ]
+        },
+        {
+          "id": "star-nature-shield",
+          "serialNumber": 51,
+          "name": "Star Nature Shield",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-fabric-shield",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_ltr_bucket_Star_Nature_Shield.jpg?v=1718017583&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1190.0,
+              "promoPrice": 690.0,
+              "dpl": 520.42
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3590.0,
+              "promoPrice": 1990.0,
+              "dpl": 1500.93
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 8490.0,
+              "promoPrice": 4690.0,
+              "dpl": 3537.37
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 16190.0,
+              "promoPrice": 8990.0,
+              "dpl": 6780.59
+            }
+          ]
+        },
+        {
+          "id": "star-enamel-shield-flexi",
+          "serialNumber": 52,
+          "name": "Star Enamel Shield  Flexi",
+          "hsn": "38140010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "4 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 746.69
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 4090.0,
+              "promoPrice": 2290.0,
+              "dpl": 1727.2
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 8090.0,
+              "promoPrice": 4490.0,
+              "dpl": 3386.53
+            }
+          ]
+        },
+        {
+          "id": "star-enamel-shield",
+          "serialNumber": 53,
+          "name": "Star Enamel Shield",
+          "hsn": "38140010",
+          "description": "Star Enamel Shield is a top-rated enamel formulated to provide advanced protection and a hard, glossy finish to a variety of surfaces.\nThe enamel slight chip resistance, resistance to fading, and wear work well on both interior and exterior surfaces.\nIt provides excellent adhesion, good coverage, and long-lasting color retention.",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-shield-melamine-aurelia?variant=45836197167332",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Enamel_1k.png?v=1746021895&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "4 Ltr",
+              "mrp": 2190.0,
+              "promoPrice": 1190.0,
+              "dpl": 897.54
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 5190.0,
+              "promoPrice": 2890.0,
+              "dpl": 2179.75
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 10090.0,
+              "promoPrice": 5590.0,
+              "dpl": 4216.19
+            }
+          ]
+        },
+        {
+          "id": "star-pu-paint-aurelia",
+          "serialNumber": 54,
+          "name": "Star PU Paint Aurelia",
+          "hsn": "39095000",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 721.53
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 8790.0,
+              "promoPrice": 4890.0,
+              "dpl": 3563.9
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 17490.0,
+              "promoPrice": 9690.0,
+              "dpl": 7062.2
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 34190.0,
+              "promoPrice": 18990.0,
+              "dpl": 13840.17
+            }
+          ]
+        },
+        {
+          "id": "star-mosquito-shield-aurelia",
+          "serialNumber": 55,
+          "name": "Star Mosquito Shield Aurelia",
+          "hsn": "32099090",
+          "description": "Star Mosquito Shield Aurelia is a revolutionary product based on nanocapsules as an active ingredient that combines the benefits of insect repellent with the practicality of paint.\nThis unique solution is perfect for owners looking to protect themselves from pesky insects while adding an odorless fresh coat of paint to their living/commercial spaces.\nThis acrylic paint is specially formulated with natural mosquito-repellent ingredients that help keep these annoying insects at bay.\nIn addition to its insect-repelling properties, Star Mosquito Shield Aurelia offers all the benefits of traditional acrylic paint.\nIt is quick-drying, easy to apply, and suits any aesthetic preference.",
+          "landingUrl": "",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/STAR_MOSQUITO_SHIELD_AURELIA.png?v=1728739962&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3790.0,
+              "promoPrice": 2090.0,
+              "dpl": 1576.36
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 9290.0,
+              "promoPrice": 5190.0,
+              "dpl": 3914.49
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 17990.0,
+              "promoPrice": 9990.0,
+              "dpl": 7534.83
+            }
+          ]
+        },
+        {
+          "id": "star-mosquito-shield-basic",
+          "serialNumber": 56,
+          "name": "Star Mosquito Shield Basic",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-seal-melamine-aurelia?variant=45841308811492",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/starshield_star_mosquito_shield.webp?v=1706016667&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 746.69
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 4090.0,
+              "promoPrice": 2290.0,
+              "dpl": 1727.2
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 8090.0,
+              "promoPrice": 4490.0,
+              "dpl": 3386.53
+            }
+          ]
+        },
+        {
+          "id": "star-virus-shield-paint",
+          "serialNumber": 57,
+          "name": "Star Virus Shield Paint",
+          "hsn": "32099090",
+          "description": "Star Virus Shield Paint is a specialized paint coating designed to provide protection against viruses and bacteria.\nIt is formulated with antimicrobial properties that can inhibit the growth and spread of harmful microorganisms on various surfaces",
+          "landingUrl": "https://starshieldpaints.com/products/star-nc-sealer-1?_pos=1&_psq=nc+sea&_ss=e&_v=1.2",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketSTARVIRUSSHIELDWALLPAINT_0c66e377-f2c8-4328-ae98-b32e9a727923-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1090.0,
+              "promoPrice": 590.0,
+              "dpl": 445.0
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 3790.0,
+              "promoPrice": 2090.0,
+              "dpl": 1576.36
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 9290.0,
+              "promoPrice": 5190.0,
+              "dpl": 3914.49
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 17990.0,
+              "promoPrice": 9990.0,
+              "dpl": 7534.83
+            }
+          ]
+        },
+        {
+          "id": "star-rodent-shield-paint",
+          "serialNumber": 58,
+          "name": "Star Rodent Shield Paint",
+          "hsn": "32099090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-nc-colour?_pos=1&_psq=nc+color&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketStarRodentShield-optimized-1722079374.jpg?v=1722079378&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1590.0,
+              "promoPrice": 890.0,
+              "dpl": 671.27
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 5590.0,
+              "promoPrice": 3090.0,
+              "dpl": 2330.59
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 13690.0,
+              "promoPrice": 7590.0,
+              "dpl": 5724.66
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 26990.0,
+              "promoPrice": 14990.0,
+              "dpl": 11306.02
+            }
+          ]
+        },
+        {
+          "id": "star-gloss-shield-water-based-enamel",
+          "serialNumber": 59,
+          "name": "Star Gloss Shield Water Based Enamel",
+          "hsn": "32099090",
+          "description": "Star Gloss Shield is an advanced water-based enamel designed to provide a glossy, durable finish to various surfaces.\nIt combines aesthetic appeal with robust protection, making it ideal for both interior and exterior applications.",
+          "landingUrl": "https://starshieldpaints.com/products/star-gloss-shield?_pos=1&_sid=b522a9f2d&_ss=r",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/star_gloss_shield.png?v=1706024966&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 690.0,
+              "promoPrice": 390.0,
+              "dpl": 284.24
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1013.05
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 6090.0,
+              "promoPrice": 3390.0,
+              "dpl": 2470.68
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4730.0
+            }
+          ]
+        },
+        {
+          "id": "star-glow-paint",
+          "serialNumber": 60,
+          "name": "Star Glow Paint",
+          "hsn": "39095000",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-glow-paint?_pos=1&_sid=07db06e75&_ss=r",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/1LTRSTARGLOWPAINTfrontcopy-optimized-1722079345.jpg?v=1722079348&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3763.64
+            }
+          ]
+        },
+        {
+          "id": "star-glow-paint-white-base-(epoxy)",
+          "serialNumber": 61,
+          "name": "Star Glow Paint White Base (Epoxy)",
+          "hsn": "39095000",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": []
+        },
+        {
+          "id": "star-texture-shield",
+          "serialNumber": 62,
+          "name": "Star Texture  Shield",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "5 Kgs",
+              "mrp": 1290.0,
+              "promoPrice": 690.0,
+              "dpl": 502.88
+            },
+            {
+              "volume": "25 Kgs",
+              "mrp": 5890.0,
+              "promoPrice": 3290.0,
+              "dpl": 2397.8
+            }
+          ]
+        },
+        {
+          "id": "star-damp-shield-waterbase",
+          "serialNumber": 63,
+          "name": "Star Damp  Shield WaterBase",
+          "hsn": "38249090",
+          "description": "Star Damp Shield - Water Based ,  is an advanced solution designed to provide superior waterproofing and durability.\nThis innovative product combines the benefits of high albedo coating, thermal insulation, and waterproofing, making it the ideal choice for various residential and commercial applications.",
+          "landingUrl": "https://starshieldpaints.com/products/star-damp-shield-water-based?_pos=1&_psq=damp&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_ltr_bucket_Star_Damp_Shield_water_based_1.png?v=1717834948&width=493",
+          "variants": [
+            {
+              "volume": "3 Ltr",
+              "mrp": 5390.0,
+              "promoPrice": 2990.0,
+              "dpl": 2153.81
+            },
+            {
+              "volume": "15 Ltr",
+              "mrp": 26390.0,
+              "promoPrice": 14690.0,
+              "dpl": 10581.78
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 52190.0,
+              "promoPrice": 28990.0,
+              "dpl": 20882.63
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Protective Coatings",
+      "products": [
+        {
+          "id": "star-paint-shield",
+          "serialNumber": 64,
+          "name": "Star Paint Shield",
+          "hsn": "32100040",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-paint-shield",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketStarpaintshield-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2890.0,
+              "promoPrice": 1590.0,
+              "dpl": 1199.24
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 10790.0,
+              "promoPrice": 5990.0,
+              "dpl": 4517.88
+            }
+          ]
+        },
+        {
+          "id": "star-lamination-shield",
+          "serialNumber": 65,
+          "name": "Star Lamination Shield",
+          "hsn": "39100090",
+          "description": "Star Lamination Shield  is a Nano Modified Scratch & Scrub Resistant.\nDust & Water Repellent anti graffiti top coat A Nano based polymerised advanced protective coating from Rain, Dust, Pollution with no maintenance ,Advance benefits, more protection and longer durability ,Anti-graffiti property in Oleophobic nature , Transparent lamination with anti-scrub and anti-scratch form , Resistant to dust, chemicals, water, acids, alkali, etc.  Self-cleaning method with relief from repainting for several years ,Excellent stain prevention",
+          "landingUrl": "https://starshieldpaints.com/products/star-paint-shield-plus?_pos=1&_psq=lam&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20LTRPLASTICCANstarlaminationshieldfront-optimized-1722079426.jpg?v=1722079429&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 746.69
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 8790.0,
+              "promoPrice": 4890.0,
+              "dpl": 3688.22
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 33990.0,
+              "promoPrice": 18990.0,
+              "dpl": 14322.97
+            }
+          ]
+        },
+        {
+          "id": "star-metal-shield-aurelia",
+          "serialNumber": 66,
+          "name": "Star Metal Shield Aurelia",
+          "hsn": "39095000",
+          "description": "Star Metal Shield Aurelia\nNano technology-based Superior Protective and anti-corrosive coating for metal",
+          "landingUrl": "https://starshieldpaints.com/products/star-metal-shield-aurelia?_pos=1&_psq=star+meta&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_STAR_METAL_SHIELD_AURELIA_metalic_or_alluminium_cylendrical_box-_New.png?v=1728820713&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 2090.0,
+              "promoPrice": 1190.0,
+              "dpl": 897.54
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 10590.0,
+              "promoPrice": 5890.0,
+              "dpl": 4442.46
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 42290.0,
+              "promoPrice": 23490.0,
+              "dpl": 17717.03
+            }
+          ]
+        },
+        {
+          "id": "star-metal-shield-water-based",
+          "serialNumber": 67,
+          "name": "Star Metal Shield Water Based",
+          "hsn": "32091090",
+          "description": "Star Metal Shield Waterbased Is An Advanced, Eco-Friendly Protective Coating Designed Specifically For Metal Surfaces, Providing Superior Resistance Against Corrosion, Rust, And Environmental Damage.\nUtilizing Innovative Water-Based Technology, It Combines Robust Adhesion Properties, Excellent Durability, And Uv Stability, Ensuring Lasting Protection Without Harmful Emissions Or Solvents.\nIdeal For Industrial Equipment, Structural Steel, Marine Applications, And Automotive Components, Star Metal Shield Water Based Is Easy To Apply, Dries Quickly, And Delivers Long-Lasting Performance, Significantly Extending The Lifespan And Maintaining The Aesthetics Of Metal Surfaces",
+          "landingUrl": "https://starshieldpaints.com/products/star-metal-shield-waterbased?_pos=2&_psq=metal&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketstarmetalshield-optimized-1722079374.jpg?v=1722079378&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 369.58
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2690.0,
+              "promoPrice": 1490.0,
+              "dpl": 1123.81
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 6490.0,
+              "promoPrice": 3590.0,
+              "dpl": 2707.71
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 12590.0,
+              "promoPrice": 6990.0,
+              "dpl": 5272.12
+            }
+          ]
+        },
+        {
+          "id": "star-metal-shield-color",
+          "serialNumber": 68,
+          "name": "Star Metal Shield Color",
+          "hsn": "39095000",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/pages/star-metal-shield-color?_pos=3&_psq=metal+shi&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_STAR_METAL_SHIELD_color_metalic_or_alluminium_cylendrical_box-_New.png?v=1728907621&width=535",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 2290.0,
+              "promoPrice": 1290.0,
+              "dpl": 972.97
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 11490.0,
+              "promoPrice": 6390.0,
+              "dpl": 4819.58
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 44990.0,
+              "promoPrice": 24990.0,
+              "dpl": 18848.39
+            }
+          ]
+        },
+        {
+          "id": "star-solar-shield",
+          "serialNumber": 69,
+          "name": "Star Solar shield",
+          "hsn": "32149010",
+          "description": "Nano-Based Ultra Hydrophobic Coating\nThe Star Solar Shield represents a new frontier in surface protection against heat and UV radiation.\nConstructed to cope with the worst extremes, it provides a robust barrier that reflects solar radiation and reduces heat absorption.\nWith regard to residential and commercial applications, the advanced coating ensures that each surface retains its integrity above and below in a manner that effects durability and efficiency for longer.\nBy preventing overheating and thus lowering cooling costs, Star Solar Shield will retain the aesthetic of the surface by making this investment key in the lengthening of surface life.",
+          "landingUrl": "https://starshieldpaints.com/products/star-solar-shield-1?_pos=3&_psq=sol&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/1LTRSTARSOLARSHIELDfront-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "930 ML",
+              "mrp": 6290.0,
+              "promoPrice": 3490.0,
+              "dpl": 2632.29
+            }
+          ]
+        },
+        {
+          "id": "star-solar-shield-with-kit",
+          "serialNumber": 70,
+          "name": "Star Solar shield With KIT",
+          "hsn": "32149010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "930 ML",
+              "mrp": 7190.0,
+              "promoPrice": 3990.0,
+              "dpl": 3009.41
+            }
+          ]
+        },
+        {
+          "id": "star-solar-shield-cool",
+          "serialNumber": 71,
+          "name": "Star Solar shield Cool",
+          "hsn": "32149010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "930 ML",
+              "mrp": 14390.0,
+              "promoPrice": 7990.0,
+              "dpl": 6026.36
+            }
+          ]
+        },
+        {
+          "id": "star-glass-shield-transparent",
+          "serialNumber": 72,
+          "name": "Star Glass Shield Transparent",
+          "hsn": "32149010",
+          "description": "STAR GLASS SHIELD- Ultra hydrophobic anti stain coating for Glass .\nAn innovative certified problem solver Nano coating for glass and ceramics to make them water and dust repellent.\nProtective, ultra-hydrophobic layer of polyurethane ,Non-sticky, self-cleanable membrane , Reduction in dust and water stains help in increasing visibility  ,  Resistant to acids, chemicals, scratches, oils, etc.  Reflects 97% of UV and IR rays to reduce degradation and temperature  Long lasting protection",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "930 ML",
+              "mrp": 5390.0,
+              "promoPrice": 2990.0,
+              "dpl": 2179.15
+            }
+          ]
+        },
+        {
+          "id": "star-glass-shield-transparent-(kit)",
+          "serialNumber": 73,
+          "name": "Star Glass Shield Transparent (KIT)",
+          "hsn": "32149010",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-glass-shield-transparent?_pos=2&_psq=star+glass&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/5ltstarflassshield_2K_Plasticcan-optimized-1722079402.jpg?v=1722079406&width=493",
+          "variants": [
+            {
+              "volume": "930 ML",
+              "mrp": 6290.0,
+              "promoPrice": 3490.0,
+              "dpl": 2543.56
+            }
+          ]
+        },
+        {
+          "id": "star-marine-shield",
+          "serialNumber": 74,
+          "name": "Star Marine Shield",
+          "hsn": "32089090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-marine-shield?_pos=1&_psq=marine&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Marine_Shield_2k.png?v=1746021766&width=493",
+          "variants": [
+            {
+              "volume": "3 Ltr",
+              "mrp": 5890.0,
+              "promoPrice": 3290.0,
+              "dpl": 2397.8
+            },
+            {
+              "volume": "15 Ltr",
+              "mrp": 28790.0,
+              "promoPrice": 15990.0,
+              "dpl": 11653.73
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 53990.0,
+              "promoPrice": 29990.0,
+              "dpl": 21857.12
+            }
+          ]
+        },
+        {
+          "id": "star-red-oxide-primer-flexi",
+          "serialNumber": 75,
+          "name": "Star Red Oxide Primer Flexi",
+          "hsn": "32064910",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 290.0,
+              "promoPrice": 149.0,
+              "dpl": 112.38
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 1290.0,
+              "promoPrice": 690.0,
+              "dpl": 520.42
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 4890.0,
+              "promoPrice": 2690.0,
+              "dpl": 2028.9
+            }
+          ]
+        },
+        {
+          "id": "star-red-oxide-primer",
+          "serialNumber": 76,
+          "name": "Star Red Oxide Primer",
+          "hsn": "32064910",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 390.0,
+              "promoPrice": 219.0,
+              "dpl": 165.18
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 746.69
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 6990.0,
+              "promoPrice": 3890.0,
+              "dpl": 2933.98
+            }
+          ]
+        },
+        {
+          "id": "star-yellow-oxide-primer",
+          "serialNumber": 77,
+          "name": "Star Yellow Oxide Primer",
+          "hsn": "32064910",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 249.0,
+              "dpl": 187.81
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2190.0,
+              "promoPrice": 1190.0,
+              "dpl": 897.54
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 8090.0,
+              "promoPrice": 4490.0,
+              "dpl": 3386.53
+            }
+          ]
+        },
+        {
+          "id": "star-graffitti-shield-solventbase",
+          "serialNumber": 78,
+          "name": "Star Graffitti Shield Solventbase",
+          "hsn": "39095000",
+          "description": "Anti-Graffiti hydrophobic coating\n\nStar Graffiti Shield solvent-based is a super hydrophobic modified nanotechnology-based Anti-Graffiti and Anti-Poster permanent coating to protect your walls.\nIt creates a tough, non-porous barrier that prevents graffiti from adhering to the surface.\nIt is often used on high-traffic areas or surfaces that are difficult to access for regular maintenance.\nIn addition to protecting against graffiti vandalism, anti-graffiti coatings can also offer other benefits, such as UV protection, weather resistance, and easy cleaning.\nThese coatings can help extend the life of surfaces, reduce maintenance costs, and maintain the aesthetic appeal of buildings and public spaces.\nOrder Now",
+          "landingUrl": "https://starshieldpaints.com/products/star-graffiti-shield-solvent-based?_pos=1&_sid=eca6531c7&_ss=r",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/stargraffitishieldset1fron.png?v=1746099506&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 4090.0,
+              "promoPrice": 2290.0,
+              "dpl": 1668.98
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 19790.0,
+              "promoPrice": 10990.0,
+              "dpl": 8009.66
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 77390.0,
+              "promoPrice": 42990.0,
+              "dpl": 31331.69
+            }
+          ]
+        },
+        {
+          "id": "star-graffitti-shield-solventbase",
+          "serialNumber": 79,
+          "name": "Star Graffitti Shield Solventbase",
+          "hsn": "39095000",
+          "description": "Anti-Graffiti hydrophobic coating\n\nStar Graffiti Shield solvent-based is a super hydrophobic modified nanotechnology-based Anti-Graffiti and Anti-Poster permanent coating to protect your walls.\nIt creates a tough, non-porous barrier that prevents graffiti from adhering to the surface.\nIt is often used on high-traffic areas or surfaces that are difficult to access for regular maintenance.\nIn addition to protecting against graffiti vandalism, anti-graffiti coatings can also offer other benefits, such as UV protection, weather resistance, and easy cleaning.\nThese coatings can help extend the life of surfaces, reduce maintenance costs, and maintain the aesthetic appeal of buildings and public spaces.\nOrder Now",
+          "landingUrl": "https://starshieldpaints.com/products/star-graffiti-shield-solvent-based?_pos=1&_sid=eca6531c7&_ss=r",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/stargraffitishieldset1fron.png?v=1746099506&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 4490.0,
+              "promoPrice": 2490.0,
+              "dpl": 1814.75
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 21590.0,
+              "promoPrice": 11990.0,
+              "dpl": 8738.47
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 84590.0,
+              "promoPrice": 46990.0,
+              "dpl": 34246.95
+            }
+          ]
+        },
+        {
+          "id": "star-corrossion-shield",
+          "serialNumber": 80,
+          "name": "Star Corrossion Shield",
+          "hsn": "39073010",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-corrosion-shield?_pos=2&_psq=star+cor&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Corrosion_Shield_2k.png?v=1746098082&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 990.0,
+              "promoPrice": 549.0,
+              "dpl": 414.08
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 4690.0,
+              "promoPrice": 2590.0,
+              "dpl": 1953.47
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 17990.0,
+              "promoPrice": 9990.0,
+              "dpl": 7534.83
+            }
+          ]
+        },
+        {
+          "id": "star-rust-converter",
+          "serialNumber": 81,
+          "name": "Star Rust Converter",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-rust-converter?_pos=1&_psq=rust&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Rust_Converter.jpg?v=1729662692&width=493",
+          "variants": []
+        },
+        {
+          "id": "star-acid-shield",
+          "serialNumber": 82,
+          "name": "Star Acid Shield",
+          "hsn": "32089090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-acid-shield?_pos=1&_psq=acid&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/StarAcidShield2k.png?v=1740758324&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1013.05
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 12390.0,
+              "promoPrice": 6890.0,
+              "dpl": 5021.53
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 48590.0,
+              "promoPrice": 26990.0,
+              "dpl": 19670.68
+            }
+          ]
+        },
+        {
+          "id": "star-coil-shield",
+          "serialNumber": 83,
+          "name": "Star Coil Shield",
+          "hsn": "32089090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-coil-shield?_pos=1&_psq=coil&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_coil_shield.png?v=1718037117&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 746.69
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 8790.0,
+              "promoPrice": 4890.0,
+              "dpl": 3688.22
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 34190.0,
+              "promoPrice": 18990.0,
+              "dpl": 14322.97
+            }
+          ]
+        },
+        {
+          "id": "star-paper-shield",
+          "serialNumber": 84,
+          "name": "Star Paper Shield",
+          "hsn": "32100040",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-paper-shield?_pos=1&_psq=pap&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_paper_shield.jpg?v=1717828644&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2690.0,
+              "promoPrice": 1490.0,
+              "dpl": 1123.81
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 10390.0,
+              "promoPrice": 5790.0,
+              "dpl": 4367.03
+            }
+          ]
+        },
+        {
+          "id": "star-fabric-shield",
+          "serialNumber": 85,
+          "name": "Star Fabric Shield",
+          "hsn": "",
+          "description": "Star Fabric Shield Is A Silicone-Based Water-Repellent Coating Specifically Designed For Textile Applications.\nIt Deeply Impregnates Fibers At A Molecular Level, Forming An Invisible, Breathable Barrier That Effectively Repels Water And Prevents Staining.\nIdeal For Clothing, Outdoor Gear, Upholstery, And Industrial Fabrics, Star Fabric Shield Ensures Textiles Remain Dry And Comfortable Without Compromising Their Natural Softness Or Appearance.",
+          "landingUrl": "https://starshieldpaints.com/products/star-fabric-shield?_pos=1&_psq=star+fab&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/star_fabric_shield.png?v=1717597678&width=493",
+          "variants": []
+        }
+      ]
+    },
+    {
+      "category": "Wood",
+      "products": [
+        {
+          "id": "star-wood-shield-2k-2k-pu--aurelia",
+          "serialNumber": 86,
+          "name": "Star Wood Shield-2k 2k PU- Aurelia",
+          "hsn": "32089090",
+          "description": "Star Wood Shield 2k PU Aurelia - UV Resistant Ultra-hydrophobic Tough Lamination ?\nA nano technology water repellent ultra-hydrophobic wood coating protection from termites and fungus # Transparent lamination on wooden surface to make it stain-proof # Self cleanable inhibits bacterial growth # Prevents invading termites, beetles, mold, etc. # Flexible for contraction and expansion of wood due to weather change # Oleophobic nature makes it highly durable # Available in natural and glossy finish",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-shield-2k-pu-aurelia?_pos=1&_psq=wood+shield+2k&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/StarWoodShieldPU2k_2.png?v=1747909568&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1990.0,
+              "promoPrice": 1090.0,
+              "dpl": 794.41
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 9690.0,
+              "promoPrice": 5390.0,
+              "dpl": 3928.31
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 38490.0,
+              "promoPrice": 21490.0,
+              "dpl": 15662.2
+            }
+          ]
+        },
+        {
+          "id": "star-wood-shield-melamine--aurelia",
+          "serialNumber": 87,
+          "name": "Star Wood Shield melamine- Aurelia",
+          "hsn": "32089090",
+          "description": "Star Wood Shield Melamine Aurelia is a premium wood finish designed to offer outstanding protection and an elegant sheen to wooden surfaces.\nThis high-performance product is ideal for use on both interior and exterior wood surfaces, delivering long-lasting durability and superior aesthetics.\nIt combines the benefits of a melamine-based finish with the strength and durability of polyurethane, making it the perfect solution for wooden furniture, doors, windows, and other wood surfaces exposed to wear and tear.",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-shield-melamine-aurelia?_pos=5&_psq=wood+shield&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20litdrumStarWoodShieldMelaminemetalicoralluminiumcylendricalbox-New_2.png?v=1747908697&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2890.0,
+              "promoPrice": 1590.0,
+              "dpl": 1199.24
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 10990.0,
+              "promoPrice": 6090.0,
+              "dpl": 4593.31
+            }
+          ]
+        },
+        {
+          "id": "star-wood-shield-waterbase",
+          "serialNumber": 88,
+          "name": "Star Wood Shield Waterbase",
+          "hsn": "32091090",
+          "description": "Star Wood Shield Waterbase is a specialized wood coating that gives a superior protective covering and enhances the durability and aesthetic appeal of wooden surfaces.\nThe water-based formula is environmentally friendly and provides a smooth, long-lasting finish that preserves the natural texture of the wood.",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-shield-waterbase?_pos=1&_psq=wood+shield&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketSTARWOODSHIELD-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 369.58
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2990.0,
+              "promoPrice": 1690.0,
+              "dpl": 1274.66
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 7490.0,
+              "promoPrice": 4190.0,
+              "dpl": 3160.25
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 14390.0,
+              "promoPrice": 7990.0,
+              "dpl": 6026.36
+            }
+          ]
+        },
+        {
+          "id": "star-wood-shield-polyster--aurelia",
+          "serialNumber": 89,
+          "name": "Star Wood Shield Polyster- Aurelia",
+          "hsn": "32089090",
+          "description": "Star Wood Shield Polyester Aurelia is a premium wood coating solution designed to protect, preserve, and enhance the beauty of wooden surfaces.\nThis advanced formula provides superior protection against wear, moisture, and environmental damage, ensuring long-lasting durability and an elegant finish.\nIt is perfect for use on both interior and exterior wooden surfaces, offering a sleek, glossy, and professional appearance that elevates any wooden structure.",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-shield-polyster-aurelia?_pos=2&_psq=wood+shield&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20litdrumSTARWOODSHIELDPOLYESTERpartametalicoralluminiumcylendricalbox-New_4.png?v=1747909776&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1290.0,
+              "promoPrice": 749.0,
+              "dpl": 564.92
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 6490.0,
+              "promoPrice": 3590.0,
+              "dpl": 2707.71
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 24990.0,
+              "promoPrice": 13990.0,
+              "dpl": 10551.78
+            }
+          ]
+        },
+        {
+          "id": "star-wood-seal-2k-pu--aurelia",
+          "serialNumber": 90,
+          "name": "Star Wood Seal 2k PU- Aurelia",
+          "hsn": "32089090",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1690.0,
+              "promoPrice": 949.0,
+              "dpl": 715.77
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 8290.0,
+              "promoPrice": 4590.0,
+              "dpl": 3461.95
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 32390.0,
+              "promoPrice": 17990.0,
+              "dpl": 13568.73
+            }
+          ]
+        },
+        {
+          "id": "star-wood-seal-melamine--aurelia",
+          "serialNumber": 91,
+          "name": "Star Wood Seal melamine- Aurelia",
+          "hsn": "32089090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-wood-seal-melamine-aurelia?_pos=2&_psq=wood+seal&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_STAR_WOOD_SEAL_MELAMINE_part_a_metalic_or_alluminium_cylendrical_box-_New_8b05796e-78fc-4ed5-96bb-e5c92a9592df.png?v=1728999135&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 590.0,
+              "promoPrice": 349.0,
+              "dpl": 263.23
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2990.0,
+              "promoPrice": 1649.0,
+              "dpl": 1243.74
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 11290.0,
+              "promoPrice": 6290.0,
+              "dpl": 4744.15
+            }
+          ]
+        },
+        {
+          "id": "star-nc-sealer",
+          "serialNumber": 92,
+          "name": "Star  NC Sealer",
+          "hsn": "32091090",
+          "description": "Star Nc Sealer Is A High-Quality Nitrocellulose Sanding Sealer Formulated For Furniture, Cabinetry, Musical Instruments, And Interior Wood Surfaces.\nFeaturing Quick-Drying Capabilities, Exceptional Sandability, And Excellent Holdout For Subsequent Coatings, This Sealer Provides A Smooth, Uniform Surface, Reducing The Number Of Required Finish Coats.\nIts Pale, Clear Nature Preserves The Natural Wood Appearance, Providing Excellent Adhesion And Preparation For A Variety Of Topcoat Finishes.",
+          "landingUrl": "https://starshieldpaints.com/products/star-nc-sealer-1?_pos=1&_psq=nc&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_Star_Wood_Shield_sealer_part_a_metalic_or_alluminium_cylendrical_box-_New_871cb5ed-557e-4a37-819c-8a4f5a3ffd52.png?v=1728906191&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1048.39
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 9890.0,
+              "promoPrice": 5490.0,
+              "dpl": 4140.76
+            }
+          ]
+        },
+        {
+          "id": "star-nc-clear",
+          "serialNumber": 93,
+          "name": "Star  NC Clear",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-nc-clear?_pos=1&_psq=nc+cl&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_Star_Wood_Shield_clear_part_a_metalic_or_alluminium_cylendrical_box-_New_864c5c61-4c08-4fa1-bd50-793ccce42b7a.png?v=1728905939&width=494",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1048.39
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 9890.0,
+              "promoPrice": 5490.0,
+              "dpl": 4140.76
+            }
+          ]
+        },
+        {
+          "id": "star-nc-colour",
+          "serialNumber": 94,
+          "name": "Star  NC Colour",
+          "hsn": "32091090",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-nc-colour?_pos=1&_psq=nc+color&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20_lit_drum_Star_NC_colour_part_a_metalic_or_alluminium_cylendrical_box-_New_c75b04a8-5615-4afb-8740-2fb5682b9037.png?v=1728834267&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 490.0,
+              "promoPrice": 290.0,
+              "dpl": 218.73
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1048.39
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 9890.0,
+              "promoPrice": 5490.0,
+              "dpl": 4140.76
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Floor Coatings",
+      "products": [
+        {
+          "id": "star-cool-shield-floor",
+          "serialNumber": 95,
+          "name": "Star Cool Shield Floor",
+          "hsn": "",
+          "description": "Star Cool Shield Floor Is An Advanced Heat-Reflective Floor Coating Engineered With Nano-Modified Acrylic Elastomeric Technology, Specifically Formulated To Reduce Surface Temperature And Enhance Durability Of Flooring Exposed To Harsh Sunlight And Heavy Foot Traffic. Its Innovative Reflective Properties Significantly Minimize Heat Absorption, Providing Superior Thermal Comfort And Substantial Energy Savings. Ideal For Industrial, Commercial, And Residential Applications, Star Cool Shield Floor Ensures Lasting Protection With Its Abrasion-Resistant, Waterproof, Anti-Slip, And Uv-Resistant Characteristics. Environmentally Responsible, This Voc-Free Coating Aligns Seamlessly With Sustainability Goals, Supporting Green Building Standards And Certifications.",
+          "landingUrl": "https://starshieldpaints.com/products/star-cool-shield-floor?_pos=1&_psq=cool+shield+flo&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_CoolShieldFloor2K.png?v=1740754107&width=493",
+          "variants": [
+            {
+              "volume": "20 Kgs",
+              "mrp": 8990.0,
+              "promoPrice": 4990.0,
+              "dpl": 3763.64
+            }
+          ]
+        },
+        {
+          "id": "star-floor-paint",
+          "serialNumber": 96,
+          "name": "Star Floor Paint",
+          "hsn": "39100090",
+          "description": "Star Floor Paint provides style combined with durability, thereby making your floors look astounding but adding an extra layer of protection to them. It's a very flexible paint, recommended for many surfaces, and it provides that glossy, vibrant finish that decorates and protects from wear and tear.\n\nBe it a touch of class or some charming feel, Star Floor Paint is your way to go for great floors that will last long.",
+          "landingUrl": "https://starshieldpaints.com/products/star-floor-paint?_pos=1&_psq=floor+paint&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Floor_Paint.jpg?v=1717131078&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 890.0,
+              "promoPrice": 490.0,
+              "dpl": 369.58
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2890.0,
+              "promoPrice": 1590.0,
+              "dpl": 1199.24
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 6990.0,
+              "promoPrice": 3890.0,
+              "dpl": 2933.98
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 13490.0,
+              "promoPrice": 7490.0,
+              "dpl": 5649.24
+            }
+          ]
+        },
+        {
+          "id": "star-floor-shine",
+          "serialNumber": 97,
+          "name": "Star Floor Shine",
+          "hsn": "39073010",
+          "description": "Star Floor Shine is a neutral cleaner designed for the maintenance of various types of flooring, including marble, granite, ceramic, and more. Its neutral pH formulation suits all washable surfaces, providing a safe and effective cleaning solution.\n\nStar Floor Shine is particularly beneficial for increasing the resistance of floor treatments to pedestrian traffic, making it ideal for heavily trafficked areas such as shopping malls and hotels.?\n\nUnlike cleaners based on hydrochloric acid, Star Floor Shine is much safer and less reactive, especially on sensitive surfaces like marble.",
+          "landingUrl": "https://starshieldpaints.com/products/star-floor-shine?_pos=3&_psq=f&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/Star_Floor_Shine_2k.png?v=1746167671&width=493",
+          "variants": [
+            {
+              "volume": "3 Ltr",
+              "mrp": 4090.0,
+              "promoPrice": 2290.0,
+              "dpl": 1727.2
+            },
+            {
+              "volume": "15 Ltr",
+              "mrp": 18890.0,
+              "promoPrice": 10490.0,
+              "dpl": 7911.95
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 35790.0,
+              "promoPrice": 19990.0,
+              "dpl": 15077.2
+            }
+          ]
+        },
+        {
+          "id": "star-floor-paint-2k",
+          "serialNumber": 98,
+          "name": "Star Floor Paint 2K",
+          "hsn": "39095000",
+          "description": "Star Floor Paint Is Formulated From Advanced Epoxy-Based Resins, Providing A Seamless, Protective, And Aesthetically Appealing Finish. Designed To Withstand Heavy Traffic, Chemical Spills, And Environmental Stress, It Significantly Extends Floor Life While Enhancing Safety And Hygiene",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 1790.0,
+              "promoPrice": 990.0,
+              "dpl": 721.53
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 8790.0,
+              "promoPrice": 4890.0,
+              "dpl": 3563.9
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 17490.0,
+              "promoPrice": 9690.0,
+              "dpl": 7062.2
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 34190.0,
+              "promoPrice": 18990.0,
+              "dpl": 13840.17
+            }
+          ]
+        },
+        {
+          "id": "star-epoxy-flooring-primer-kit",
+          "serialNumber": 99,
+          "name": "Star Epoxy Flooring Primer Kit",
+          "hsn": "39073010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "12 Ltr",
+              "mrp": 7690.0,
+              "promoPrice": 4290.0,
+              "dpl": 3235.68
+            },
+            {
+              "volume": "24 Ltr",
+              "mrp": 15190.0,
+              "promoPrice": 8490.0,
+              "dpl": 6403.47
+            }
+          ]
+        },
+        {
+          "id": "star-epoxy-flooring-screed-kit",
+          "serialNumber": 100,
+          "name": "Star Epoxy Flooring Screed Kit",
+          "hsn": "39073010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "45 Ltr",
+              "mrp": 17290.0,
+              "promoPrice": 9590.0,
+              "dpl": 7233.14
+            },
+            {
+              "volume": "90 Ltr",
+              "mrp": 34190.0,
+              "promoPrice": 18990.0,
+              "dpl": 14322.97
+            }
+          ]
+        },
+        {
+          "id": "star-epoxy-flooring-top-coat-kit",
+          "serialNumber": 101,
+          "name": "Star Epoxy Flooring Top Coat Kit",
+          "hsn": "39073010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "25 Ltr",
+              "mrp": 10790.0,
+              "promoPrice": 5990.0,
+              "dpl": 4517.88
+            },
+            {
+              "volume": "50 Ltr",
+              "mrp": 21090.0,
+              "promoPrice": 11690.0,
+              "dpl": 8817.03
+            }
+          ]
+        },
+        {
+          "id": "star-epoxy-flooring-clear-/3d-top-coat-kit",
+          "serialNumber": 102,
+          "name": "Star Epoxy Flooring Clear /3D Top Coat KIT",
+          "hsn": "39073010",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "12 Ltr",
+              "mrp": 14190.0,
+              "promoPrice": 7890.0,
+              "dpl": 5950.93
+            },
+            {
+              "volume": "24 Ltr",
+              "mrp": 27890.0,
+              "promoPrice": 15490.0,
+              "dpl": 11683.14
+            }
+          ]
+        },
+        {
+          "id": "star-epoxy-flooring-metalic-top-coat-kit",
+          "serialNumber": 103,
+          "name": "Star Epoxy Flooring Metalic Top Coat Kit",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "15 Ltr",
+              "mrp": 17990.0,
+              "promoPrice": 9990.0,
+              "dpl": 7534.83
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 34990.0,
+              "promoPrice": 19490.0,
+              "dpl": 14700.08
+            }
+          ]
+        },
+        {
+          "id": "star-epoxy-flooring-texture-top-coat-kit",
+          "serialNumber": 104,
+          "name": "Star Epoxy Flooring Texture Top Coat Kit",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "15 Ltr",
+              "mrp": 9490.0,
+              "promoPrice": 5290.0,
+              "dpl": 3989.92
+            },
+            {
+              "volume": "30 Ltr",
+              "mrp": 18890.0,
+              "promoPrice": 10490.0,
+              "dpl": 7911.95
+            }
+          ]
+        },
+        {
+          "id": "star-pu-flooring",
+          "serialNumber": 105,
+          "name": "Star PU Flooring",
+          "hsn": "39069090",
+          "description": "Star Pu Flooring Is An Advanced Polyurethane-Based Flooring System Designed To Deliver Exceptional Flexibility, Abrasion Resistance, And Chemical Protection. Its Elastomeric Properties Enable Superior Performance On Substrates Prone To Movement Or Thermal Expansion, Ensuring Crack-Bridging Capabilities And Lasting Durability.\n\nIdeal For Commercial Kitchens, Hospitals, Pharma, Industrial Units, Parking Areas, And Residential Spaces, Star Pu Flooring Offers An Aesthetically Pleasing Seamless Finish While Meeting Stringent Hygiene Standards.",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "20 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            }
+          ]
+        },
+        {
+          "id": "star-floor-shield-heavy-duty",
+          "serialNumber": 106,
+          "name": "Star Floor Shield Heavy Duty",
+          "hsn": "",
+          "description": "Star Floor Shield Heavy Duty is an advanced floor coating solution engineered for high-performance durability, designed to withstand heavy traffic, extreme wear, and harsh environmental conditions. It offers unparalleled protection for industrial, commercial, and residential flooring while enhancing appearance and safety.",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "20 Ltr",
+              "mrp": 6990.0,
+              "promoPrice": 3990.0,
+              "dpl": 3009.41
+            }
+          ]
+        },
+        {
+          "id": "star-skid-shield-parking",
+          "serialNumber": 107,
+          "name": "Star Skid Shield Parking",
+          "hsn": "39095000",
+          "description": "Star Skid Shield parking is specifically designed with seamless, abrasion-resistant anti-slip coating for floors.\n\nStar Skid Shield - Anti-skid floor coating is a specialized solution designed to enhance safety by reducing the risk of slips and falls. It’s typically made with aggregates like sand or quartz embedded within a durable resin base, providing a rough texture that increases traction. Ideal for high-traffic areas, industrial settings, or wet environments, this coating is both functional and aesthetically versatile, available in various colors and finishes. It’s easy to apply and maintain, making it a practical choice for ensuring safer walking surfaces.",
+          "landingUrl": "https://starshieldpaints.com/products/star-skid-shield-parking?_pos=1&_psq=star+skid&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/star_skid_shield_parking_2K.png?v=1729176869&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 2590.0,
+              "promoPrice": 1449.0,
+              "dpl": 1092.89
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 12790.0,
+              "promoPrice": 7090.0,
+              "dpl": 5347.54
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 50390.0,
+              "promoPrice": 27990.0,
+              "dpl": 21111.1
+            }
+          ]
+        },
+        {
+          "id": "star-road-marking",
+          "serialNumber": 108,
+          "name": "Star Road Marking",
+          "hsn": "32099090",
+          "description": "Star Road Marking Paint\nWater Based High Performance Non-Fading Strong Adhesive Tough Coating For Road Signs & Signals . The essential purpose of road marking is to guide and control traffic on a highway. It supplements the function of traffic signs.\nRoad Paints are critical and crucial to the enhanced safety for both vehicle drivers and pedestrians.\nStar Road Marking Paint has glass beads that become the reason for shine and glow.",
+          "landingUrl": "https://starshieldpaints.com/products/star-road-marking-paint?_pos=1&_psq=road&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20ltrbucketStarRoadMarkingPaintfront-optimized-1722079426.jpg?v=1722079429&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 790.0,
+              "promoPrice": 430.0,
+              "dpl": 324.32
+            },
+            {
+              "volume": "3.6 Ltr",
+              "mrp": 2490.0,
+              "promoPrice": 1390.0,
+              "dpl": 1048.39
+            },
+            {
+              "volume": "9.1 Ltr",
+              "mrp": 6090.0,
+              "promoPrice": 3390.0,
+              "dpl": 2556.86
+            },
+            {
+              "volume": "18.2 Ltr",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4895.0
+            }
+          ]
+        },
+        {
+          "id": "star-road-repair",
+          "serialNumber": 109,
+          "name": "Star Road Repair",
+          "hsn": "32099090",
+          "description": "Star Road Repair is a specialized product that's designed to provide strong and durable solutions for fixing and maintaining road surfaces. This advanced formula is engineered to deliver high performance when it comes to filling potholes, cracks, and other surface damages. It ensures long-lasting repairs and improves road safety. Star Road Repair enhances the strength and durability of asphalt and concrete surfaces, making it an essential tool for both small repairs and big road maintenance projects.",
+          "landingUrl": "https://starshieldpaints.com/products/star-road-repair?_pos=1&_psq=road+re&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/starroadrepairmockup.jpg?v=1747985156&width=493",
+          "variants": [
+            {
+              "volume": "5 Ltr",
+              "mrp": 2990.0,
+              "promoPrice": 1690.0,
+              "dpl": 1274.66
+            },
+            {
+              "volume": "10 Ltr",
+              "mrp": 5890.0,
+              "promoPrice": 3290.0,
+              "dpl": 2481.44
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 11690.0,
+              "promoPrice": 6490.0,
+              "dpl": 4895.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Car Care",
+      "products": [
+        {
+          "id": "star-heat-shield",
+          "serialNumber": 110,
+          "name": "Star Heat Shield",
+          "hsn": "32149090",
+          "description": "Star Heat Shield Is An Advanced, Nano-Modified Transparent Protective Coating Engineered Specifically For Glass Surfaces In Automotive, Commercial, And Residential Applications. This Innovative Solution Effectively Blocks Up To 95% Of Infrared Radiation And 99% Of Harmful Uv Rays, Significantly Reducing Interior Heat Build-Up, Protecting Interiors From Fading And Deterioration, And Enhancing Overall Energy Efficiency. Its Superior Optical Clarity Ensures Uncompromised Visibility While Its Hydrophobic And Oleophobic Properties Keep Surfaces Cleaner, Reducing Maintenance Efforts. Ideal For Automotive Windows, Commercial Building Facades, And Residential Glass Structures, Star Heat Shield Is A Durable, Eco-Friendly Coating Designed For Comfort, Sustainability, And Long-Lasting Protection",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "100 ML",
+              "mrp": 5890.0,
+              "promoPrice": 3290.0,
+              "dpl": 2481.44
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Anti Viral",
+      "products": [
+        {
+          "id": "star-virus-shield-nano-coating",
+          "serialNumber": 111,
+          "name": "Star Virus Shield Nano coating",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "https://starshieldpaints.com/products/star-virus-shield-nano-coating?_pos=2&_psq=virus+shield&_ss=e&_v=1.0",
+          "imageUrl": "https://starshieldpaints.com/cdn/shop/files/20LTRPLASTICCANSTARVIRUSSHIELDNANOCOATING_1ecd9513-49b9-4199-acf2-0e0ff68405ed-optimized-1722079402.jpg?v=1722079405&width=493",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Remover & Thinners",
+      "products": [
+        {
+          "id": "star-paint-remover",
+          "serialNumber": 112,
+          "name": "Star Paint Remover",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            }
+          ]
+        },
+        {
+          "id": "star-universal-thinner",
+          "serialNumber": 113,
+          "name": "Star Universal Thinner",
+          "hsn": "",
+          "description": "",
+          "landingUrl": "",
+          "imageUrl": "",
+          "variants": [
+            {
+              "volume": "1 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "5 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            },
+            {
+              "volume": "20 Ltr",
+              "mrp": 0.0,
+              "promoPrice": 0.0,
+              "dpl": 0.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

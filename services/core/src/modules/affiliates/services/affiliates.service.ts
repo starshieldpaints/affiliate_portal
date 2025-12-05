@@ -1,3 +1,974 @@
+// import {
+//   Injectable,
+//   NotFoundException,
+//   BadRequestException,
+//   ForbiddenException,
+//   Logger
+// } from '@nestjs/common';
+// import { ConfigService } from '@nestjs/config';
+// import {
+//   CommissionStatus,
+//   KycStatus,
+//   Prisma,
+//   PayoutLineStatus,
+//   UserStatus
+// } from '@prisma/client';
+// import { PrismaService } from '../../prisma/prisma.service';
+// import { UpdateAffiliateProfileDto } from '../dto/update-affiliate-profile.dto';
+// import { CreateAffiliateLinkDto } from '../dto/create-affiliate-link.dto';
+// import { randomBytes } from 'crypto';
+// import { RequestUploadUrlDto } from '../dto/request-upload-url.dto';
+// import { RequestDownloadUrlDto } from '../dto/request-download-url.dto';
+// import { CloudStorageService } from '../../storage/cloud-storage.service';
+
+// @Injectable()
+// export class AffiliatesService {
+//   private readonly logger = new Logger(AffiliatesService.name);
+
+//   constructor(
+//     private readonly prisma: PrismaService,
+//     private readonly config: ConfigService,
+//     private readonly storage: CloudStorageService
+//   ) {}
+
+//   async findAll(params?: {
+//     search?: string;
+//     status?: string;
+//     kycStatus?: string;
+//     take?: number;
+//   }) {
+//     const normalizedTake = Math.min(Math.max(params?.take ?? 50, 1), 200);
+//     const where: Prisma.AffiliateProfileWhereInput = {};
+
+//     if (params?.kycStatus && params.kycStatus !== 'all') {
+//       where.kycStatus = params.kycStatus as KycStatus;
+//     }
+
+//     if (params?.status && params.status !== 'all') {
+//       const relationFilter =
+//         (where.user as Prisma.UserRelationFilter | undefined) ?? ({} as Prisma.UserRelationFilter);
+//       const existingIs = (relationFilter.is as Prisma.UserWhereInput | undefined) ?? {};
+//       relationFilter.is = {
+//         ...existingIs,
+//         status: params.status as UserStatus
+//       };
+//       where.user = relationFilter;
+//     }
+
+//     if (params?.search?.trim()) {
+//       const term = params.search.trim();
+//       const searchClause: Prisma.AffiliateProfileWhereInput = {
+//         OR: [
+//           { displayName: { contains: term, mode: 'insensitive' } },
+//           { defaultReferralCode: { contains: term, mode: 'insensitive' } },
+//           { phone: { contains: term } },
+//           { user: { email: { contains: term, mode: 'insensitive' } } }
+//         ]
+//       };
+//       if (!where.AND) {
+//         where.AND = searchClause;
+//       } else if (Array.isArray(where.AND)) {
+//         where.AND = [...where.AND, searchClause];
+//       } else {
+//         where.AND = [where.AND, searchClause];
+//       }
+//     }
+
+//     const [records, total, kycBreakdown] = await this.prisma.$transaction([
+//       this.prisma.affiliateProfile.findMany({
+//         where,
+//         include: {
+//           user: {
+//             select: {
+//               email: true,
+//               status: true,
+//               role: true,
+//               createdAt: true
+//             }
+//           },
+//           _count: {
+//             select: {
+//               links: true,
+//               coupons: true
+//             }
+//           }
+//         },
+//         orderBy: { createdAt: 'desc' },
+//         take: normalizedTake
+//       }),
+//       this.prisma.affiliateProfile.count({ where }),
+//       this.prisma.affiliateProfile.groupBy({
+//         by: ['kycStatus'],
+//         where,
+//         orderBy: { kycStatus: 'asc' },
+//         _count: { _all: true }
+//       })
+//     ]);
+
+//     const meta = {
+//       total,
+//       take: normalizedTake,
+//       kycBreakdown: kycBreakdown.reduce<Record<string, number>>((acc, item) => {
+//         const count = (item._count as { _all?: number } | null)?._all ?? 0;
+//         acc[item.kycStatus] = count;
+//         return acc;
+//       }, {})
+//     };
+
+//     return { data: records, meta };
+//   }
+
+//   async findOne(id: string) {
+//     const affiliate = await this.prisma.affiliateProfile.findUnique({
+//       where: { id },
+//       include: {
+//         user: {
+//           select: {
+//             email: true,
+//             status: true,
+//             role: true
+//           }
+//         },
+//         links: {
+//           select: {
+//             id: true,
+//             code: true,
+//             isActive: true,
+//             createdAt: true
+//           }
+//         },
+//         coupons: {
+//           select: {
+//             id: true,
+//             code: true,
+//             isActive: true,
+//             discountType: true,
+//             discountValue: true
+//           }
+//         }
+//       }
+//     });
+//     if (affiliate) {
+//       return affiliate;
+//     }
+//     return {
+//       id,
+//       displayName: 'Sample Affiliate',
+//       kycStatus: 'pending',
+//       payoutMethod: 'stripe_connect',
+//       createdAt: new Date(),
+//       user: {
+//         email: 'sample@starshield.io',
+//         status: 'active',
+//         role: 'affiliate'
+//       },
+//       links: [],
+//       coupons: []
+//     };
+//   }
+
+//   async updateProfile(userId: string, dto: UpdateAffiliateProfileDto) {
+//     const profile = await this.prisma.affiliateProfile.findUnique({
+//       where: { userId }
+//     });
+//     if (!profile) {
+//       throw new NotFoundException('Affiliate profile not found');
+//     }
+
+//     const payoutDetails: Prisma.InputJsonValue | typeof Prisma.JsonNull | undefined =
+//       dto.payoutDetails === undefined
+//         ? (profile.payoutDetails as Prisma.InputJsonValue | typeof Prisma.JsonNull | null) ??
+//           undefined
+//         : dto.payoutDetails === null
+//           ? Prisma.JsonNull
+//           : (dto.payoutDetails as Prisma.InputJsonValue);
+
+//     const updated = await this.prisma.affiliateProfile.update({
+//       where: { userId },
+//       data: {
+//         displayName: dto.displayName ?? profile.displayName,
+//         payoutMethod: dto.payoutMethod ?? profile.payoutMethod,
+//         payoutDetails,
+//         kycStatus: dto.kycStatus ?? profile.kycStatus,
+//         panNumber: dto.panNumber ?? profile.panNumber,
+//         aadhaarNumber: dto.aadhaarNumber ?? profile.aadhaarNumber,
+//         panImageUrl: dto.panImageUrl ?? profile.panImageUrl,
+//         aadhaarFrontUrl: dto.aadhaarFrontUrl ?? profile.aadhaarFrontUrl,
+//         aadhaarBackUrl: dto.aadhaarBackUrl ?? profile.aadhaarBackUrl
+//       },
+//       include: {
+//         user: {
+//           select: {
+//             id: true,
+//             email: true,
+//             role: true,
+//             status: true
+//           }
+//         }
+//       }
+//     });
+
+//     return updated;
+//   }
+
+//   async requestDocumentUpload(userId: string, dto: RequestUploadUrlDto) {
+//     const affiliateId = await this.requireAffiliateId(userId);
+//     const purpose = this.slugify(dto.purpose ?? 'document') || 'document';
+//     const extension = this.extractExtension(dto.fileName);
+//     const timestamp = Date.now();
+//     const objectName = [
+//       'affiliates',
+//       affiliateId,
+//       `${purpose}-${timestamp}${extension ? `.${extension}` : ''}`
+//     ]
+//       .filter(Boolean)
+//       .join('/');
+
+//     this.logger.log(
+//       `Requesting upload URL for user ${userId} (affiliate ${affiliateId}) to ${objectName}`
+//     );
+
+//     return this.storage.generateSignedUploadUrl({
+//       objectName,
+//       contentType: dto.mimeType
+//     });
+//   }
+
+//   async requestDocumentAccess(userId: string, dto: RequestDownloadUrlDto) {
+//     const affiliateId = await this.requireAffiliateId(userId);
+//     const normalizedObjectName = dto.objectName.replace(/^\//, '');
+//     const expectedPrefix = `affiliates/${affiliateId}/`;
+//     if (!normalizedObjectName.startsWith(expectedPrefix)) {
+//       this.logger.warn(
+//         `Blocked download URL request for user ${userId} (affiliate ${affiliateId}) to ${normalizedObjectName}`
+//       );
+//       throw new ForbiddenException('You do not have access to this file');
+//     }
+
+//     this.logger.log(
+//       `Requesting download URL for user ${userId} (affiliate ${affiliateId}) to ${normalizedObjectName}`
+//     );
+
+//     return this.storage.generateSignedDownloadUrl({
+//       objectName: normalizedObjectName
+//     });
+//   }
+
+//   // async createAffiliateLink(userId: string, dto: CreateAffiliateLinkDto) {
+//   //   const profile = await this.prisma.affiliateProfile.findUnique({
+//   //     where: { userId },
+//   //     select: { id: true, defaultReferralCode: true }
+//   //   });
+//   //   if (!profile) {
+//   //     throw new NotFoundException('Affiliate profile not found');
+//   //   }
+//   //   const prefix = dto.alias ?? profile.defaultReferralCode ?? 'affiliate';
+//   //   const code = await this.generateLinkCode(prefix);
+//   //   const trackedUrl = this.buildTrackedUrl(dto.landingUrl, {
+//   //     referralCode: dto.referralCode,
+//   //     utmSource: dto.utmSource,
+//   //     utmMedium: dto.utmMedium,
+//   //     utmCampaign: dto.utmCampaign,
+//   //     productId: dto.productId,
+//   //     productSku: dto.productSku
+//   //   });
+
+//   //   const link = await this.prisma.affiliateLink.create({
+//   //     data: {
+//   //       affiliateId: profile.id,
+//   //       productId: dto.productId ?? null,
+//   //       code,
+//   //       landingUrl: trackedUrl,
+//   //       utmDefaults: {
+//   //         source: dto.utmSource,
+//   //         medium: dto.utmMedium,
+//   //         campaign: dto.utmCampaign
+//   //       }
+//   //     },
+//   //     select: {
+//   //       id: true,
+//   //       code: true,
+//   //       landingUrl: true
+//   //     }
+//   //   });
+
+//   //   const trackingBase =
+//   //     this.config.get<string>('tracking.baseUrl') ??
+//   //     this.config.get<string>('app.url') ??
+//   //     'http://localhost:4000';
+//   //   const shortUrl = new URL(`/r/${link.code}`, trackingBase).toString();
+
+//   //   return {
+//   //     id: link.id,
+//   //     code: link.code,
+//   //     landingUrl: link.landingUrl,
+//   //     shortUrl
+//   //   };
+//   // }
+
+
+//   // Inside AffiliatesService
+
+//   async createAffiliateLink(userId: string, dto: CreateAffiliateLinkDto) {
+//     const affiliate = await this.prisma.affiliateProfile.findUnique({
+//       where: { userId },
+//     });
+
+//     if (!affiliate) {
+//       throw new NotFoundException('Affiliate profile not found');
+//     }
+
+//     // --- FIX STARTS HERE ---
+//     let targetProductId = dto.productId;
+
+//     // 1. Check if the ID exists as a Product
+//     const productExists = await this.prisma.product.findUnique({
+//       where: { id: dto.productId },
+//       select: { id: true }
+//     });
+
+//     // 2. If NOT a product, check if it's a Variant
+//     if (!productExists) {
+//       const variant = await this.prisma.productVariant.findUnique({
+//         where: { id: dto.productId },
+//         select: { productId: true }
+//       });
+
+//       if (variant) {
+//         // It was a variant! Use the parent Product ID for the foreign key
+//         targetProductId = variant.productId;
+//       } else {
+//         // It's neither. Throw a clear error.
+//         throw new NotFoundException(`Product or Variant with ID ${dto.productId} not found.`);
+//       }
+//     }
+//     // --- FIX ENDS HERE ---
+
+//     // Generate a unique code if not provided
+//     const code = dto.referralCode
+//       ? dto.referralCode
+//       : `${affiliate.defaultReferralCode}-${randomString(4)}`;
+
+//     // Create the link using the resolved Product ID
+//     return this.prisma.affiliateLink.create({
+//       data: {
+//         affiliateId: affiliate.id,
+//         productId: targetProductId, // <--- Use the resolved ID
+//         code,
+//         landingUrl: dto.landingUrl,
+//         utmDefaults: {
+//           source: dto.utmSource,
+//           medium: dto.utmMedium,
+//           campaign: dto.utmCampaign,
+//         },
+//       },
+//     });
+//   }
+
+//   async getDashboardOverview(userId: string) {
+//     const affiliateId = await this.findAffiliateId(userId);
+//     if (!affiliateId) {
+//       return {
+//         stats: {
+//           clicks: 0,
+//           conversions: 0,
+//           totalCommission: 0,
+//           pendingCommission: 0,
+//           activeLinks: 0
+//         },
+//         upcomingPayout: null,
+//         recentActivity: [],
+//         topLinks: [],
+//         channelMix: []
+//       };
+//     }
+
+//     const [
+//       clickCount,
+//       conversionCount,
+//       activeLinks,
+//       approvedCommission,
+//       pendingCommission,
+//       upcomingPayout,
+//       recentLedger,
+//       topLinks,
+//       channelGroups,
+//       commissionStatusCounts
+//     ] = await this.prisma.$transaction([
+//       this.prisma.click.count({
+//         where: { affiliateLink: { affiliateId } }
+//       }),
+//       this.prisma.attribution.count({
+//         where: { affiliateId }
+//       }),
+//       this.prisma.affiliateLink.count({
+//         where: { affiliateId, isActive: true }
+//       }),
+//       this.prisma.commissionLedger.aggregate({
+//         _sum: { amount: true },
+//         where: { affiliateId, status: CommissionStatus.approved }
+//       }),
+//       this.prisma.commissionLedger.aggregate({
+//         _sum: { amount: true },
+//         where: { affiliateId, status: CommissionStatus.pending }
+//       }),
+//       this.prisma.payoutLine.findFirst({
+//         where: {
+//           affiliateId,
+//           status: {
+//             in: [PayoutLineStatus.pending, PayoutLineStatus.queued, PayoutLineStatus.processing]
+//           }
+//         },
+//         select: {
+//           amount: true,
+//           currency: true,
+//           createdAt: true,
+//           batch: {
+//             select: {
+//               periodEnd: true
+//             }
+//           }
+//         },
+//         orderBy: { createdAt: 'asc' }
+//       }),
+//       this.prisma.commissionLedger.findMany({
+//         where: { affiliateId },
+//         select: {
+//           id: true,
+//           amount: true,
+//           currency: true,
+//           status: true,
+//           createdAt: true,
+//           order: {
+//             select: {
+//               externalOrderId: true
+//             }
+//           }
+//         },
+//         orderBy: { createdAt: 'desc' },
+//         take: 5
+//       }),
+//       this.prisma.affiliateLink.findMany({
+//         where: { affiliateId },
+//         select: {
+//           id: true,
+//           code: true,
+//           landingUrl: true,
+//           product: {
+//             select: {
+//               name: true
+//             }
+//           },
+//           _count: {
+//             select: { clicks: true }
+//           }
+//         },
+//         orderBy: {
+//           clicks: {
+//             _count: 'desc'
+//           }
+//         },
+//         take: 3
+//       }),
+//       this.prisma.attribution.groupBy({
+//         by: ['model'],
+//         where: { affiliateId },
+//         orderBy: { model: 'asc' },
+//         _count: { _all: true }
+//       }),
+//       this.prisma.commissionLedger.groupBy({
+//         by: ['status'],
+//         where: { affiliateId },
+//         orderBy: { status: 'asc' },
+//         _count: { _all: true }
+//       })
+//     ]);
+
+//     const totalChannelEvents = channelGroups.reduce((sum, group) => {
+//       const count =
+//         typeof group._count === 'object' && group._count !== null && '_all' in group._count
+//           ? (group._count as { _all?: number })._all ?? 0
+//           : 0;
+//       return sum + count;
+//     }, 0);
+
+//     return {
+//       stats: (() => {
+//         const getStatusCount = (status: CommissionStatus) => {
+//           const entry = commissionStatusCounts.find((c) => c.status === status);
+//           const aggregate = entry?._count as { _all?: number } | null | undefined;
+//           return aggregate?._all ?? 0;
+//         };
+//         const approvedCount = getStatusCount(CommissionStatus.approved);
+//         const pendingCount = getStatusCount(CommissionStatus.pending);
+//         const totalClicks = clickCount || 0;
+//         const ctr = totalClicks ? conversionCount / totalClicks : 0;
+//         const epc = totalClicks
+//           ? this.toNumber(approvedCommission._sum?.amount) / totalClicks
+//           : 0;
+//         const approvalRate =
+//           approvedCount + pendingCount > 0 ? approvedCount / (approvedCount + pendingCount) : 0;
+
+//         return {
+//           clicks: clickCount,
+//           conversions: conversionCount,
+//           totalCommission: this.toNumber(approvedCommission._sum?.amount),
+//           pendingCommission: this.toNumber(pendingCommission._sum?.amount),
+//           activeLinks,
+//           ctr,
+//           epc,
+//           approvalRate,
+//           approvedConversions: approvedCount,
+//           pendingConversions: pendingCount
+//         };
+//       })(),
+//       upcomingPayout: upcomingPayout
+//         ? {
+//             amount: this.toNumber(upcomingPayout.amount),
+//             currency: upcomingPayout.currency,
+//             scheduledFor: upcomingPayout.batch?.periodEnd ?? upcomingPayout.createdAt
+//           }
+//         : null,
+//       recentActivity: recentLedger.map((entry) => ({
+//         id: entry.id,
+//         label: entry.order?.externalOrderId ?? entry.id.slice(0, 8),
+//         amount: this.toNumber(entry.amount),
+//         currency: entry.currency,
+//         status: entry.status,
+//         createdAt: entry.createdAt
+//       })),
+//       topLinks: topLinks.map((link) => ({
+//         id: link.id,
+//         label: link.product?.name ?? link.code,
+//         clicks: link._count.clicks,
+//         landingUrl: link.landingUrl
+//       })),
+//       channelMix: channelGroups.slice(0, 5).map((group) => {
+//         const count =
+//           typeof group._count === 'object' && group._count !== null && '_all' in group._count
+//             ? (group._count as { _all?: number })._all ?? 0
+//             : 0;
+//         return {
+//           label: group.model ?? 'Unknown',
+//           share: totalChannelEvents === 0 ? 0 : Math.round((count / totalChannelEvents) * 100)
+//         };
+//       })
+//     };
+//   }
+
+//   async getNotifications(userId: string) {
+//     const affiliateId = await this.findAffiliateId(userId);
+//     if (!affiliateId) {
+//       return [];
+//     }
+//     const [recentPayouts, recentLedger] = await this.prisma.$transaction([
+//       this.prisma.payoutLine.findMany({
+//         where: { affiliateId },
+//         orderBy: { createdAt: 'desc' },
+//         take: 5,
+//         select: {
+//           id: true,
+//           amount: true,
+//           currency: true,
+//           status: true,
+//           createdAt: true,
+//           batch: {
+//             select: {
+//               periodEnd: true
+//             }
+//           }
+//         }
+//       }),
+//       this.prisma.commissionLedger.findMany({
+//         where: { affiliateId },
+//         orderBy: { createdAt: 'desc' },
+//         take: 5,
+//         select: {
+//           id: true,
+//           amount: true,
+//           currency: true,
+//           status: true,
+//           createdAt: true,
+//           order: {
+//             select: { externalOrderId: true }
+//           }
+//         }
+//       })
+//     ]);
+
+//     const items = [
+//       ...recentPayouts.map((payout) => ({
+//         id: `payout-${payout.id}`,
+//         title: payout.status === PayoutLineStatus.paid ? 'Payout processed' : 'Payout update',
+//         detail:
+//           payout.status === PayoutLineStatus.paid
+//             ? `Transfer completed for ${formatCurrency(
+//                 this.toNumber(payout.amount),
+//                 payout.currency
+//               )}`
+//             : `Payout ${payout.status.toLowerCase()} • ${formatCurrency(
+//                 this.toNumber(payout.amount),
+//                 payout.currency
+//               )}`,
+//         timestamp: payout.createdAt,
+//         type:
+//           payout.status === PayoutLineStatus.paid
+//             ? 'success'
+//             : payout.status === PayoutLineStatus.failed
+//             ? 'warning'
+//             : 'info'
+//       })),
+//       ...recentLedger.map((entry) => ({
+//         id: `ledger-${entry.id}`,
+//         title:
+//           entry.status === CommissionStatus.approved
+//             ? 'Commission approved'
+//             : entry.status === CommissionStatus.pending
+//             ? 'Commission pending'
+//             : 'Commission updated',
+//         detail: `${entry.order?.externalOrderId ?? entry.id.slice(0, 8)} • ${formatCurrency(
+//           this.toNumber(entry.amount),
+//           entry.currency
+//         )}`,
+//         timestamp: entry.createdAt,
+//         type:
+//           entry.status === CommissionStatus.rejected || entry.status === CommissionStatus.reversed
+//             ? 'warning'
+//             : entry.status === CommissionStatus.approved
+//             ? 'success'
+//             : 'info'
+//       }))
+//     ];
+
+//     return items
+//       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+//       .slice(0, 8)
+//       .map((item) => ({
+//         ...item,
+//         timestamp: item.timestamp.toISOString()
+//       }));
+//   }
+
+//   async getPayoutOverview(userId: string) {
+//     const affiliateId = await this.findAffiliateId(userId);
+//     if (!affiliateId) {
+//       return {
+//         summary: { pendingCommission: 0, approvedCommission: 0 },
+//         nextPayout: null,
+//         history: []
+//       };
+//     }
+//     const [history, pendingSum, approvedSum] = await this.prisma.$transaction([
+//       this.prisma.payoutLine.findMany({
+//         where: { affiliateId },
+//         include: {
+//           batch: {
+//             select: {
+//               periodEnd: true,
+//               method: true
+//             }
+//           }
+//         },
+//         orderBy: { createdAt: 'desc' },
+//         take: 10
+//       }),
+//       this.prisma.commissionLedger.aggregate({
+//         _sum: { amount: true },
+//         where: { affiliateId, status: CommissionStatus.pending }
+//       }),
+//       this.prisma.commissionLedger.aggregate({
+//         _sum: { amount: true },
+//         where: { affiliateId, status: CommissionStatus.approved }
+//       })
+//     ]);
+
+//     const actionableStatuses: PayoutLineStatus[] = [
+//       PayoutLineStatus.pending,
+//       PayoutLineStatus.processing,
+//       PayoutLineStatus.queued
+//     ];
+//     const nextPayout = history.find((line) => actionableStatuses.includes(line.status));
+
+//     return {
+//       summary: {
+//         pendingCommission: this.toNumber(pendingSum._sum?.amount),
+//         approvedCommission: this.toNumber(approvedSum._sum?.amount)
+//       },
+//       nextPayout: nextPayout
+//         ? {
+//             amount: this.toNumber(nextPayout.amount),
+//             currency: nextPayout.currency,
+//             status: nextPayout.status,
+//             scheduledFor: (nextPayout.batch?.periodEnd ?? nextPayout.createdAt).toISOString()
+//           }
+//         : null,
+//       history: history.map((line) => ({
+//         id: line.id,
+//         amount: this.toNumber(line.amount),
+//         currency: line.currency,
+//         status: line.status,
+//         method: line.batch?.method ?? null,
+//         createdAt: line.createdAt.toISOString()
+//       }))
+//     };
+//   }
+
+//   async getReportsSnapshot(userId: string) {
+//     const affiliateId = await this.findAffiliateId(userId);
+//     if (!affiliateId) {
+//       return {
+//         cohorts: [],
+//         funnel: {
+//           sessions: 0,
+//           qualified: 0,
+//           conversions: 0
+//         }
+//       };
+//     }
+//     const since = new Date();
+//     since.setDate(since.getDate() - 120);
+
+//     const [clicks, ledgers] = await this.prisma.$transaction([
+//       this.prisma.click.findMany({
+//         where: {
+//           affiliateLink: { affiliateId },
+//           clickedAt: { gte: since }
+//         },
+//         select: { clickedAt: true }
+//       }),
+//       this.prisma.commissionLedger.findMany({
+//         where: { affiliateId, createdAt: { gte: since } },
+//         select: {
+//           createdAt: true,
+//           amount: true,
+//           status: true
+//         }
+//       })
+//     ]);
+
+//     const weekMap = new Map<
+//       string,
+//       { clicks: number; conversions: number; commission: number }
+//     >();
+
+//     const addToWeek = (
+//       date: Date,
+//       updater: (bucket: { clicks: number; conversions: number; commission: number }) => void
+//     ) => {
+//       const key = this.weekKey(date);
+//       if (!weekMap.has(key)) {
+//         weekMap.set(key, { clicks: 0, conversions: 0, commission: 0 });
+//       }
+//       const bucket = weekMap.get(key)!;
+//       updater(bucket);
+//     };
+
+//     clicks.forEach((click) =>
+//       addToWeek(click.clickedAt, (bucket) => {
+//         bucket.clicks += 1;
+//       })
+//     );
+
+//     ledgers.forEach((ledger) =>
+//       addToWeek(ledger.createdAt, (bucket) => {
+//         if (ledger.status === CommissionStatus.approved) {
+//           bucket.conversions += 1;
+//           bucket.commission += this.toNumber(ledger.amount);
+//         } else if (ledger.status === CommissionStatus.pending) {
+//           bucket.conversions += 1;
+//         }
+//       })
+//     );
+
+//     const cohorts = Array.from(weekMap.entries())
+//       .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
+//       .slice(0, 6)
+//       .map(([key, bucket]) => ({
+//         label: this.formatWeekLabel(key),
+//         clicks: bucket.clicks,
+//         conversions: bucket.conversions,
+//         commission: bucket.commission
+//       }));
+
+//     const totalClicks = clicks.length;
+//     const approvedConversions = ledgers.filter(
+//       (ledger) => ledger.status === CommissionStatus.approved
+//     ).length;
+//     const pendingConversions = ledgers.filter(
+//       (ledger) => ledger.status === CommissionStatus.pending
+//     ).length;
+
+//     return {
+//       cohorts,
+//       funnel: {
+//         sessions: totalClicks,
+//         qualified: pendingConversions + approvedConversions,
+//         conversions: approvedConversions
+//       }
+//     };
+//   }
+//   private async generateLinkCode(prefix: string) {
+//     const base = this.slugify(prefix) || 'link';
+//     for (let attempt = 0; attempt < 5; attempt++) {
+//       const suffix = randomBytes(3).toString('hex');
+//       const candidate = `${base}-${suffix}`;
+//       const existing = await this.prisma.affiliateLink.findUnique({
+//         where: { code: candidate }
+//       });
+//       if (!existing) {
+//         return candidate;
+//       }
+//     }
+//     return `${base}-${randomBytes(4).toString('hex')}`;
+//   }
+
+//   private buildTrackedUrl(
+//     landingUrl: string,
+//     params: {
+//       referralCode: string;
+//       utmSource?: string;
+//       utmMedium?: string;
+//       utmCampaign?: string;
+//       productId?: string;
+//       productSku?: string;
+//     }
+//   ) {
+//     const url = this.createUrl(landingUrl);
+//     url.searchParams.set('aff', params.referralCode);
+//     if (params.utmSource) url.searchParams.set('utm_source', params.utmSource);
+//     if (params.utmMedium) url.searchParams.set('utm_medium', params.utmMedium);
+//     if (params.utmCampaign) url.searchParams.set('utm_campaign', params.utmCampaign);
+//     if (params.productId) url.searchParams.set('product_id', params.productId);
+//     if (params.productSku) url.searchParams.set('sku', params.productSku);
+//     return url.toString();
+//   }
+
+//   private createUrl(pathOrUrl: string) {
+//     try {
+//       return new URL(pathOrUrl);
+//     } catch {
+//       // If the caller passed a bare domain/path (e.g., "shop.myshopify.com/products/abc"),
+//       // prefix https:// before falling back to the app base URL.
+//       try {
+//         return new URL(`https://${pathOrUrl}`);
+//       } catch {
+//         /* no-op */
+//       }
+//       const fallback = this.config.get<string>('app.url') ?? 'https://starshield.io';
+//       return new URL(pathOrUrl, fallback);
+//     }
+//   }
+
+//   private extractExtension(fileName?: string | null) {
+//     if (!fileName) {
+//       return '';
+//     }
+//     const cleaned = fileName.split('?')[0] ?? fileName;
+//     const parts = cleaned.split('.');
+//     if (parts.length <= 1) {
+//       return '';
+//     }
+//     const ext = parts.pop();
+//     return ext ? this.slugify(ext) : '';
+//   }
+
+//   private slugify(value: string) {
+//     return value
+//       .toLowerCase()
+//       .replace(/[^a-z0-9]+/g, '-')
+//       .replace(/^-+|-+$/g, '')
+//       .slice(0, 32);
+//   }
+
+//   private async findAffiliateId(userId: string) {
+//     const profile = await this.prisma.affiliateProfile.findUnique({
+//       where: { userId },
+//       select: { id: true }
+//     });
+//     return profile?.id ?? null;
+//   }
+
+//   private async ensureAffiliateProfile(userId: string) {
+//     const existing = await this.findAffiliateId(userId);
+//     if (existing) return existing;
+
+//     const user = await this.prisma.user.findUnique({ where: { id: userId } });
+//     if (!user) throw new NotFoundException('User not found');
+
+//     const referral = `ref_${Math.random().toString(36).slice(2, 8)}`;
+//     const created = await this.prisma.affiliateProfile.create({
+//       data: {
+//         userId,
+//         displayName: user.email,
+//         defaultReferralCode: referral,
+//         kycStatus: KycStatus.pending,
+//         payoutMethod: 'upi',
+//         payoutDetails: Prisma.JsonNull,
+//         panNumber: 'PENDING',
+//         aadhaarNumber: 'PENDING'
+//       },
+//       select: { id: true }
+//     });
+//     return created.id;
+//   }
+
+//   private async requireAffiliateId(userId: string) {
+//     return this.ensureAffiliateProfile(userId);
+//   }
+
+//   private weekKey(date: Date) {
+//     const copy = new Date(date);
+//     copy.setUTCHours(0, 0, 0, 0);
+//     const day = copy.getUTCDay();
+//     const diff = (day + 6) % 7;
+//     copy.setUTCDate(copy.getUTCDate() - diff);
+//     return copy.toISOString().slice(0, 10);
+//   }
+
+//   private formatWeekLabel(key: string) {
+//     try {
+//       return new Intl.DateTimeFormat('en-US', {
+//         month: 'short',
+//         day: 'numeric'
+//       }).format(new Date(key));
+//     } catch {
+//       return key;
+//     }
+//   }
+
+//   private toNumber(value?: Prisma.Decimal | null) {
+//     if (!value) {
+//       return 0;
+//     }
+//     return Number(value);
+//   }
+// }
+
+// function formatCurrency(amount: number, currency = 'USD') {
+//   try {
+//     return new Intl.NumberFormat('en-US', {
+//       style: 'currency',
+//       currency
+//     }).format(amount ?? 0);
+//   } catch {
+//     return `$${(amount ?? 0).toFixed(2)}`;
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import {
   Injectable,
   NotFoundException,
@@ -29,7 +1000,7 @@ export class AffiliatesService {
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly storage: CloudStorageService
-  ) {}
+  ) { }
 
   async findAll(params?: {
     search?: string;
@@ -178,7 +1149,7 @@ export class AffiliatesService {
     const payoutDetails: Prisma.InputJsonValue | typeof Prisma.JsonNull | undefined =
       dto.payoutDetails === undefined
         ? (profile.payoutDetails as Prisma.InputJsonValue | typeof Prisma.JsonNull | null) ??
-          undefined
+        undefined
         : dto.payoutDetails === null
           ? Prisma.JsonNull
           : (dto.payoutDetails as Prisma.InputJsonValue);
@@ -254,57 +1225,105 @@ export class AffiliatesService {
     });
   }
 
+  // --- 3. LINK CREATION (FIXED) ---
+
   async createAffiliateLink(userId: string, dto: CreateAffiliateLinkDto) {
-    const profile = await this.prisma.affiliateProfile.findUnique({
+    const affiliate = await this.prisma.affiliateProfile.findUnique({
       where: { userId },
-      select: { id: true, defaultReferralCode: true }
-    });
-    if (!profile) {
-      throw new NotFoundException('Affiliate profile not found');
-    }
-    const prefix = dto.alias ?? profile.defaultReferralCode ?? 'affiliate';
-    const code = await this.generateLinkCode(prefix);
-    const trackedUrl = this.buildTrackedUrl(dto.landingUrl, {
-      referralCode: dto.referralCode,
-      utmSource: dto.utmSource,
-      utmMedium: dto.utmMedium,
-      utmCampaign: dto.utmCampaign,
-      productId: dto.productId,
-      productSku: dto.productSku
     });
 
+    if (!affiliate) {
+      throw new NotFoundException('Affiliate profile not found');
+    }
+
+    // 1. Smart ID Resolution
+    let targetProductId = dto.productId;
+    const productExists = await this.prisma.product.findUnique({
+      where: { id: dto.productId },
+      select: { id: true }
+    });
+
+    if (!productExists) {
+      const variant = await this.prisma.productVariant.findUnique({
+        where: { id: dto.productId },
+        select: { productId: true }
+      });
+
+      if (variant) {
+        targetProductId = variant.productId;
+      } else {
+        throw new NotFoundException(`Product or Variant with ID ${dto.productId} not found.`);
+      }
+    }
+
+    // 2. Determine Base URL (Matches your .env)
+    let baseUrl = this.config.get<string>('TRACKING_BASE_URL') ??
+      this.config.get<string>('app.url') ??
+      'https://orbithr.onrender.com';
+
+    // Ensure no trailing slash
+    baseUrl = baseUrl.replace(/\/$/, '');
+
+    // 3. Idempotency Check
+    if (!dto.referralCode) {
+      const existingLink = await this.prisma.affiliateLink.findFirst({
+        where: {
+          affiliateId: affiliate.id,
+          productId: targetProductId,
+          landingUrl: dto.landingUrl,
+        }
+      });
+
+      if (existingLink) {
+        return {
+          ...existingLink,
+          shortUrl: `${baseUrl}/r/${existingLink.code}`
+        };
+      }
+    }
+
+    // 4. Code Generation
+    let code: string;
+    if (dto.referralCode) {
+      const existing = await this.prisma.affiliateLink.findUnique({
+        where: { code: dto.referralCode }
+      });
+
+      if (existing) {
+        if (existing.affiliateId === affiliate.id && existing.productId === targetProductId) {
+          return {
+            ...existing,
+            shortUrl: `${baseUrl}/r/${existing.code}`
+          };
+        }
+        throw new BadRequestException(`Referral code '${dto.referralCode}' is unavailable.`);
+      }
+      code = dto.referralCode;
+    } else {
+      code = await this.generateUniqueCode(affiliate.defaultReferralCode);
+    }
+
+    // 5. Create Link
     const link = await this.prisma.affiliateLink.create({
       data: {
-        affiliateId: profile.id,
-        productId: dto.productId ?? null,
+        affiliateId: affiliate.id,
+        productId: targetProductId,
         code,
-        landingUrl: trackedUrl,
+        landingUrl: dto.landingUrl,
         utmDefaults: {
           source: dto.utmSource,
           medium: dto.utmMedium,
-          campaign: dto.utmCampaign
-        }
+          campaign: dto.utmCampaign,
+        },
       },
-      select: {
-        id: true,
-        code: true,
-        landingUrl: true
-      }
     });
 
-    const trackingBase =
-      this.config.get<string>('tracking.baseUrl') ??
-      this.config.get<string>('app.url') ??
-      'http://localhost:4000';
-    const shortUrl = new URL(`/r/${link.code}`, trackingBase).toString();
+    const shortUrl = `${baseUrl}/r/${link.code}`;
 
-    return {
-      id: link.id,
-      code: link.code,
-      landingUrl: link.landingUrl,
-      shortUrl
-    };
+    return { ...link, shortUrl };
   }
+
+  // --- 4. DASHBOARD & ANALYTICS ---
 
   async getDashboardOverview(userId: string) {
     const affiliateId = await this.findAffiliateId(userId);
@@ -365,9 +1384,7 @@ export class AffiliatesService {
           currency: true,
           createdAt: true,
           batch: {
-            select: {
-              periodEnd: true
-            }
+            select: { periodEnd: true }
           }
         },
         orderBy: { createdAt: 'asc' }
@@ -380,11 +1397,7 @@ export class AffiliatesService {
           currency: true,
           status: true,
           createdAt: true,
-          order: {
-            select: {
-              externalOrderId: true
-            }
-          }
+          order: { select: { externalOrderId: true } }
         },
         orderBy: { createdAt: 'desc' },
         take: 5
@@ -395,20 +1408,10 @@ export class AffiliatesService {
           id: true,
           code: true,
           landingUrl: true,
-          product: {
-            select: {
-              name: true
-            }
-          },
-          _count: {
-            select: { clicks: true }
-          }
+          product: { select: { name: true } },
+          _count: { select: { clicks: true } }
         },
-        orderBy: {
-          clicks: {
-            _count: 'desc'
-          }
-        },
+        orderBy: { clicks: { _count: 'desc' } },
         take: 3
       }),
       this.prisma.attribution.groupBy({
@@ -465,10 +1468,10 @@ export class AffiliatesService {
       })(),
       upcomingPayout: upcomingPayout
         ? {
-            amount: this.toNumber(upcomingPayout.amount),
-            currency: upcomingPayout.currency,
-            scheduledFor: upcomingPayout.batch?.periodEnd ?? upcomingPayout.createdAt
-          }
+          amount: this.toNumber(upcomingPayout.amount),
+          currency: upcomingPayout.currency,
+          scheduledFor: upcomingPayout.batch?.periodEnd ?? upcomingPayout.createdAt
+        }
         : null,
       recentActivity: recentLedger.map((entry) => ({
         id: entry.id,
@@ -499,9 +1502,8 @@ export class AffiliatesService {
 
   async getNotifications(userId: string) {
     const affiliateId = await this.findAffiliateId(userId);
-    if (!affiliateId) {
-      return [];
-    }
+    if (!affiliateId) return [];
+
     const [recentPayouts, recentLedger] = await this.prisma.$transaction([
       this.prisma.payoutLine.findMany({
         where: { affiliateId },
@@ -513,11 +1515,7 @@ export class AffiliatesService {
           currency: true,
           status: true,
           createdAt: true,
-          batch: {
-            select: {
-              periodEnd: true
-            }
-          }
+          batch: { select: { periodEnd: true } }
         }
       }),
       this.prisma.commissionLedger.findMany({
@@ -530,9 +1528,7 @@ export class AffiliatesService {
           currency: true,
           status: true,
           createdAt: true,
-          order: {
-            select: { externalOrderId: true }
-          }
+          order: { select: { externalOrderId: true } }
         }
       })
     ]);
@@ -544,20 +1540,20 @@ export class AffiliatesService {
         detail:
           payout.status === PayoutLineStatus.paid
             ? `Transfer completed for ${formatCurrency(
-                this.toNumber(payout.amount),
-                payout.currency
-              )}`
+              this.toNumber(payout.amount),
+              payout.currency
+            )}`
             : `Payout ${payout.status.toLowerCase()} • ${formatCurrency(
-                this.toNumber(payout.amount),
-                payout.currency
-              )}`,
+              this.toNumber(payout.amount),
+              payout.currency
+            )}`,
         timestamp: payout.createdAt,
         type:
           payout.status === PayoutLineStatus.paid
             ? 'success'
             : payout.status === PayoutLineStatus.failed
-            ? 'warning'
-            : 'info'
+              ? 'warning'
+              : 'info'
       })),
       ...recentLedger.map((entry) => ({
         id: `ledger-${entry.id}`,
@@ -565,8 +1561,8 @@ export class AffiliatesService {
           entry.status === CommissionStatus.approved
             ? 'Commission approved'
             : entry.status === CommissionStatus.pending
-            ? 'Commission pending'
-            : 'Commission updated',
+              ? 'Commission pending'
+              : 'Commission updated',
         detail: `${entry.order?.externalOrderId ?? entry.id.slice(0, 8)} • ${formatCurrency(
           this.toNumber(entry.amount),
           entry.currency
@@ -576,8 +1572,8 @@ export class AffiliatesService {
           entry.status === CommissionStatus.rejected || entry.status === CommissionStatus.reversed
             ? 'warning'
             : entry.status === CommissionStatus.approved
-            ? 'success'
-            : 'info'
+              ? 'success'
+              : 'info'
       }))
     ];
 
@@ -603,12 +1599,7 @@ export class AffiliatesService {
       this.prisma.payoutLine.findMany({
         where: { affiliateId },
         include: {
-          batch: {
-            select: {
-              periodEnd: true,
-              method: true
-            }
-          }
+          batch: { select: { periodEnd: true, method: true } }
         },
         orderBy: { createdAt: 'desc' },
         take: 10
@@ -637,11 +1628,11 @@ export class AffiliatesService {
       },
       nextPayout: nextPayout
         ? {
-            amount: this.toNumber(nextPayout.amount),
-            currency: nextPayout.currency,
-            status: nextPayout.status,
-            scheduledFor: (nextPayout.batch?.periodEnd ?? nextPayout.createdAt).toISOString()
-          }
+          amount: this.toNumber(nextPayout.amount),
+          currency: nextPayout.currency,
+          status: nextPayout.status,
+          scheduledFor: (nextPayout.batch?.periodEnd ?? nextPayout.createdAt).toISOString()
+        }
         : null,
       history: history.map((line) => ({
         id: line.id,
@@ -659,11 +1650,7 @@ export class AffiliatesService {
     if (!affiliateId) {
       return {
         cohorts: [],
-        funnel: {
-          sessions: 0,
-          qualified: 0,
-          conversions: 0
-        }
+        funnel: { sessions: 0, qualified: 0, conversions: 0 }
       };
     }
     const since = new Date();
@@ -679,11 +1666,7 @@ export class AffiliatesService {
       }),
       this.prisma.commissionLedger.findMany({
         where: { affiliateId, createdAt: { gte: since } },
-        select: {
-          createdAt: true,
-          amount: true,
-          status: true
-        }
+        select: { createdAt: true, amount: true, status: true }
       })
     ]);
 
@@ -705,9 +1688,7 @@ export class AffiliatesService {
     };
 
     clicks.forEach((click) =>
-      addToWeek(click.clickedAt, (bucket) => {
-        bucket.clicks += 1;
-      })
+      addToWeek(click.clickedAt, (bucket) => { bucket.clicks += 1; })
     );
 
     ledgers.forEach((ledger) =>
@@ -748,67 +1729,32 @@ export class AffiliatesService {
       }
     };
   }
-  private async generateLinkCode(prefix: string) {
-    const base = this.slugify(prefix) || 'link';
-    for (let attempt = 0; attempt < 5; attempt++) {
-      const suffix = randomBytes(3).toString('hex');
-      const candidate = `${base}-${suffix}`;
+
+  // --- PRIVATE HELPERS ---
+
+  private async generateUniqueCode(prefix: string): Promise<string> {
+    let attempts = 0;
+    const maxAttempts = 5;
+
+    while (attempts < maxAttempts) {
+      const candidate = `${prefix}-${randomString(4)}`;
       const existing = await this.prisma.affiliateLink.findUnique({
         where: { code: candidate }
       });
+
       if (!existing) {
         return candidate;
       }
+      attempts++;
     }
-    return `${base}-${randomBytes(4).toString('hex')}`;
-  }
-
-  private buildTrackedUrl(
-    landingUrl: string,
-    params: {
-      referralCode: string;
-      utmSource?: string;
-      utmMedium?: string;
-      utmCampaign?: string;
-      productId?: string;
-      productSku?: string;
-    }
-  ) {
-    const url = this.createUrl(landingUrl);
-    url.searchParams.set('aff', params.referralCode);
-    if (params.utmSource) url.searchParams.set('utm_source', params.utmSource);
-    if (params.utmMedium) url.searchParams.set('utm_medium', params.utmMedium);
-    if (params.utmCampaign) url.searchParams.set('utm_campaign', params.utmCampaign);
-    if (params.productId) url.searchParams.set('product_id', params.productId);
-    if (params.productSku) url.searchParams.set('sku', params.productSku);
-    return url.toString();
-  }
-
-  private createUrl(pathOrUrl: string) {
-    try {
-      return new URL(pathOrUrl);
-    } catch {
-      // If the caller passed a bare domain/path (e.g., "shop.myshopify.com/products/abc"),
-      // prefix https:// before falling back to the app base URL.
-      try {
-        return new URL(`https://${pathOrUrl}`);
-      } catch {
-        /* no-op */
-      }
-      const fallback = this.config.get<string>('app.url') ?? 'https://starshield.io';
-      return new URL(pathOrUrl, fallback);
-    }
+    return `${prefix}-${randomString(8)}`;
   }
 
   private extractExtension(fileName?: string | null) {
-    if (!fileName) {
-      return '';
-    }
+    if (!fileName) return '';
     const cleaned = fileName.split('?')[0] ?? fileName;
     const parts = cleaned.split('.');
-    if (parts.length <= 1) {
-      return '';
-    }
+    if (parts.length <= 1) return '';
     const ext = parts.pop();
     return ext ? this.slugify(ext) : '';
   }
@@ -878,9 +1824,7 @@ export class AffiliatesService {
   }
 
   private toNumber(value?: Prisma.Decimal | null) {
-    if (!value) {
-      return 0;
-    }
+    if (!value) return 0;
     return Number(value);
   }
 }
@@ -894,4 +1838,14 @@ function formatCurrency(amount: number, currency = 'USD') {
   } catch {
     return `$${(amount ?? 0).toFixed(2)}`;
   }
+}
+
+// Helper for code generation
+function randomString(length: number): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
